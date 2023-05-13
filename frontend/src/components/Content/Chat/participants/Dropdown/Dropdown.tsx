@@ -73,7 +73,14 @@ const ParticipantsDropdown = (props: any) => {
 	}
 
 	function kickUser() {
-		
+		const channel = {
+			receiverId: props.userProfile.intra_id,
+			channelId: props.channel.id,
+		}
+		props.socket.emit('kickUser', channel, (callback: any) =>{
+			if (callback)
+				alert(callback);
+		});
 	}
 
 	function banUser() {

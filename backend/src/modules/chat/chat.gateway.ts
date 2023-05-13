@@ -139,7 +139,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 			channelUsers.map(user => {
 				const socket_id = this.getSocketIdFromIntraId(user.intra_id);
 				const channels = this.socketToChannels.get(socket_id) || [];
-				if (channels) {
+				if (channels.length) {
 					const sock = this.socket_idToSocket.get(socket_id);
 					channels.push('' + Channel.id);
 					sock.join('' + Channel.id);
@@ -203,7 +203,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 				users: [user, user1]
 			});
 			const UserChannels = this.socketToChannels.get(socket.id) || [];
-			if (UserChannels) {
+			if (UserChannels.length) {
 				UserChannels.push('' + savedChat.id);
 				socket.join('' + savedChat.id);
 			}
@@ -265,7 +265,80 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
 	@SubscribeMessage('kickUser')
 	async kickUser(@MessageBody() info: any, @ConnectedSocket() socket: Socket) {
-		
+		try {
+			const senderId = this.socket_idToIntra_id.get(socket.id);
+			const user = await this.userservice.findUsersById(senderId);
+			const receiver = await this.userservice.findUsersById(info.receiverId);
+			if (!user || !receiver) {
+				throw new Error('User doesnt exist');
+			}
+			const isAdmin = await this.channelservice.isAdmin(senderId, info.channelId);
+			if (!isAdmin) {
+				throw new Error('You are not administrator');
+			}
+			const isOwner = await this.channelservice.isOwner(info.receiverId, info.channelId);
+			if (isOwner) {
+				throw new Error('You cant kick channel owner');
+			}
+			await this.channelservice.kickUser(receiver.intra_id, info.channelId);
+			const socket_id = this.getSocketIdFromIntraId(receiver.intra_id);
+			if (socket_id) {
+				const channels = this.socketToChannels.get(socket_id);
+				if (channels.length) {
+					const index = channels.indexOf('' + info.channelId);
+					if (index === -1) {
+						return;
+					}
+					const sock = this.socket_idToSocket.get(socket_id);
+					sock.leave(channels[index]);
+					channels.splice(index, 1);
+					this.server.to('' + sock.id).emit('updateChannels', 0);
+				}
+			}
+			this.server.to('' + info.channelId).emit('updateMembers', '');
+
+		} catch (err) {
+			return (err.message);
+		}
+	}
+
+	@SubscribeMessage('banUser')
+	async banUser(@MessageBody() info: any, @ConnectedSocket() socket: Socket) {
+		try {
+			const senderId = this.socket_idToIntra_id.get(socket.id);
+			const user = await this.userservice.findUsersById(senderId);
+			const receiver = await this.userservice.findUsersById(info.receiverId);
+			if (!user || !receiver) {
+				throw new Error('User doesnt exist');
+			}
+			const isAdmin = await this.channelservice.isAdmin(senderId, info.channelId);
+			if (!isAdmin) {
+				throw new Error('You are not administrator');
+			}
+			const isOwner = await this.channelservice.isOwner(info.receiverId, info.channelId);
+			if (isOwner) {
+				throw new Error('You cant kick channel owner');
+			}
+			await this.channelservice.kickUser(receiver.intra_id, info.channelId);
+			const socket_id = this.getSocketIdFromIntraId(receiver.intra_id);
+			if (socket_id) {
+				const channels = this.socketToChannels.get(socket_id);
+				if (channels.length) {
+					const index = channels.indexOf('' + info.channelId);
+					if (index === -1) {
+						return;
+					}
+					const sock = this.socket_idToSocket.get(socket_id);
+					sock.leave(channels[index]);
+					channels.splice(index, 1);
+					this.server.to('' + sock.id).emit('updateChannels', 0);
+				}
+			}
+			this.server.to('' + info.channelId).emit('updateMembers', '');
+
+		} catch (err) {
+			return (err.message);
+		}
 	}
 
 	getSocketIdFromIntraId(intra_id: number) {

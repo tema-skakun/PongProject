@@ -209,5 +209,24 @@ export class ChannelService {
 		channel.administrators.push(user);
 	  
 		await this.channelRepository.save(channel);
-	  }
+	}
+
+	async kickUser(intra_id: number, channelId: number) {
+		const channel = await this.channelRepository.findOne({
+			where: {
+				id: channelId,
+			},
+			relations: ['users', 'administrators'],
+		})
+		if (!channel) {
+			throw new Error('Channel not found');
+		}
+		if (channel.isDM) {
+			throw new Error('You cant kick from private chat');
+		}
+		channel.users = channel.users.filter((u) => u.intra_id !== intra_id);
+		channel.administrators = channel.administrators.filter((u) => u.intra_id !== intra_id);
+
+		await this.channelRepository.save(channel);
+	}
 }

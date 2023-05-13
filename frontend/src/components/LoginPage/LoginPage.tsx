@@ -25,7 +25,7 @@ export const LoginPage = (props: twofprops, props2: blockProps) => {
 
 	const formSubmit = async (e: any) => {
 		e.preventDefault();
-		const url = `http://${process.env.IP_BACKEND}:6969/2fa/authenticate`; // replace with your API endpoint URL
+		const url = `http://${process.env.REACT_APP_IP_BACKEND}:6969/2fa/authenticate`; // replace with your API endpoint URL
 		const headers = {
 			'Content-Type': 'application/json', // set the appropriate Content-Type header
 			'Authorization': `Bearer ${JSCookies.get('accessToken')}`,

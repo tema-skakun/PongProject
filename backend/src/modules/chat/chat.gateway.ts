@@ -12,6 +12,7 @@ import { use } from "passport";
 import { ForbiddenException } from "@nestjs/common";
 import { comparePassword, encodePassword } from "src/tools/bcrypt";
 import { channel } from "diagnostics_channel";
+import { User } from "src/entities";
 
 
 @WebSocketGateway({
@@ -26,6 +27,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 	private socketToChannels = new Map<string, string[]>();
 	private socket_idToSocket = new Map<string, Socket>();
 	private socket_idToIntra_id = new Map<string, number>();
+	private muted = new Map<number, number[]>();
 	
 	constructor(
 		private userservice: UserService,
@@ -82,6 +84,13 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 			const senderId = this.socket_idToIntra_id.get(socket.id);
 			const user = await this.userservice.findUsersById(senderId);
 			const channel = await this.channelservice.findChannelByIdWithUsers(data.channelId);
+			const mutedUsers = this.muted.get(channel.id);
+			if (mutedUsers) {
+				const isHere = mutedUsers.some(u => u === user.intra_id)
+				if (isHere){
+					throw new Error('You are muted');
+				}
+			}
 			if (channel.isDM) {
 				const otherUser = channel.users.find(otheruser => otheruser.intra_id !== user.intra_id);
 				const blocked = await this.userservice.isBlocked(user.intra_id, otherUser.intra_id);
@@ -89,7 +98,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 					throw new ForbiddenException('One of you is blocked');
 				}
 			}
-			if (!this.channelservice.isBanned(channel.id, user)) {
+			if (await this.channelservice.isBanned(channel.id, user)) {
 				throw new ForbiddenException('You are banned');
 			}
 			const message = {
@@ -97,6 +106,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 				sender: user,
 				channel: channel,
 			}
+
 			const newMessage = await this.messageservice.createMessage(message);
 			this.server.to('' + channel.id).emit('getMessage', newMessage);
 			return ;
@@ -133,6 +143,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 				owner: user,
 				users: members,
 				administrators: [user],
+				bannedUsers: [],
 			}
 			const Channel = await this.channelservice.createChannel(newChannel);
 			const channelUsers = await this.channelservice.findChannelUsers(Channel.id);
@@ -169,7 +180,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 			if (channel.isPrivate && !this.channelservice.isInvited(channel.id, user)) {
 				throw new ForbiddenException('You are not invited');
 			}
-			if (!this.channelservice.isBanned(channel.id, user)) {
+			if (await this.channelservice.isBanned(channel.id, user)) {
 				throw new ForbiddenException('You are banned from the channel');
 			}
 			await this.channelservice.addUserToChannel(channel, user);
@@ -179,7 +190,6 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 			this.server.to('' + channel.id).emit('updateMembers', '');
 			this.server.to('' + socket.id).emit('updateChannels', channel.id);
 		} catch (err) {
-			console.log('error in join channel: ' + err);
 			return (err.message);
 		}
 		
@@ -219,7 +229,6 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 			socket.to('' + savedChat.id).emit('updateChannels', '');
 			this.server.to(socket.id).emit('updateChannels', savedChat.id);
 		}catch(err) {
-			console.log('error: ' + err);
 			return (err.message);
 		}
 	}
@@ -307,7 +316,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		try {
 			const senderId = this.socket_idToIntra_id.get(socket.id);
 			const user = await this.userservice.findUsersById(senderId);
-			const receiver = await this.userservice.findUsersById(info.receiverId);
+			const receiver = await this.userservice.findUserWithBanned(info.receiverId);
 			if (!user || !receiver) {
 				throw new Error('User doesnt exist');
 			}
@@ -317,9 +326,10 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 			}
 			const isOwner = await this.channelservice.isOwner(info.receiverId, info.channelId);
 			if (isOwner) {
-				throw new Error('You cant kick channel owner');
+				throw new Error('You cant ban channel owner');
 			}
 			await this.channelservice.kickUser(receiver.intra_id, info.channelId);
+			await this.channelservice.banUser(receiver, info.channelId);
 			const socket_id = this.getSocketIdFromIntraId(receiver.intra_id);
 			if (socket_id) {
 				const channels = this.socketToChannels.get(socket_id);
@@ -335,6 +345,43 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 				}
 			}
 			this.server.to('' + info.channelId).emit('updateMembers', '');
+
+		} catch (err) {
+			return (err.message);
+		}
+	}
+
+	@SubscribeMessage('muteUser')
+	async muteUser(@MessageBody() info: any, @ConnectedSocket() socket: Socket) {
+		try {
+			const senderId = this.socket_idToIntra_id.get(socket.id);
+			const user = await this.userservice.findUsersById(senderId);
+			const receiver = await this.userservice.findUserWithBanned(info.receiverId);
+			if (!user || !receiver) {
+				throw new Error('User doesnt exist');
+			}
+			const isAdmin = await this.channelservice.isAdmin(senderId, info.channelId);
+			if (!isAdmin) {
+				throw new Error('You are not administrator');
+			}
+			const isOwner = await this.channelservice.isOwner(info.receiverId, info.channelId);
+			if (isOwner) {
+				throw new Error('You cant mute channel owner');
+			}
+			const channel = await this.channelservice.findChannelById(info.channelId);
+			if (!channel) {
+				throw new Error('Channel not exsiting');
+			}
+			if (channel.isDM) {
+				throw new Error('You cant mute on private chat');
+			}
+			if (!this.muted.has(channel.id)) {
+				this.muted.set(channel.id, []);
+			  }
+			this.muted.set(channel.id, [...this.muted.get(channel.id), receiver.intra_id]);
+			setTimeout(() => {
+				this.muted.set(channel.id, this.muted.get(channel.id).filter(usr => usr != receiver.intra_id))
+			}, 60000)
 
 		} catch (err) {
 			return (err.message);

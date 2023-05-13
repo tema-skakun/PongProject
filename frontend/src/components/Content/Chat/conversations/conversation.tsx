@@ -1,9 +1,10 @@
-
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import './conversation.css'
 import ConversationDropdown from './dropdown/dropdown';
 import JSCookies from 'js-cookie';
+import { Modal } from 'react-bootstrap';
+import InviteButton from './invitebutton/invitebutton';
 
 export default function Conversation(props: any) {
 	const [user, setUser] = useState<any>(null);
@@ -27,6 +28,7 @@ export default function Conversation(props: any) {
 		};
 		getUser();
 	}, [props.channel, props.currentUser])
+
 
 	return (
 		<div className={props.channel?.id === props.currentChannel?.id ? 'active' : 'conversation' }>

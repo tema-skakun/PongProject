@@ -244,4 +244,13 @@ export class UserService {
 		await this.userRepository.save(user);
 	}
 
+	async findUserWithBanned(intra_id: number) {
+		return await this.userRepository.findOne({
+			where: {
+			  intra_id: intra_id,
+			},
+			relations: ['bannedFromChannels'],
+		  });
+	}
+
 }

@@ -25,7 +25,12 @@ export class ChannelService {
 	}
 
 	async getChannels() {
-		return await this.channelRepository.find();
+		return await this.channelRepository.find({
+			where: {
+				id: 25,
+			},
+			relations: ['bannedUsers'],
+		});
 	}
 
 	async findUserChannels(intra_id: number) {
@@ -68,10 +73,14 @@ export class ChannelService {
 		const channels = await this.channelRepository.find({
 			relations: ['users', 'invited', 'bannedUsers']
 		});
-
+		console.log('aaa')
+		console.log(channels.map(channel => channel.bannedUsers));
+		console.log('bbbb')
 		const joinableChannels: Channel[] = [];
 
 		for (const channel of channels) {
+			console.log('banned: ' + channel.bannedUsers);
+			console.log('users: ' + channel.users);
 			if (channel.isDM) {
 				continue;
 			}
@@ -199,7 +208,7 @@ export class ChannelService {
 		});
 	  
 		if (!channel) {
-		  throw new Error(`Channel with does not exist`);
+		  throw new Error(`Channel does not exist`);
 		}
 		const isAdmin = channel.administrators.some(admin => admin.intra_id === user.intra_id);
 		if (isAdmin) {
@@ -228,5 +237,31 @@ export class ChannelService {
 		channel.administrators = channel.administrators.filter((u) => u.intra_id !== intra_id);
 
 		await this.channelRepository.save(channel);
+	}
+
+	async banUser(user: User, channelId: number): Promise<void> {
+		const channel = await this.channelRepository.findOne({
+		  where: {
+			id: channelId,
+		  },
+		  relations: ['bannedUsers'],
+		});
+	  
+		if (!channel) {
+		  throw new Error(`Channel does not exist`);
+		}
+		if (channel.bannedUsers) {
+			const isBanned = channel.bannedUsers.some(banned => banned.intra_id === user.intra_id);
+			if (isBanned) {
+				throw new Error(`User is already banned`);
+			}
+			channel.bannedUsers.push(user);
+		}
+		else {
+			console.log('in else ban user');
+			channel.bannedUsers = [user];
+		}
+		const ss = await this.channelRepository.save(channel);
+		console.log('ban of user: ' + ss.bannedUsers);
 	}
 }

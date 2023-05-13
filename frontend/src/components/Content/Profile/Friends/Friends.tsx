@@ -15,7 +15,7 @@ let Friends = (props: any) => {
             {props.users.map((u: FriendDto) =>
                 <div key={u.id}>
                             <span>
-                                <div>
+                                <div >
                                     <img
                                         src={u.pictureUrl != null ? u.pictureUrl : defaultAvatar}
                                         alt="Avatar User"

@@ -259,7 +259,7 @@ export class Client extends Socket {
 		this.cleanUp();
 		this.key = Key.NoKey;
 		this.zero_goals();
-		this.otherPlayerObj.zero_goals();
+		this.playernumUncoupled = undefined;
 
 		if (this.gameLoop)
 			clearInterval(this.gameLoop);
@@ -268,6 +268,8 @@ export class Client extends Socket {
 		if (!this.otherPlayerObj)
 			return;
 
+		this.otherPlayerObj.playernumUncoupled = undefined;
+		this.otherPlayerObj.zero_goals();
 		this.otherPlayerObj.key = Key.NoKey;
 		this.otherPlayerObj.inGame = false;
 		this.otherPlayerObj.cleanUp();

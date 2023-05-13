@@ -27,6 +27,7 @@ import { FriendsModule } from '../friends/friends.module';
 import { ChannelModule } from '../channel/channel.module';
 import { MessageModule } from '../message/message.module';
 import { ChatGateway } from '../chat/chat.gateway';
+import { PreGameController } from '../game/game.controller';
 
 
 @Module({
@@ -50,7 +51,7 @@ import { ChatGateway } from '../chat/chat.gateway';
 	  }),
 	DebugModule,
 	],
-  controllers: [],
+  controllers: [PreGameController],
   providers: [LB, UserRestriction, RelationalTable, GameGateway, GameService,
 	Forty2Strategy, TwoFactorAuthenticationService, JwtTwoFactorStrategy, JWTStrategy,
 	ChatGateway],

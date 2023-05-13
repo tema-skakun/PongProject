@@ -9,6 +9,7 @@ import { Socket } from 'socket.io-client';
 import { io } from 'socket.io-client';
 import { InvitePopUp } from './components/Content/Game/components/InvitePopUp';
 import { RejectionPopup } from './components/Content/Game/components/RejectionPopup';
+import { Config } from './interfaces/config';
 
 export let socket: Socket<any, any> | null = null;
 
@@ -19,6 +20,7 @@ function App(props: any) {
     const [is2f, setis2f] = useState<boolean>(false);
     const userdata = useRef<userProps>();
 	const [displayBtn, setDisplayBtn] = useState<boolean>(true);
+	const [CONFIG, setCONFIG] = useState<Config | null>(null);
 
     useEffect(() => {
         const myCookie = JSCookies.get('accessToken');
@@ -75,7 +77,9 @@ function App(props: any) {
 				<RejectionPopup socket={socket}/>
                 <Navbar/>
                 <Content state={props.state} dispatch={props.dispatch} setIsLoggedIn={setIsLoggedIn}
-                         userdata={userdata.current}/>
+                         userdata={userdata.current}
+						 CONFIG={CONFIG}
+						 setCONFIG={setCONFIG}/>
             </div>
         ) : (
             <div className="App">

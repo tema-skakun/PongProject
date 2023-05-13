@@ -1,8 +1,9 @@
-import { Controller, Get, HttpException, HttpStatus, Param, Res, Response } from '@nestjs/common';
+import { Controller, Get, HttpException, HttpStatus, Param, Req, Res, Response, UseGuards } from '@nestjs/common';
 import { MatchHistoryEntry } from 'src/entities/matchHistoryEntry/matchHistoryEntry.entity';
 import { MatchHistoryService } from './match-history.service';
 import { MatchHistoryTransformed } from 'src/entities/matchHistoryEntry/matchHistoryEntry.transformed';
 import { ObjectPruning } from 'src/tools/objectPruning';
+import JwtTwoFactorGuard from 'src/GuardStrategies/Jwt2F.guard';
 
 @Controller('match-history')
 export class MatchHistoryController {
@@ -16,10 +17,12 @@ export class MatchHistoryController {
 		return 'hhhhheeey';
 	}
 
-	@Get(':id')
-	async completeMatchHistory(@Param('id') intraId: number): Promise<MatchHistoryTransformed []> {
+	@Get('/')
+	@UseGuards(JwtTwoFactorGuard)
+	async completeMatchHistory(@Req() req: any): Promise<MatchHistoryTransformed []> {
 		try {
-			const matchHistory = await this.matchHistoryService.get(intraId);
+			const matchHistory = await this.matchHistoryService.get(req.user.intra_id);
+
 			const matchHistroyTransformed: MatchHistoryTransformed [] = [];
 			for (const historyEntry of matchHistory)
 			{

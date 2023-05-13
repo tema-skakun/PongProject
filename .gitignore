@@ -14,6 +14,8 @@ env_script.js
 .pnp.js
 /backend/node_modules
 /frontend/node_modules
+/frontend/.env
+/backend/.env
 /backend/pong.log.json
 
 # testing

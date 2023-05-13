@@ -4,6 +4,10 @@
     grid-template-columns: 1fr 1fr 1fr;
     background-color: #6daba9;
     align-items: center;
+    grid-gap: 100px;
+    width: 100%;
+    height: 60px;
+    position: fixed;
 }
 
 .profile {
@@ -20,6 +24,7 @@
 
 .active {
     color: white;
+    font-weight:bold;
     text-decoration: none;
 }
 

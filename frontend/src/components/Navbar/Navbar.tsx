@@ -10,7 +10,7 @@ const Navbar = () => {
                     className={navData =>
                         navData.isActive ? style.active : style.notActive}
                 >
-                    <button>Profile</button>
+                    <h3>Profile</h3>
                 </NavLink>
             </div>
             <div className={style.chat}>
@@ -19,7 +19,7 @@ const Navbar = () => {
                     className={navData =>
                         navData.isActive ? style.active : style.notActive}
                 >
-                    <button>Chat</button>
+                    <h3>Chat</h3>
                 </NavLink>
 
             </div>
@@ -29,7 +29,7 @@ const Navbar = () => {
                     className={navData =>
                         navData.isActive ? style.active : style.notActive}
                 >
-                    <button>Game</button>
+                    <h3>Game</h3>
                 </NavLink>
             </div>
         </div>

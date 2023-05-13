@@ -41,16 +41,16 @@ let MatchItems = (props: any) => {
 			matchHistoryList.map((entry: MatchHistoryEntry) => 
 			<div className={style.match} key={entry.id}>
 				<div className={style.player1}>
-					<div>{entry.winner.username}</div>
 					<img src={entry.winner.picture_url}></img>
+					<div>{entry.winner.username}</div>
 				</div>
 				<div className={style.score}>
-					<h1>VS</h1>
+					<h3>VS</h3>
 					<div>{entry.winnerGoals} : {entry.looserGoals}</div>
 				</div>
 				<div className={style.player2}>
-					<div>{entry.looser.username}</div>
 					<img src={entry.looser.picture_url}></img>
+					<div>{entry.looser.username}</div>
 				</div>
 			</div>)
 			}

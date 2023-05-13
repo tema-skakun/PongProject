@@ -1,6 +1,7 @@
 import style from './Profile.module.css';
 import FriendsAPIComponent from './Friends/FriendsAPIComponent';
 import MatchItems from "./MatchItems/MatchItems";
+import EditProfile from "./EditProfile/EditProfile";
 const Profile = (props: any) => {
     return (
         <div className={style.profile}>
@@ -12,15 +13,27 @@ const Profile = (props: any) => {
                 <div>
                     {props.profilePage.user.name}
                 </div>
+                <div>
+                    <EditProfile/>
+                </div>
+                <div>
+                    wins and losses
+                </div>
+                <div>
+                    Ladder level
+                </div>
+                <div>
+                    Achievement
+                </div>
             </div>
             <div className={style.stat}>
-                Match history
+                <h2>Match history</h2>
 				<div>
                     <MatchItems />
                 </div>
             </div>
             <div className={style.friends}>
-                Friends
+                <h2>Friends</h2>
                 <FriendsAPIComponent
                     profilePage={props.profilePage}
                     setUsers={props.setUsers}

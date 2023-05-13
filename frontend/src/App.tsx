@@ -73,13 +73,13 @@ function App(props: any) {
     return (
         isLoggedIn ? (
             <div className="App">
-				<InvitePopUp socket={socket}/>
-				<RejectionPopup socket={socket}/>
-                <Navbar/>
+                <Navbar />
                 <Content state={props.state} dispatch={props.dispatch} setIsLoggedIn={setIsLoggedIn}
                          userdata={userdata.current}
 						 CONFIG={CONFIG}
 						 setCONFIG={setCONFIG}/>
+                <InvitePopUp socket={socket}/>
+                <RejectionPopup socket={socket}/>
             </div>
         ) : (
             <div className="App">

@@ -196,7 +196,7 @@ export class Client extends Socket {
 		this.streak = 0;
 		this._goals = 0;
 	}
-	incr_goals() {
+	async incr_goals() {
 		const other: Client = this._otherPlayerObj;
 		other.streak = 0;
 		++this.streak;
@@ -216,7 +216,7 @@ export class Client extends Socket {
 			this.emit('winner');
 			other.emit('looser');
 
-			updateMatchHistory(this, other, this.userService, this.matchHistoryService);
+			await updateMatchHistory(this, other, this.userService, this.matchHistoryService);
 
 			this.cancelGame();
 		}
@@ -259,7 +259,7 @@ export class Client extends Socket {
 		this.cleanUp();
 		this.key = Key.NoKey;
 		this.zero_goals();
-		this.otherPlayerObj.zero_goals();
+		this.playernumUncoupled = undefined;
 
 		if (this.gameLoop)
 			clearInterval(this.gameLoop);
@@ -268,6 +268,8 @@ export class Client extends Socket {
 		if (!this.otherPlayerObj)
 			return;
 
+		this.otherPlayerObj.playernumUncoupled = undefined;
+		this.otherPlayerObj.zero_goals();
 		this.otherPlayerObj.key = Key.NoKey;
 		this.otherPlayerObj.inGame = false;
 		this.otherPlayerObj.cleanUp();

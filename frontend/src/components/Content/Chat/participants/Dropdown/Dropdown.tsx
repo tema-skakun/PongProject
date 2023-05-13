@@ -4,8 +4,10 @@ import { BsGearFill } from "react-icons/bs";
 import './Dropdown.css';
 import axios from "axios";
 import JSCookies from 'js-cookie';
+import { useNavigate } from "react-router-dom";
 
 const ParticipantsDropdown = (props: any) => {
+	const navigator = useNavigate();
 
 	function sendPm() {
 		const channel = {
@@ -51,7 +53,7 @@ const ParticipantsDropdown = (props: any) => {
 	}
 
 	function pongInvite() {
-		
+		navigator('/game');
 	}
 
 	async function makeAdministrator() {

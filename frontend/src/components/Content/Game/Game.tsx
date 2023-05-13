@@ -1,11 +1,12 @@
 import { Config } from './interfaces/config';
 import { GameState } from './hooks/useSocket';
 
-import { useRef, useState, useCallback} from 'react';
+import { useRef, useState, useCallback, useEffect} from 'react';
 
 import { QueueButton } from './components/matchmakeing_button';
 
 import MemeOverlay from './components/memeOverlay';
+import JSCookies from 'js-cookie';
 
 import { Radio } from './components/radio';
 import { Canvas } from './components/Canvas';
@@ -15,6 +16,7 @@ import { socket } from '../../../App';
 import { InviteForm } from './components/inviteForm';
 import 'reactjs-popup/dist/index.css';
 import { InvitePopUp } from './components/InvitePopUp';
+import axios, { AxiosResponse } from 'axios';
 
 export enum archivements {
 	chad,
@@ -28,7 +30,7 @@ export enum winningStates {
 }
 
 
-function Game() {
+function Game({CONFIG, setCONFIG}: {CONFIG: Config, setCONFIG: Function}) {
 	// <Means for displaying>
 	const backgroundImg: React.MutableRefObject<HTMLImageElement> = useRef((() => {
 		const img = new Image();
@@ -47,10 +49,21 @@ function Game() {
 	// <Stateful>
 	const [displayBtn, setDisplayBtn] = useState<boolean>(true);
 	const [displayPopUp, setDisplayPopUp] = useState<boolean>(false);
-	const [CONFIG, setCONFIG] = useState<Config | null>(null);
 	// </Stateful>
 	const winningRef: React.MutableRefObject<winningStates> = useRef(winningStates.undecided);
 	const [invitedBy, setInvitedBy] = useState<[string, (res: string) => void]>(['nobody', (res: string) => {console.log('You fucked up')}]);
+
+	useEffect(() => {
+		axios.get(`http://${process.env.REACT_APP_IP_BACKEND}:6969/preGame/${socket?.id}`, {
+			headers: {
+				'Content-Type': 'application/json',
+				'Authorization': `Bearer ${JSCookies.get('accessToken')}`,
+			}
+		})
+		.then((res: AxiosResponse<any, any>) => {
+			setDisplayBtn(!res.data);
+		})
+	}, [])
 
 	const toggleDisplayPupUp = useCallback(() => {
 		setDisplayPopUp(!displayPopUp);

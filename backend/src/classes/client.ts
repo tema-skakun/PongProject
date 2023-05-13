@@ -196,7 +196,7 @@ export class Client extends Socket {
 		this.streak = 0;
 		this._goals = 0;
 	}
-	incr_goals() {
+	async incr_goals() {
 		const other: Client = this._otherPlayerObj;
 		other.streak = 0;
 		++this.streak;
@@ -216,7 +216,7 @@ export class Client extends Socket {
 			this.emit('winner');
 			other.emit('looser');
 
-			updateMatchHistory(this, other, this.userService, this.matchHistoryService);
+			await updateMatchHistory(this, other, this.userService, this.matchHistoryService);
 
 			this.cancelGame();
 		}

@@ -1,0 +1,33 @@
+.profile {
+    display: grid;
+    grid-template-rows: 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
+    padding: 20px;
+}
+
+.profile img {
+    align-items: start;
+    width: 200px;
+    height: 200px;
+    border-radius: 50px;
+    justify-self: self-end;
+}
+
+.user {
+    grid-column: 1;
+}
+
+.stat {
+    grid-column: 2;
+}
+
+.friends {
+    grid-column: 3;
+}
+
+.friends img {
+    width: 100px;
+    height: 100px;
+    border-radius: 30px;
+    justify-self: self-end;
+}

@@ -1,0 +1,102 @@
+[
+  {
+    "level": "debug",
+    "message": "PendingMatchRequest: undefinedRelations: ->WuUdLCTQA0wNiqFxAAAi, h9EUrr5TQqj6wcaSAAAl, defined<-Clients: WuUdLCTQA0wNiqFxAAAi h9EUrr5TQqj6wcaSAAAl RunningGames: ed5cb209-155c-4fc1-9f74-3172681f2e98     ",
+    "timestamp": "2023-04-19T09:57:45.798Z"
+  },
+  {
+    "level": "debug",
+    "message": "PendingMatchRequest: undefinedRelations: Clients: RunningGames:     ",
+    "timestamp": "2023-04-19T09:57:50.801Z"
+  },
+  {
+    "level": "debug",
+    "message": "PendingMatchRequest: 2f5cdf39-2247-4408-b509-ec2f0c3fa891Relations: ->EHQKRlJVLwXD-GrCAAAo, undefined, undefined<-Clients: EHQKRlJVLwXD-GrCAAAo RunningGames:     ",
+    "timestamp": "2023-04-19T09:57:59.809Z"
+  },
+  {
+    "level": "debug",
+    "message": "PendingMatchRequest: undefinedRelations: Clients: RunningGames:     ",
+    "timestamp": "2023-04-19T09:58:27.822Z"
+  },
+  {
+    "level": "debug",
+    "message": "PendingMatchRequest: 186ed112-1607-4d1e-906e-91b730d7c9eaRelations: ->MqXh6q-_f5ng7n2AAAAr, undefined, undefined<-Clients: MqXh6q-_f5ng7n2AAAAr RunningGames:     ",
+    "timestamp": "2023-04-19T09:58:31.825Z"
+  },
+  {
+    "level": "debug",
+    "message": "PendingMatchRequest: undefinedRelations: Clients: RunningGames:     ",
+    "timestamp": "2023-04-19T10:01:30.004Z"
+  },
+  {
+    "level": "debug",
+    "message": "PendingMatchRequest: 9aa82657-e64a-416f-b7e8-729887ad4817Relations: ->TY0Q9BsRlV8hqXbkAAAu, undefined, undefined<-Clients: TY0Q9BsRlV8hqXbkAAAu RunningGames:     ",
+    "timestamp": "2023-04-19T10:01:35.009Z"
+  },
+  {
+    "level": "debug",
+    "message": "PendingMatchRequest: undefinedRelations: Clients: RunningGames:     ",
+    "timestamp": "2023-04-19T10:04:03.153Z"
+  },
+  {
+    "level": "debug",
+    "message": "PendingMatchRequest: 1fd7c5bd-0710-490a-b4f1-d14e46261265Relations: ->RoBwmJlE7PJIOolAAAAx, undefined, undefined<-Clients: RoBwmJlE7PJIOolAAAAx RunningGames:     ",
+    "timestamp": "2023-04-19T10:04:07.155Z"
+  },
+  {
+    "level": "debug",
+    "message": "PendingMatchRequest: undefinedRelations: ->RoBwmJlE7PJIOolAAAAx, KMBMFf4cIr9UXQYQAAA0, defined<-Clients: RoBwmJlE7PJIOolAAAAx KMBMFf4cIr9UXQYQAAA0 RunningGames: 1fd7c5bd-0710-490a-b4f1-d14e46261265     ",
+    "timestamp": "2023-04-19T10:04:16.165Z"
+  },
+  {
+    "level": "debug",
+    "message": "PendingMatchRequest: undefinedRelations: Clients: KMBMFf4cIr9UXQYQAAA0 RunningGames:     ",
+    "timestamp": "2023-04-19T10:06:48.273Z"
+  },
+  {
+    "level": "debug",
+    "message": "PendingMatchRequest: undefinedRelations: Clients: RunningGames:     ",
+    "timestamp": "2023-04-19T10:06:49.274Z"
+  },
+  {
+    "level": "debug",
+    "message": "PendingMatchRequest: 1df275db-62e8-440d-8be3-c7ab14c36924Relations: ->3z6VDid9XxVKsLGIAAA3, undefined, undefined<-Clients: 3z6VDid9XxVKsLGIAAA3 RunningGames:     ",
+    "timestamp": "2023-04-19T10:06:52.277Z"
+  },
+  {
+    "level": "debug",
+    "message": "PendingMatchRequest: undefinedRelations: Clients: RunningGames:     ",
+    "timestamp": "2023-04-19T10:09:14.416Z"
+  },
+  {
+    "level": "debug",
+    "message": "PendingMatchRequest: 65992085-09c0-467f-8571-c3e41471262bRelations: ->0Fbz2gUGxnLtrV1cAAA6, undefined, undefined<-Clients: 0Fbz2gUGxnLtrV1cAAA6 RunningGames:     ",
+    "timestamp": "2023-04-19T10:09:20.431Z"
+  },
+  {
+    "level": "debug",
+    "message": "PendingMatchRequest: undefinedRelations: Clients: RunningGames:     ",
+    "timestamp": "2023-04-19T10:09:21.432Z"
+  },
+  {
+    "level": "debug",
+    "message": "PendingMatchRequest: 10d519bb-cd0a-4bff-b242-df9088c4e002Relations: ->ou-7QsXELKl5GrtFAAA9, undefined, undefined<-Clients: ou-7QsXELKl5GrtFAAA9 RunningGames:     ",
+    "timestamp": "2023-04-19T10:09:24.435Z"
+  },
+  {
+    "level": "debug",
+    "message": "PendingMatchRequest: undefinedRelations: Clients: RunningGames:     ",
+    "timestamp": "2023-04-19T10:09:57.466Z"
+  },
+  {
+    "level": "debug",
+    "message": "PendingMatchRequest: fe04d44c-b8a9-42dc-b9a5-23d888250592Relations: ->BX-svgfLCqAeji4SAABA, undefined, undefined<-Clients: BX-svgfLCqAeji4SAABA RunningGames:     ",
+    "timestamp": "2023-04-19T10:10:01.469Z"
+  },
+  {
+    "level": "debug",
+    "message": "PendingMatchRequest: undefinedRelations: Clients: RunningGames:     ",
+    "timestamp": "2023-04-19T10:10:12.484Z"
+  }
+]

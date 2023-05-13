@@ -1,0 +1,29 @@
+.navbar {
+    display: grid;
+    grid-template-rows: 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
+    background-color: #6daba9;
+    align-items: center;
+}
+
+.profile {
+    grid-column: 1;
+}
+
+.chat {
+    grid-column: 2;
+}
+
+.game {
+    grid-column: 3;
+}
+
+.active {
+    color: white;
+    text-decoration: none;
+}
+
+.notActive {
+    color: black;
+    text-decoration: none;
+}

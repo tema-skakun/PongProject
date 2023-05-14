@@ -79,17 +79,17 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
 	// <Loop>
 		player2.gameLoop = setInterval(async () => {
+		console.timeLog('process');
+		console.timeEnd('process');
 		this.gameService.physics(player2);
 
 		// <Emission>
-		console.log(`player2 goals: ${player2.goals}`);
-		console.log(`player1 goals: ${player1.goals}`);
-		console.log(`\n`);
 		player2.coupledEmits('gameState', JSON.stringify(player2.gameState));
 
 		this.gameService.goals(player2);
 		// </Emission>
 
+		console.time('process');
 		}, CONFIG.UPDATE_INTERVAL)
 	// </Loop>
   }
@@ -129,6 +129,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
 	// Waiting for 'join' event.
 	const joinCb = (JoinOptsStr: string) => {
+		console.log('Join callback activated');
 		client.addReactivator('join', joinCb);
 		const JoinOpts: Object = JSON.parse(JoinOptsStr);
 		this.join(client, JoinOpts);

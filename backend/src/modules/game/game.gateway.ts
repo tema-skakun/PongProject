@@ -82,19 +82,12 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 		this.gameService.physics(player2);
 
 		// <Emission>
+		console.log(`player2 goals: ${player2.goals}`);
+		console.log(`player1 goals: ${player1.goals}`);
+		console.log(`\n`);
 		player2.coupledEmits('gameState', JSON.stringify(player2.gameState));
 
-		const goals: string = this.gameService.goals(player2);
-		if (goals === 'goal player1')
-		{
-			player1.incr_goals();
-			console.log('emitted one goal for player1');
-		}
-		else if (goals === 'goal player2')
-		{
-			player2.incr_goals();
-			console.log('emitted one goal for player2');
-		}
+		this.gameService.goals(player2);
 		// </Emission>
 
 		}, CONFIG.UPDATE_INTERVAL)
@@ -120,11 +113,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 		await client.setPendingMatchRequest(pendingMatchRequest);
 	  }
   
-	  client.emit('handshake', JSON.stringify(CONFIG));
-	//   client.onSave('disconnect', () => {
-	// 	  console.log(`client out (ignore doubles): ${client.id}`);
-	// 	  client.tearDown();
-	//   })
+	client.coupledHandshake();
   }
 
   async handleConnection(socket: Socket): Promise<void> { // Lobby
@@ -137,34 +126,33 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 		client.disconnect();
 	}
 		clients.set(client.id, client);
-	
-
-	// setInterval(() => {
-		// console.log(clients.size);
-		// clients.forEach((cl: Client) => {
-		// 	(cl.inGame) ? console.log('inGame') : console.log('not inGame');
-		// })
-	// }, 1000);
 
 	// Waiting for 'join' event.
 	const joinCb = (JoinOptsStr: string) => {
-		// client.off('join', joinCb);
-		// console.log('GETS INTO THE JOIN CALLBACK');
+		client.addReactivator('join', joinCb);
 		const JoinOpts: Object = JSON.parse(JoinOptsStr);
 		this.join(client, JoinOpts);
 	}
 
-	client.on('invite', (intraIdStr: number, callback: (res: string) => void) => {
+	client.on('invite', (intraId: string, callback: (res: string) => void) => {
 
+		console.log('server recieved invite');
 		clients.forEach((cl: Client) => {
+			console.log(`Searched intra Id: ${intraId}`);
+			console.log(`Found intra id: ${cl.intraId}`);
+			console.log(`First part: ${cl.intraId == +intraId}`);
+			console.log(`Unwanted socket.id: ${client.id}`);
+			console.log(`recieved socket.id: ${cl.id}`);
+			console.log(`Second part: ${client.id !== cl.id}`);
 			// console.log(`in the set: ${cl.id}`);
-			if ((cl.intraId === intraIdStr) && (client.id !== cl.id))
+			if ((cl.intraId == +intraId) && (client.id !== cl.id))
 			{
+				console.log(`send invite req`);
 				cl.emit('inviteReq', client.intraId, (resToServer: string) => {
 					if (resToServer === 'I will destory you') // Client accepted the game
 					{
-						client.off('join', joinCb);
-						cl.off('join', joinCb);
+						client.addReactivator('join', joinCb);
+						client.addReactivator('join', joinCb);
 						this.kickoffGroup(client, cl);
 					}
 
@@ -184,6 +172,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 		client.inGame = false;
 		client.tearDown();
 	})
+
   }
 
   kickoffGroup(inviter: Client, invitee: Client) {
@@ -191,7 +180,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 	inviter.playernum = 2;
 	inviter.setPendingMatchRequest(crypto.randomUUID());
 
-	inviter.coupledEmits('handshake', JSON.stringify(CONFIG));
+	inviter.coupledHandshake();
 	this.start(inviter);
   }
 

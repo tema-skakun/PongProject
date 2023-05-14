@@ -123,6 +123,22 @@ export class Client extends Socket {
 			this.off(listener.name, listener.func);
 		}
 	}
+
+	private _listenersToBeReactivated: {name: string, func: EventFunction} [] = [];
+	reactivateListeners() {
+		for (const listener of this._listenersToBeReactivated)
+		{
+			console.log(`Reactivates: ${listener.name}`)
+			this.on(listener.name, listener.func);
+		}
+	}
+	addReactivator(name: string, func: EventFunction) {
+		console.log(`Adds Reactivator for: ${name}`);
+		this.off(name, func);
+		this._listenersToBeReactivated.filter(list => list.name !== name);
+		this._listenersToBeReactivated.push({name: name, func: func});
+	}
+
 	// set cleanupHandlers(newCleanup: EventFunction) {
 	// 	this._cleanupHandlers.push(newCleanup);
 	// 	if (this._otherPlayerObj)
@@ -210,7 +226,6 @@ export class Client extends Socket {
 		}
 
 		++this._goals;
-		this.coupledEmits('goal', (this.playernum === 1) ? 'player1' : 'player2' );
 		if (this._goals === CONFIG.POINTS)
 		{
 			this.emit('winner');
@@ -224,6 +239,26 @@ export class Client extends Socket {
 	get goals(): number {
 		return this._goals;
 	}
+
+	coupledHandshake() {
+		const intervalId: NodeJS.Timer =  setInterval(() => {
+		this.emit('handshake', JSON.stringify(CONFIG)); }, 100)
+
+		if (this.otherPlayerObj)
+		{
+			const intervalId2: NodeJS.Timer =  setInterval(() => {
+			this.otherPlayerObj.emit('handshake', JSON.stringify(CONFIG)); }, 100)
+
+			setTimeout(() => {
+				clearInterval(intervalId2);
+			}, 1000);
+		}
+
+		setTimeout(() => {
+		  clearInterval(intervalId);
+		}, 1000);
+	}
+
 
 	coupledOn(clientEventName: string, eventFunctionXClient: EventFunctionXClient)
 	{
@@ -255,7 +290,8 @@ export class Client extends Socket {
 	}
 	// </coupled action>
 
-	cancelGame() {
+	cancelPlayer()
+	{
 		this.cleanUp();
 		this.key = Key.NoKey;
 		this.zero_goals();
@@ -265,20 +301,22 @@ export class Client extends Socket {
 			clearInterval(this.gameLoop);
 
 		this.inGame = false;
+		console.log(`Reactivate listerns is called`);
+		this.reactivateListeners();
+	}
+
+	cancelGame() {
+		this.cancelPlayer();
+
 		if (!this.otherPlayerObj)
 			return;
 
-		this.otherPlayerObj.playernumUncoupled = undefined;
-		this.otherPlayerObj.zero_goals();
-		this.otherPlayerObj.key = Key.NoKey;
-		this.otherPlayerObj.inGame = false;
-		this.otherPlayerObj.cleanUp();
+		this.otherPlayerObj.cancelPlayer();
 	}
   
 	tearDown() {
 		if (!this._otherPlayerObj)
 		{
-			console.log('other player not set');
 			resetGlobalPendingMatch();
 			return ;
 		}

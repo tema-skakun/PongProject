@@ -2,7 +2,6 @@ import React, { useState} from "react"
 import { Socket } from "socket.io-client";
 import Popup from "reactjs-popup";
 import 'reactjs-popup/dist/index.css';
-import { inheritedClosureFromPopUp } from "./RejectionPopup";
 
 
 export const InviteForm: React.FC<{socket: Socket<any, any> | null, setDisplayBtn: Function}> = ({socket, setDisplayBtn}) => {
@@ -14,8 +13,6 @@ export const InviteForm: React.FC<{socket: Socket<any, any> | null, setDisplayBt
 	}
 
 	let onClickHandler: any = null;
-	if (inheritedClosureFromPopUp)
-		onClickHandler = inheritedClosureFromPopUp(inputVal, setDisplayBtn, setInputVal)
 
 	return (<div>
 			<input value={inputVal} type='text' onChange={inputChangeHandler}/>

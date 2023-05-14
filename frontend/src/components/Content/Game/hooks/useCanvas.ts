@@ -5,7 +5,11 @@ import { Config } from '../interfaces/config';
 export function useCanvas(SCALAR: number, CanvasRef: React.RefObject<HTMLCanvasElement>, CONFIG: Config | null, setDrawingContext: React.Dispatch<React.SetStateAction<CanvasRenderingContext2D | null>>) {
 	useEffect(() => {
 		if (!CanvasRef.current || !CONFIG)
+		{
+			console.log(`Canvas Ref current: ${CanvasRef.current}`);
+			console.log(`Config: ${CONFIG}`);
 			return ;
+		}
 
 		CanvasRef.current.width = CONFIG.WIDTH / SCALAR;
 		CanvasRef.current.height = CONFIG.HEIGHT / SCALAR;

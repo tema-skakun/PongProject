@@ -5,6 +5,8 @@ import './Dropdown.css';
 import axios from "axios";
 import JSCookies from 'js-cookie';
 import { useNavigate } from "react-router-dom";
+import { socket } from "../../../../../App";
+import { gSetShowRejection } from "../../../../../App";
 
 const ParticipantsDropdown = (props: any) => {
 	const navigator = useNavigate();
@@ -53,7 +55,18 @@ const ParticipantsDropdown = (props: any) => {
 	}
 
 	function pongInvite() {
-		navigator('/game');
+		if (!socket)
+			return ;
+
+		console.log('client emits invite');
+		socket.emit('invite', props.userProfile.intra_id, (res: string) => {
+			if (res === 'Fuck off')
+			{
+				gSetShowRejection(true);
+			} else {
+				navigator('/game');
+			}
+		})
 	}
 
 	async function makeAdministrator() {

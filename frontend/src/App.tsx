@@ -2,7 +2,7 @@ import './App.css';
 import Navbar from './components/Navbar/Navbar';
 import Content from './components/Content/Content';
 import JSCookies from 'js-cookie';
-import {useEffect, useRef, useState} from 'react';
+import {createContext, useEffect, useRef, useState} from 'react';
 import {userProps} from './props';
 import {LoginPage} from './components/LoginPage/LoginPage';
 import { Socket } from 'socket.io-client';
@@ -10,9 +10,11 @@ import { io } from 'socket.io-client';
 import { InvitePopUp } from './components/Content/Game/components/InvitePopUp';
 import { RejectionPopup } from './components/Content/Game/components/RejectionPopup';
 import { Config } from './interfaces/config';
+import { winningStates } from './components/Content/Game/Game';
 
 export let socket: Socket<any, any> | null = null;
 
+export let gSetShowRejection: Function = (b: boolean) => {console.log('You fucked up')};
 
 function App(props: any) {
 	const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -21,8 +23,12 @@ function App(props: any) {
     const userdata = useRef<userProps>();
 	const [displayBtn, setDisplayBtn] = useState<boolean>(true);
 	const [CONFIG, setCONFIG] = useState<Config | null>(null);
+	const [showRejection, setShowRejection] = useState<boolean>(false);
+	const winningRef: React.MutableRefObject<winningStates> = useRef(winningStates.undecided);
 
     useEffect(() => {
+		gSetShowRejection = setShowRejection;
+
         const myCookie = JSCookies.get('accessToken');
 
         if (!isLoggedIn && myCookie) {
@@ -66,6 +72,20 @@ function App(props: any) {
         }
     }, [isLoggedIn]);
 
+	useEffect(() => {
+		if (!socket)
+			return ;
+
+		socket.on('handshake', (CONFIG_STR: string) => {
+			// console.log('HANDSHAKE');
+			setCONFIG(JSON.parse(CONFIG_STR))
+		})
+
+		return (
+			() => {if (socket) socket.off('handshake')}
+		)
+	}, [socket]);
+
     if (isLoading) {
         return <div>Loading...</div>;
     }
@@ -73,13 +93,15 @@ function App(props: any) {
     return (
         isLoggedIn ? (
             <div className="App">
-                <Navbar />
+				<InvitePopUp socket={socket}
+							setDisplayBtn={setDisplayBtn} />
+				<RejectionPopup socket={socket} showRejection={showRejection} setShowRejection={setShowRejection}/>
+                <Navbar/>
                 <Content state={props.state} dispatch={props.dispatch} setIsLoggedIn={setIsLoggedIn}
                          userdata={userdata.current}
 						 CONFIG={CONFIG}
-						 setCONFIG={setCONFIG}/>
-                <InvitePopUp socket={socket}/>
-                <RejectionPopup socket={socket}/>
+						 setCONFIG={setCONFIG}
+						 winningRef={winningRef}/>
             </div>
         ) : (
             <div className="App">

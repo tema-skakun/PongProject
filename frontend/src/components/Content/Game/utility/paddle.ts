@@ -1,5 +1,5 @@
 import { Config } from "../interfaces/config"; 
-import { GameState } from "../hooks/useSocket";
+import { GameState } from "../interfaces/gameState";
 
 
 export function paddle(SCALAR: number, CONFIG: Config, drawingContext: CanvasRenderingContext2D, gameState: GameState, paddleNr: number) {

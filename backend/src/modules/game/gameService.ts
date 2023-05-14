@@ -96,35 +96,27 @@ export class GameService {
 				else
 					gState.paddleY2 += CONFIG.PADDLE_SPEED / 60;
 			}
-			
+
+			gState.goalsPlayer1 = player1.goals;
+			gState.goalsPlayer2 = player2.goals;
 	}
 
-	goals(player2: Client): string {
-		// <Destructuring>
-		const gState: GameState = player2.gameState;
-		const dotCoordinate: {x: number, y: any} = gState.dotCoordinate;
-		const x = dotCoordinate.x;
-		const y = dotCoordinate.y;
-		const CONFIG_X = CONFIG.initialState.dotCoordinate.x;
-		const WIDTH = CONFIG.WIDTH;
-		// </Destructuring>
+	goals(player2: Client) {
+		const gState = player2.gameState;
+		const player1 = player2.otherPlayerObj;
+		const dotCoordinate = gState.dotCoordinate;
 
-		if (x < 0)
-		{
-				dotCoordinate.x = CONFIG_X;
-				gState.dotCoordinate.y = spawnY();
+		if (dotCoordinate.x < 0) {
+			player2.incr_goals();
+			dotCoordinate.x = CONFIG.WIDTH / 2;
+			dotCoordinate.y = undefined;
 			gState.velocity = randomVelocity();
-			return ('goal player2');
-		}
-		else if (x > WIDTH)
-		{
-				dotCoordinate.x = CONFIG_X;
-				gState.dotCoordinate.y = spawnY();
+		} else if (dotCoordinate.x > CONFIG.WIDTH) {
+			player1.incr_goals();
+			dotCoordinate.x = CONFIG.WIDTH / 2;
+			dotCoordinate.y = undefined;
 			gState.velocity = randomVelocity();
-			return ('goal player1');
 		}
-	
-		return ('none');
 	}
 
 	keyChange(code: string, player: Client, activate: boolean) {

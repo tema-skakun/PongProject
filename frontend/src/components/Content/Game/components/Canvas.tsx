@@ -13,13 +13,11 @@ import { clear } from "../utility/initalize";
 export type CanvasProps = {
 	gameStateRef: React.MutableRefObject<GameState | null>;
 	CONFIG: Config | null;
-	goalsPlayerOne: React.MutableRefObject<number>;
-	goalsPlayerTwo: React.MutableRefObject<number>;
 	winningRef: React.MutableRefObject<winningStates>;
 	backgroundImg: React.MutableRefObject<HTMLImageElement>;
 }
 
-export const Canvas: React.FC<CanvasProps> = ({gameStateRef, CONFIG, goalsPlayerOne, goalsPlayerTwo, winningRef, backgroundImg}: CanvasProps) => {
+export const Canvas: React.FC<CanvasProps> = ({gameStateRef, CONFIG, winningRef, backgroundImg}: CanvasProps) => {
 
 	const CanvasRef: React.RefObject<HTMLCanvasElement> = useRef<HTMLCanvasElement>(null);
 	const [drawingContext, setDrawingContext] = useState<CanvasRenderingContext2D | null>(null)
@@ -67,14 +65,14 @@ export const Canvas: React.FC<CanvasProps> = ({gameStateRef, CONFIG, goalsPlayer
 			paddle(SCALAR, CONFIG, drawingContext, gameStateRef.current, 2);
 			Numbers({
 				drawingContext: drawingContext,
-				num: goalsPlayerOne.current.toString(),
+				num: (gameStateRef.current.goalsPlayer1) ? gameStateRef.current.goalsPlayer1.toString() : '0' ,
 				x: (CONFIG.WIDTH / 4) / SCALAR,
 				y: (CONFIG.PADDING + 20) / SCALAR,
 				font: `${40 / SCALAR}px Arial`
 			})
 			Numbers({
 				drawingContext: drawingContext,
-				num: goalsPlayerTwo.current.toString(),
+				num: (gameStateRef.current.goalsPlayer2) ? gameStateRef.current.goalsPlayer2.toString() : '0' ,
 				x: ((CONFIG.WIDTH / 4) * 3) / SCALAR,
 				y: (CONFIG.PADDING + 20) / SCALAR,
 				font: `${40 / SCALAR}px Arial`
@@ -99,7 +97,7 @@ export const Canvas: React.FC<CanvasProps> = ({gameStateRef, CONFIG, goalsPlayer
 				setTimeout(() => clear(SCALAR, CONFIG, drawingContext), 4000);
 			}
 		}
-	}, [drawingContext, CONFIG, SCALAR, backgroundImg, gameStateRef, goalsPlayerTwo, goalsPlayerOne, winningRef])
+	}, [drawingContext, CONFIG, SCALAR, backgroundImg, gameStateRef, winningRef])
 	
 	// <Means for animation>
 	const LoopCallback = useCallback(() => {

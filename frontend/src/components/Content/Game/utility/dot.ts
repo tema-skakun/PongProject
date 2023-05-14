@@ -1,5 +1,5 @@
 import { Config } from "../interfaces/config"; 
-import { GameState } from "../hooks/useSocket";
+import { GameState } from "../interfaces/gameState";
 
 
 export function dot(SCALAR: number, CONFIG: Config, drawingContext: CanvasRenderingContext2D, gameState: GameState) {

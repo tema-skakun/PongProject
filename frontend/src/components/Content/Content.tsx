@@ -10,12 +10,12 @@ const Content = (props: any) => {
     return (
         <div className={style.content}>
             <Routes>
-                <Route path='/profile' element={<ProfileContainer/>}/>
+                <Route path='/profile' element={<ProfileContainer />}/>
                 <Route path='/chat' element={<Chat
                         dispatch={ props.dispatch }
 						userdata={ props.userdata }
                     />}/>
-                <Route path='/game' element={<Game CONFIG={props.CONFIG} setCONFIG={props.setCONFIG}/>}/>
+                <Route path='/game' element={<Game winningRef={props.winningRef} CONFIG={props.CONFIG} setCONFIG={props.setCONFIG}/>}/>
 				<Route path='/meme' element={<MemeOverlay memeUrl='/pug-dance.gif' showMeme={true} />}/>
             </Routes>
         </div>

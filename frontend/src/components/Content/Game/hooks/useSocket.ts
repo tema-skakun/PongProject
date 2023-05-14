@@ -1,15 +1,7 @@
 // import { useState } from 'react';
 import { useEffect } from 'react';
 import { Socket } from 'socket.io-client';
-
-export interface GameState {
-	dotCoordinate : {
-		x: number;
-		y: number;
-	};
-	paddleY: number;
-	paddleY2: number;
-}
+import { GameState } from '../interfaces/gameState';
 
 type SocketCallback = (passed: string) => void;
 

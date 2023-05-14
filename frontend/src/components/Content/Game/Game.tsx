@@ -1,5 +1,5 @@
 import { Config } from './interfaces/config';
-import { GameState } from './hooks/useSocket';
+import { GameState } from './interfaces/gameState';
 
 import { useRef, useState, useCallback, useEffect} from 'react';
 
@@ -30,7 +30,7 @@ export enum winningStates {
 }
 
 
-function Game({CONFIG, setCONFIG}: {CONFIG: Config, setCONFIG: Function}) {
+function Game({CONFIG, setCONFIG, winningRef}: {CONFIG: Config, setCONFIG: Function, winningRef: React.MutableRefObject<winningStates>}) {
 	// <Means for displaying>
 	const backgroundImg: React.MutableRefObject<HTMLImageElement> = useRef((() => {
 		const img = new Image();
@@ -38,9 +38,6 @@ function Game({CONFIG, setCONFIG}: {CONFIG: Config, setCONFIG: Function}) {
 		return img;
 	})());
 	const gameStateRef: React.MutableRefObject<GameState | null> = useRef(null)
-	
-	const goalsPlayerOne: React.MutableRefObject<number> = useRef(0)
-	const goalsPlayerTwo: React.MutableRefObject<number> = useRef(0)
 
 	const [showMe, setShowMe] = useState<boolean>(false);
 	const memeUrl = useRef<string>('/pug-dance.gif');
@@ -50,8 +47,6 @@ function Game({CONFIG, setCONFIG}: {CONFIG: Config, setCONFIG: Function}) {
 	const [displayBtn, setDisplayBtn] = useState<boolean>(true);
 	const [displayPopUp, setDisplayPopUp] = useState<boolean>(false);
 	// </Stateful>
-	const winningRef: React.MutableRefObject<winningStates> = useRef(winningStates.undecided);
-	const [invitedBy, setInvitedBy] = useState<[string, (res: string) => void]>(['nobody', (res: string) => {console.log('You fucked up')}]);
 
 	useEffect(() => {
 		axios.get(`http://${process.env.REACT_APP_IP_BACKEND}:6969/preGame/${socket?.id}`, {
@@ -105,13 +100,11 @@ function Game({CONFIG, setCONFIG}: {CONFIG: Config, setCONFIG: Function}) {
 	useSocketRecieve(socket,
 		displayMeme,
 		winningRef,
-		goalsPlayerOne,
-		goalsPlayerTwo,
 		gameStateRef,
 		setDisplayBtn,
 		setCONFIG,
 		toggleDisplayPupUp,
-		setInvitedBy);
+		displayBtn);
 
 	useSocketEmission(socket);
 	
@@ -129,7 +122,7 @@ function Game({CONFIG, setCONFIG}: {CONFIG: Config, setCONFIG: Function}) {
 	else {
 		return (<div className='canvas-container'>
 					<div className='canvas-wrapper'>
-						<Canvas gameStateRef={gameStateRef} CONFIG={CONFIG} goalsPlayerOne={goalsPlayerOne} goalsPlayerTwo={goalsPlayerTwo} winningRef={winningRef} backgroundImg={backgroundImg} />
+						<Canvas gameStateRef={gameStateRef} CONFIG={CONFIG} winningRef={winningRef} backgroundImg={backgroundImg} />
 						<MemeOverlay showMeme={showMe} memeUrl={memeUrl.current}/>
 					</div>
 				</div>)

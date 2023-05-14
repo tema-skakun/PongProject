@@ -5,4 +5,7 @@ export interface GameState {
 	};
 	paddleY: number;
 	paddleY2: number;
+
+	goalsPlayer1: number;
+	goalsPlayer2: number;
 }

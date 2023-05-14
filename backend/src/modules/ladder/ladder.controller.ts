@@ -20,11 +20,9 @@ export class LadderController {
 		}
 
 		const index: number = winsToLosses.indexOf(myWinToLoss);
-		console.log(winsToLosses.length);
-		console.log(index);
-		console.log(index / winsToLosses.length);
+		const myRank: number = (100 / (winsToLosses.length - 1)) * index;
 
-		return (index / winsToLosses.length) * 100;
+		return myRank;
 	}
 
 	@Get('winsToLossesAll')

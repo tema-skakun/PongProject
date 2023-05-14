@@ -3,7 +3,6 @@ import { Socket } from "socket.io-client";
 import { archivements, winningStates } from "../Game";
 import { GameState } from "../interfaces/gameState";
 import { useEffect } from "react";
-import { timeLog } from "console";
 
 export function useSocketRecieve(socket: Socket<any, any> | null,
 	displayMeme: (a: archivements) => void,
@@ -62,9 +61,6 @@ export function useSocketRecieve(socket: Socket<any, any> | null,
 					}, 3000);
 					break;
 				case 'gameState':
-					console.timeLog();
-					console.timeEnd();
-					console.time();
 					if (displayBtn)
 						setDisplayBtn(false);
 					gameStateRef.current = JSON.parse(args[0] as string);

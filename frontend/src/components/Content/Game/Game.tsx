@@ -48,18 +48,6 @@ function Game({CONFIG, setCONFIG, winningRef}: {CONFIG: Config, setCONFIG: Funct
 	const [displayPopUp, setDisplayPopUp] = useState<boolean>(false);
 	// </Stateful>
 
-	useEffect(() => {
-		axios.get(`http://${process.env.REACT_APP_IP_BACKEND}:6969/preGame/${socket?.id}`, {
-			headers: {
-				'Content-Type': 'application/json',
-				'Authorization': `Bearer ${JSCookies.get('accessToken')}`,
-			}
-		})
-		.then((res: AxiosResponse<any, any>) => {
-			setDisplayBtn(!res.data);
-		})
-	}, [])
-
 	const toggleDisplayPupUp = useCallback(() => {
 		setDisplayPopUp(!displayPopUp);
 	}, [setDisplayPopUp, displayPopUp]);
@@ -84,8 +72,12 @@ function Game({CONFIG, setCONFIG, winningRef}: {CONFIG: Config, setCONFIG: Funct
 		// if (newSocketConn)
 		// 	setSocket(newSocketConn);
 		if (socket)
+		{
+			console.log('Emits the join once more');
 			socket.emit('join', JSON.stringify({}));
+		}
 
+		setDisplayBtn(false);
 		event.preventDefault();
 
 		return (() => {

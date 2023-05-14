@@ -3,6 +3,7 @@ import { Socket } from "socket.io-client";
 import { archivements, winningStates } from "../Game";
 import { GameState } from "../interfaces/gameState";
 import { useEffect } from "react";
+import { timeLog } from "console";
 
 export function useSocketRecieve(socket: Socket<any, any> | null,
 	displayMeme: (a: archivements) => void,
@@ -38,9 +39,7 @@ export function useSocketRecieve(socket: Socket<any, any> | null,
 					}
 				case 'winner':
 					winningRef.current = winningStates.won;
-					console.log('winner started');
 					setTimeout(() => {
-						console.log('winner ended');
 						gameStateRef.current = null;
 						setDisplayBtn(true);
 						winningRef.current = winningStates.undecided;
@@ -48,9 +47,7 @@ export function useSocketRecieve(socket: Socket<any, any> | null,
 					break;
 				case 'looser':
 					winningRef.current = winningStates.lost;
-					console.log('winner ended');
 					setTimeout(() => {
-						console.log('winner ended');
 						gameStateRef.current = null;
 						setDisplayBtn(true);
 						winningRef.current = winningStates.undecided;
@@ -65,9 +62,11 @@ export function useSocketRecieve(socket: Socket<any, any> | null,
 					}, 3000);
 					break;
 				case 'gameState':
+					console.timeLog();
+					console.timeEnd();
+					console.time();
 					if (displayBtn)
 						setDisplayBtn(false);
-					console.log('GAMESTATE');
 					gameStateRef.current = JSON.parse(args[0] as string);
 					break;
 				case 'playerDisconnect':

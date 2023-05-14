@@ -15,6 +15,9 @@ type EventFunction = (...args: any[]) => void;
 type EventFunctionXClient = (player: Client) => EventFunction;
 
 async function updateMatchHistory(winner: Client, looser: Client, userService: UserService, matchHistoryService: MatchHistoryService) {
+	const stashedWinnerGoals = winner.goals;
+	const stashedLooserGoals = looser.goals;
+
 	const looserEntity: User = await userService.findUserByIdAndGetRelated(looser.intraId, ['wonGames', 'lostGames']);
 	const winnerEntity: User = await userService.findUserByIdAndGetRelated(winner.intraId, ['wonGames', 'lostGames']);
 
@@ -22,9 +25,9 @@ async function updateMatchHistory(winner: Client, looser: Client, userService: U
 
 	const matchHistoryEntry: MatchHistoryEntry = await matchHistoryService.create({
 		winner: winnerEntity,
-		winnerGoals: winner.goals,
+		winnerGoals: stashedWinnerGoals,
 		looser: looserEntity,
-		looserGoals: looser.goals
+		looserGoals: stashedLooserGoals
 	})
 
 	// console.log(`total losses before: ${looserEntity.lostGames}`)
@@ -128,8 +131,11 @@ export class Client extends Socket {
 	reactivateListeners() {
 		for (const listener of this._listenersToBeReactivated)
 		{
-			console.log(`Reactivates: ${listener.name}`)
-			this.on(listener.name, listener.func);
+			if (this.listenerCount(listener.name) === 0)
+			{
+				console.log(`Reactivates: ${listener.name}`)
+				this.on(listener.name, listener.func);
+			}
 		}
 	}
 	addReactivator(name: string, func: EventFunction) {
@@ -231,7 +237,7 @@ export class Client extends Socket {
 			this.emit('winner');
 			other.emit('looser');
 
-			await updateMatchHistory(this, other, this.userService, this.matchHistoryService);
+			updateMatchHistory(this, other, this.userService, this.matchHistoryService);
 
 			this.cancelGame();
 		}

@@ -14,6 +14,7 @@ export class MessageController {
 	}
 	
 	@Get('all')
+	@UseGuards(JwtTwoFactorGuard)
 	async getAllMess() {
 		return await this.messageservice.getAll();
 	}

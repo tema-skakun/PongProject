@@ -21,15 +21,27 @@ export class FriendsController {
 
 	@Delete('/:id')
 	@UseGuards(JwtTwoFactorGuard)
-	async deleteFriend(@Param('id') id: number, @Req() req: any): Promise<boolean> {
-		return await this.friendsService.deleteFriend(req.user.intra_id, id);
+	async deleteFriend(@Param('id') id: string, @Req() req: any): Promise<boolean> {
+		let chosenId: number = req.user.intra_id;
+
+		if (id && !isNaN(Number(id))) {
+			chosenId = Number(id);
+		}
+
+		return await this.friendsService.deleteFriend(req.user.intra_id, chosenId);
 	}
 
 
 	@Post('/:id')
 	@UseGuards(JwtTwoFactorGuard)
-	async addFriend(@Param('id') id: number, @Req() req: any): Promise<User> {
-		return await this.friendsService.addFriend(req.user.intra_id , id);
+	async addFriend(@Param('id') id: string, @Req() req: any): Promise<User> {
+		let chosenId: number = req.user.intra_id;
+
+		if (id && !isNaN(Number(id))) {
+			chosenId = Number(id);
+		}
+
+		return await this.friendsService.addFriend(req.user.intra_id , chosenId);
 	}
 
 	@Get('/displayable/:id?')

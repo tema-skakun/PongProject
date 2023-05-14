@@ -1,6 +1,7 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, Req, UseGuards } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { LadderService } from './ladder.service';
+import JwtTwoFactorGuard from 'src/GuardStrategies/Jwt2F.guard';
 
 @Controller('ladder')
 export class LadderController {
@@ -10,10 +11,17 @@ export class LadderController {
 	) {}
 
 	@Get('/percentile/:id')
-	async percentile(@Param('id') intraId: number): Promise<string | number> // if string then not ranked yet
+	@UseGuards(JwtTwoFactorGuard)
+	async percentile(@Param('id') intraId: string, @Req() req: any): Promise<string | number> // if string then not ranked yet
 	{
+		let chosenId: number = req.user.intra_id;
+
+		if (intraId && !isNaN(Number(intraId))) {
+			chosenId = Number(intraId);
+		}
+
 		const winsToLosses: number [] = await this.usrService.getWinsToLossesArray();
-		const myWinToLoss: number | string = await this.usrService.getWinsToLossesRatio(intraId);
+		const myWinToLoss: number | string = await this.usrService.getWinsToLossesRatio(chosenId);
 		if (typeof myWinToLoss === 'string')
 		{
 			return "not ranked yet";
@@ -26,15 +34,23 @@ export class LadderController {
 	}
 
 	@Get('winsToLossesAll')
+	@UseGuards(JwtTwoFactorGuard)
 	async winsToLossesAll()
 	{
 		return this.usrService.getWinsToLossesArray(); 
 	}
 
 	@Get('/:id')
-	async winsToLosses(@Param('id') intraId: number): Promise<number | string> // if string then not ranked yet
+	@UseGuards(JwtTwoFactorGuard)
+	async winsToLosses(@Param('id') intraId: string, @Req() req: any): Promise<number | string> // if string then not ranked yet
 	{
-		return this.usrService.getWinsToLossesRatio(intraId);
+		let chosenId: number = req.user.intra_id;
+
+		if (intraId && !isNaN(Number(intraId))) {
+			chosenId = Number(intraId);
+		}
+
+		return this.usrService.getWinsToLossesRatio(chosenId);
 	}
 
 }

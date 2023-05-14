@@ -1,8 +1,11 @@
 .profile {
     display: grid;
     grid-template-rows: 1fr;
-    grid-template-columns: 1fr 2fr 1fr;
+    grid-template-columns: 0.8fr 2.5fr 1.2fr;
     padding: 20px;
+    height: 100%;
+    background-color: #a9d2c4;
+
 }
 
 .profile img {
@@ -14,7 +17,9 @@
 }
 
 .user {
+    position: fixed;
     grid-column: 1;
+    padding: 20px;
 }
 
 .stat {

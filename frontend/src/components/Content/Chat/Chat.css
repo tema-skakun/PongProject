@@ -1,7 +1,8 @@
 .chat{
-	height: 90vh;
+	/*height: 90vh;*/
 	display: flex;
-	background-color: white;
+	height: 100%;
+	background-color: #b5e3d3;
 }
 
 .chatMenu{
@@ -24,7 +25,7 @@
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
-	position: relative;
+	/*position: relative;*/
 }
 
 .chatBoxTop {
@@ -54,6 +55,7 @@
 	cursor: pointer;
 	background-color: teal;
 	color: white;
+
   }
 
 .chatParticipants {
@@ -71,9 +73,9 @@
 }
 
 .noConversationText {
-	position: relative;
+	/*position: relative;*/
 	top: 10%;
 	font-size: 50px;
-	color: rgb(224, 220, 220);
+	color: rgb(79, 75, 75);
 	cursor: default;
 }

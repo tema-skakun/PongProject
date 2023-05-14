@@ -134,7 +134,11 @@ const Chat = (props: any) => {
 					</div>
 						{channels.map((c: any) => (
 							<div key={c.id} onClick={() => setCurrentChannel(c)}>
-								<Conversation currentChannel={currentChannel} channel={c} currentUser={props.userdata} socket={socket.current}/>
+								<Conversation currentChannel={currentChannel}
+											  channel={c}
+											  currentUser={props.userdata}
+											  socket={socket.current}
+								/>
 							</div>
 						))}
 				</div>

@@ -31,7 +31,7 @@ export class MatchHistoryController {
 			}
 			return matchHistroyTransformed;
 		} catch (err: any) {
-			throw  new HttpException('internal Server errrrrror', HttpStatus.INTERNAL_SERVER_ERROR);
+			throw  new HttpException('Intra id does not exist', HttpStatus.FOUND);
 		}
 	}
 }

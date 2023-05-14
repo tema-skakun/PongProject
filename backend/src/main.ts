@@ -5,10 +5,6 @@ import * as cookieParser from 'cookie-parser';
 import { Server } from 'socket.io';
 import * as cors from 'cors';
 
-// if (!process.env.FRONTEND_URL) {
-// 	  throw new Error('FRONTEND_URL is not set in .env file');
-// }
-
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { cors: true});
   app.useGlobalPipes(new ValidationPipe({
@@ -16,10 +12,6 @@ async function bootstrap() {
   }
   ));
   app.use(cookieParser());
- //  app.enableCors({
-	// origin: process.env.FRONTEND_URL,
-	// credentials: true,
- //  });
 
 app.use(cors((req, callback) => {
 	// Replace this with your own logic to validate the request's origin.

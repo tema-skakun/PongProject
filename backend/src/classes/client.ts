@@ -96,7 +96,7 @@ export class Client extends Socket {
 	}
 	get involvedGame(): string {
 		if (!this._involvedGame)
-			Error('involved Game is undefined at access');
+			console.warn('involved Game is undefined at access');
 		return this._involvedGame;
 	}
 
@@ -110,7 +110,9 @@ export class Client extends Socket {
 	}
 	get otherPlayerObj(): Client {
 		if (!this._otherPlayerObj)
-			Error('Other player obj is undefined');
+		{
+			console.warn('Other player obj is undefined');
+		}
 		return this._otherPlayerObj;
 	}
 
@@ -145,27 +147,13 @@ export class Client extends Socket {
 		this._listenersToBeReactivated.push({name: name, func: func});
 	}
 
-	// set cleanupHandlers(newCleanup: EventFunction) {
-	// 	this._cleanupHandlers.push(newCleanup);
-	// 	if (this._otherPlayerObj)
-	// 		this._otherPlayerObj._cleanupHandlers.push(newCleanup);
-	// 	else
-	// 		throw Error('Other player attribute not set');
-	// }
-	// cleanUpListeners() {
-	// 	for (const listener of this._cleanupHandlers)
-	// 	{
-	// 		this.offAny(listener);
-	// 	}
-	// }
-
 	private _gameState: GameState;
 	set gameState(gs: GameState) {
 		this._gameState = gs;
 		if (this._otherPlayerObj)
 			this._otherPlayerObj._gameState = gs;
 		else
-			throw Error('Other player attribute not set');
+			console.warn('Other player attribute not set');
 	}
 	get gameState(): GameState {
 		return this._gameState;
@@ -178,7 +166,9 @@ export class Client extends Socket {
 		if (this._otherPlayerObj)
 			this._otherPlayerObj._gameLoop = gl;
 		else
-			throw Error('Other player attribute not set');
+		{
+			console.warn('Other player attribute not set');
+		}
 	}
 	get gameLoop(): NodeJS.Timer | undefined {
 		return this._gameLoop;
@@ -272,7 +262,9 @@ export class Client extends Socket {
 		// <Destructuring>
 		const other: Client = this._otherPlayerObj;
 		if (!other)
-			throw Error('other player not in here');
+		{
+			console.warn('other player not in here');
+		}
 
 		const myEventFunction: EventFunction = eventFunctionXClient(this);
 		const otherEventFunction: EventFunction = eventFunctionXClient(other);
@@ -290,7 +282,7 @@ export class Client extends Socket {
 	coupledEmits(eventName: string, data: string) {
 		this.emit(eventName, data);
 		if (!this._otherPlayerObj)
-			throw Error('no other player on emission');
+			console.warn('no other player on emission')
 		else
 			this._otherPlayerObj.emit(eventName, data);
 	}
@@ -350,7 +342,9 @@ export class Client extends Socket {
 		const jwtToken: string = cookieStr.slice(searchStr.length + 1);
 		const cookieContent: string | Record<string, any> = decrypthMethod.bind(decryptObj)(jwtToken);
 		if (typeof cookieContent === 'string')
-			throw Error('incomplete cookie');
+		{
+			console.warn('incomplete cookie');
+		}
 		
 		this.cookie = cookieContent;
 		console.log(this._intraId)

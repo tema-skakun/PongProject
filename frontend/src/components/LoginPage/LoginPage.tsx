@@ -47,7 +47,6 @@ export const LoginPage = (props: twofprops, props2: blockProps) => {
 			// return response.json();
 		} else {
 			// handle error response
-			console.log('response not ok');
 			throw new Error('Failed to authenticate2f');
 		}
 		})

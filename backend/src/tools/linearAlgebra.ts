@@ -1,6 +1,5 @@
 ;import CONFIG from "../constants/constants";
 import * as math from "mathjs";
-import { ArgumentOutOfRangeError } from "rxjs";
 
 function increaseMagnitudeMatrix(vector: math.Matrix, p: number): math.Matrix {
 	// Calculate the current magnitude of the vector
@@ -95,7 +94,7 @@ function getDeflectionMatrix(hitPoint: number, velocity: math.Matrix): math.Matr
 		}
 
 		if (!newVelocity)
-			throw Error;
+			console.warn(`deflection failed`);
 		
 		newVelocity = increaseMagnitudeMatrix(newVelocity, (1 / CONFIG.BUMPS_TILL_MAX_SPEED));
 
@@ -109,41 +108,19 @@ interface DeflectionParameters {
 	paddle?: {hitPoint: number, paddleNr: number};
 }
 
-// export function deflection({velocity, paddle}: DeflectionParameters): math.Matrix {
-
-// 	let newVelocity: math.Matrix = undefined;
-
-// 	if (paddle)
-// 	{
-// 		const deflectionMatrix: math.Matrix = getDeflectionMatrix(paddle.hitPoint, velocity);
-// 		newVelocity = math.multiply(deflectionMatrix, velocity); 
-		 
-		
-// 		if (paddle.paddleNr == 1 && velocity.get([0, 0]) > 0)
-// 			return (math.multiply(identityMatrix, velocity));
-// 		if (paddle.paddleNr == 2 && velocity.get([0, 0]) < 0)
-// 			return (math.multiply(identityMatrix, velocity));
-// 	}
-// 	else
-// 	{
-// 		newVelocity = math.multiply(deflectionMatrixBorder, velocity);
-// 	}
-
-// 	if (!newVelocity)
-// 		throw Error;
-
-// 	return (newVelocity);
-// }
-
 export function getHitPoint(box1: math.Matrix, box2: math.Matrix): number {
 	const dimensions: number [] = box1.size();
 	const dimensions2: number [] = box2.size();
 
 	if (dimensions[1] !== 2 || dimensions2[1] !== 2) // not 'boxes'
-		throw ArgumentOutOfRangeError;
+	{
+		console.warn('Argument out of range')
+	}
 
 	if (dimensions[0] !== dimensions2[0] || dimensions[0] < 2) // 'boxes' of different dimenstions or not 2d boxes
-		throw ArgumentOutOfRangeError;
+	{
+		console.warn('Argument out of range')
+	}
 	
 	for (let i = 0; i < dimensions[0]; ++i)
 	{

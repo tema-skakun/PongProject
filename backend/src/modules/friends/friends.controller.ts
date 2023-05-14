@@ -32,20 +32,16 @@ export class FriendsController {
 		return await this.friendsService.addFriend(req.user.intra_id , id);
 	}
 
-	@Get('/displayable/:id')
-	// @UseGuards(JwtTwoFactorGuard)
-	async getDisplayables(@Param('id') id: number): Promise<FriendDto []> {
-		const friendsEntity: User [] = await this.friendsService.getFriends(id);
-
-		const friendsDto: FriendDto [] = await Promise.all(friendsEntity.map(async friend => {
-			return await this.friendsService.entityToDisplayable(friend);
-		}))
-		return (friendsDto);
-	}
-	@Get('/displayable')
+	@Get('/displayable/:id?')
 	@UseGuards(JwtTwoFactorGuard)
-	async getDisplayablesAll(@Req() req: any): Promise<FriendDto []> {
-		const friendsEntity: User [] = await this.friendsService.getFriends(req.user.intra_id);
+	async getDisplayablesAll(@Req() req: any, @Param('id') id?: string): Promise<FriendDto []> {
+		let chosenId: number = req.user.intra_id;
+
+		if (id && !isNaN(Number(id))) {
+			chosenId = Number(id);
+		}
+
+		const friendsEntity: User [] = await this.friendsService.getFriends(chosenId);
 		if (friendsEntity.length === 0)
 			return [];
 		const friendsDto: FriendDto [] = await Promise.all(friendsEntity.map(async friend => {

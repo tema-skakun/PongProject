@@ -12,16 +12,17 @@ export class MatchHistoryController {
 		private matchHistoryService: MatchHistoryService
 	) {}
 
-	@Get('test')
-	giveTest() {
-		return 'hhhhheeey';
-	}
-
-	@Get('/')
+	@Get('/:id?')
 	@UseGuards(JwtTwoFactorGuard)
-	async completeMatchHistory(@Req() req: any): Promise<MatchHistoryTransformed []> {
+	async completeMatchHistory(@Req() req: any, @Param('id') id?: string): Promise<MatchHistoryTransformed []> {
+		let chosenId: number = req.user.intra_id;
+
+		if (id && !isNaN(Number(id))) {
+			chosenId = Number(id);
+		}
+		
 		try {
-			const matchHistory = await this.matchHistoryService.get(req.user.intra_id);
+			const matchHistory = await this.matchHistoryService.get(chosenId);
 
 			const matchHistroyTransformed: MatchHistoryTransformed [] = [];
 			for (const historyEntry of matchHistory)

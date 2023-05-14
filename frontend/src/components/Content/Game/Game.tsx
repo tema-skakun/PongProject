@@ -108,7 +108,6 @@ function Game({CONFIG, setCONFIG, winningRef}: {CONFIG: Config, setCONFIG: Funct
 								<QueueButton handler={queueBtnHandler}/>
 							</div>
 						</form>
-						<InviteForm setDisplayBtn={setDisplayBtn} socket={socket}/>
 					</div>
 	}
 	else {

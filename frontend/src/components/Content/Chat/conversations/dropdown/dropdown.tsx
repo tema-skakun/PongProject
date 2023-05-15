@@ -2,10 +2,13 @@ import { Dropdown, Modal } from "react-bootstrap";
 import { BsGearFill } from "react-icons/bs";
 import InviteButton from "../invitebutton/invitebutton";
 import { useState } from "react";
+import { channel } from "diagnostics_channel";
+import Changepassword from "../changepassword/changepassword";
 
 
 const ConversationDropdown = (props: any) => {
 	const [modalOpen, setModalOpen] = useState(false)
+	const [passModal, setPassModal] = useState(false)
 
 	function Leave() {
 		const channel = {
@@ -17,16 +20,12 @@ const ConversationDropdown = (props: any) => {
 		});
 	}
 
-	function BlockUser() {
-
-	}
-
-	function unblockUser() {
-
-	}
-
 	function closeModal() {
 		setModalOpen(modalOpen ? false : true)
+	}
+
+	function closePass() {
+		setPassModal(passModal ? false : true)
 	}
 
 	return (
@@ -38,9 +37,13 @@ const ConversationDropdown = (props: any) => {
 		<Dropdown.Menu>
 			<Dropdown.Item onClick={Leave}>Leave</Dropdown.Item>
 			<Dropdown.Item onClick={closeModal}>Invite</Dropdown.Item>
+			<Dropdown.Item onClick={closePass}>Change password</Dropdown.Item>
 		</Dropdown.Menu>
 		<Modal show={modalOpen} onHide={closeModal} backdrop="static" keyboard={false}>
-			<InviteButton socket={props.socket.current} closeModal={closeModal} />
+			<InviteButton socket={props.socket.current} closeModal={closeModal} channel={props.channel}/>
+		</Modal>
+		<Modal show={passModal} onHide={closePass} backdrop="static" keyboard={false}>
+			<Changepassword socket={props.socket.current} closePass={closePass} channel={props.channel}/>
 		</Modal>
 		</Dropdown>
   	);

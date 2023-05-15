@@ -133,8 +133,9 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 			if (channel.name.length === 0 || (channel.type !== 'private' && channel.type !== 'public' && channel.type !== 'protected'))
 				throw new ForbiddenException('you did something wrong');
 			let password = channel.password;
-			if(password.length !== 0)
+			if(password.length !== 0) {
       			password = encodePassword(password);
+			}
 			const newChannel = {
 				name: channel.name,
 				isDM: false,

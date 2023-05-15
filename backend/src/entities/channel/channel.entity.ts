@@ -29,7 +29,8 @@ export class Channel {
 	@JoinTable()
 	administrators?: User[];
 
-	@ManyToOne(() => User)
+	@ManyToMany(() => User, user => user.invitedToChannels)
+	@JoinTable()
   	invited?: User[];
 
 	@ManyToMany(() => User, user=> user.bannedFromChannels)

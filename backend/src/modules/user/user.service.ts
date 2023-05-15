@@ -26,7 +26,7 @@ export class UserService {
 			},
 			relations: ['blockedUsers'],
 		});
-		const notBannedUsers: User[] = [];
+		const notBlockedUsers: User[] = [];
 		for (const user of allUsers) {
 			if (user.intra_id === intra_id) {
 				continue;
@@ -37,9 +37,9 @@ export class UserService {
 			if (user.blockedUsers.some((blockedUser) => blockedUser.intra_id === intra_id)) {
 			continue;
 			}
-			notBannedUsers.push(user);
+			notBlockedUsers.push(user);
 		}
-		return notBannedUsers;
+		return notBlockedUsers;
 	}
 
 	async isBlocked(intra_id: number, userIdToCheck: number) {

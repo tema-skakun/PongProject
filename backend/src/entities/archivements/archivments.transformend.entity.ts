@@ -11,6 +11,7 @@ export class ArchivementsTransformed {
 	@Expose()
 	id: number;
 
+	@Expose()
 	@Transform(({value}) => ObjectPruning(UserTransformed, value))
 	holder: UserTransformed;
 

@@ -6,43 +6,48 @@ import axios from 'axios';
 import JSCookies from 'js-cookie';
  
 
-export default function InviteButton({ closeModal, socket }: {closeModal: any, socket: any}) {
+export default function InviteButton({ closeModal, socket, channel }: {closeModal: any, socket: any, channel: any}) {
 	const [selectedContactIds, setSelectedContactIds] = useState<any>([]);
 	const [users, setUsers] = useState<any>([]);
 
-	// useEffect(() =>{
-	// 	const getUsers = async ()=>{
-	// 		try {
-	// 			const res = await axios.get(`http://${process.env.REACT_APP_IP_BACKEND}:6969/users/notBlockedUsers`, {
-	// 				headers: {
-	// 					'Content-Type': 'application/json',
-	// 					'Authorization': `Bearer ${JSCookies.get('accessToken')}`,
-	// 				}
-	// 			})
-	// 			setUsers(res.data);
-	// 		} catch(err) {
-	// 			console.log(err);
-	// 		}
-	// 	}
-	// 	getUsers();
-	// }, [])
+	useEffect(() =>{
+		const getUsers = async ()=>{
+			try {
+				const res = await axios.get(`http://${process.env.REACT_APP_IP_BACKEND}:6969/chat/usersToInvite/` + channel.id, {
+					headers: {
+						'Content-Type': 'application/json',
+						'Authorization': `Bearer ${JSCookies.get('accessToken')}`,
+					},
+				})
+				setUsers(res.data);
+			} catch(err: any) {
+				closeModal();
+				alert(err.response.data.error)
+			}
+		}
+		getUsers();
+	}, [])
 
 	async function handleSubmit(e: any) {
 		e.preventDefault();
-		// if () {
-		// 	alert('Please fill out all fields');
-		// 	return;
-		// }
-		// const invite = {
-		// 	usersId: selectedContactIds,
-		// }
-		// socket.emit('inviteToChannel', invite, (callback: any) => {
-		// 	if (callback) {
-		// 		alert(callback);
-		// 		return;
-		// 	}
-		// });
-		setSelectedContactIds([]);
+		if (!selectedContactIds.length) {
+			alert('Please chose user');
+			return;
+		}
+		const invite = {
+			receiverId: selectedContactIds[0],
+		}
+		console.log('chosen user: ' + selectedContactIds[0]);
+		try {
+			const res = await axios.post(`http://${process.env.REACT_APP_IP_BACKEND}:6969/chat/invite/` + channel.id, invite, {
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': `Bearer ${JSCookies.get('accessToken')}`,
+				},
+			})
+		} catch(err: any) {
+			alert(err.response.data.error)
+		}
 		closeModal();
 	}
 

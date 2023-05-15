@@ -6,7 +6,7 @@ import { ChannelService } from "./channel.service";
 import { encodePassword } from "src/tools/bcrypt";
 import { comparePassword } from 'src/tools/bcrypt';
 import { ExceptionsHandler } from "@nestjs/core/exceptions/exceptions-handler";
-import { ObjectPruningMany } from "src/tools/objectPruning";
+import { ObjectPruning, ObjectPruningMany } from "src/tools/objectPruning";
 import { ChannelTransformed } from "src/entities/channel/channel.transformed";
 import { UserTransformed } from "src/entities/user/user.transformed";
 
@@ -20,6 +20,61 @@ export class ChannelController {
 	@Get('all')
 	async getUsers() {
 		return ObjectPruningMany(ChannelTransformed, await this.channelservice.getChannels());
+	}
+
+	@Get('usersToInvite/:channelId')
+	@UseGuards(JwtTwoFactorGuard)
+	async getUsersToInvite(
+		@Req() req: any,
+		@Res() res: any,
+	) {
+		try {
+			const users = await this.userservice.getnotBlockedUsers(req.user.intra_id);
+			const inviteUsers = await this.channelservice.usersToInvite(users, req.params.channelId);
+			res.status(200).json(inviteUsers);
+		}catch(err) {
+			console.log('error: ' + err);
+			res.status(400).json({ error: err.message });
+		}
+	}
+
+	@Post('invite/:channelId')
+	@UseGuards(JwtTwoFactorGuard)
+	async sendInvite(
+		@Req() req: any,
+		@Res() res: any,
+	) {
+		try {
+			const user = await this.userservice.findUsersById(req.body.receiverId);
+			if (!user) {
+				throw new Error('User doesnt exist');
+			}
+			console.log('user received: ' + user.intra_id)
+			await this.channelservice.inviteUserToChannel(req.params.channelId, user);
+			res.status(200).json();
+		}catch(err) {
+			console.log('error: ' + err);
+			res.status(400).json({ error: err.message });
+		}
+	}
+
+	@Post('changePassword/:channelId')
+	@UseGuards(JwtTwoFactorGuard)
+	async changePassword(
+		@Req() req: any,
+		@Res() res: any,
+	) {
+		try {
+			const isOwner = await this.channelservice.isOwner(req.user.intra_id, req.params.channelId);
+			if (!isOwner) {
+				throw new Error('You are not the owner of the channel')
+			}
+			await this.channelservice.changePassword(req.params.channelId, req.body.password);
+			res.status(200).json();
+		}catch(err) {
+			console.log('error: ' + err);
+			res.status(400).json({ error: err.message });
+		}
 	}
 
 	@Get('channelUsers/:channel_id')

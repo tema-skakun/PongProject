@@ -6,6 +6,7 @@ import { Channel } from "src/entities/channel/channel.entity";
 import { In, Repository } from "typeorm";
 import { ChannelDto } from "src/entities/channel/channel.dto";
 import { use } from "passport";
+import { encodePassword } from "src/tools/bcrypt";
 
 
 @Injectable()
@@ -25,12 +26,7 @@ export class ChannelService {
 	}
 
 	async getChannels() {
-		return await this.channelRepository.find({
-			where: {
-				id: 25,
-			},
-			relations: ['bannedUsers'],
-		});
+		return await this.channelRepository.find();
 	}
 
 	async findUserChannels(intra_id: number) {
@@ -73,14 +69,9 @@ export class ChannelService {
 		const channels = await this.channelRepository.find({
 			relations: ['users', 'invited', 'bannedUsers']
 		});
-		console.log('aaa')
-		console.log(channels.map(channel => channel.bannedUsers));
-		console.log('bbbb')
 		const joinableChannels: Channel[] = [];
 
 		for (const channel of channels) {
-			console.log('banned: ' + channel.bannedUsers);
-			console.log('users: ' + channel.users);
 			if (channel.isDM) {
 				continue;
 			}
@@ -258,10 +249,83 @@ export class ChannelService {
 			channel.bannedUsers.push(user);
 		}
 		else {
-			console.log('in else ban user');
 			channel.bannedUsers = [user];
 		}
-		const ss = await this.channelRepository.save(channel);
-		console.log('ban of user: ' + ss.bannedUsers);
+		await this.channelRepository.save(channel);
+	}
+
+	async usersToInvite(users: User[], channelId: number) {
+		const channel = await this.channelRepository.findOne({
+			where: {
+			  id: channelId,
+			},
+			relations: ['bannedUsers', 'invited', 'users'],
+		  });
+		if (!channel) {
+			throw new Error('No such channel');
+		}
+		if (channel.isDM) {
+			throw new Error('Cant invite to private chat');
+		}
+		if (!channel.isPrivate) {
+			throw new Error('Can invite only to private channel');
+		}
+		const invitableUsers: User[] = [];
+		for (const user of users) {
+			const isInvited = channel.invited?.some(invitedUser => invitedUser.intra_id === user.intra_id);
+			if (isInvited) {
+				continue;
+			}
+			
+			const usr = channel.users?.some(channelUser => channelUser.intra_id === user.intra_id);
+			if (usr) {
+				continue;
+			}
+			const banned = channel.bannedUsers?.some(bannedUser => bannedUser.intra_id === user.intra_id);
+			if (banned) {
+				continue;
+			}
+
+			invitableUsers.push(user);
+		}
+		return invitableUsers;
+	}
+
+	async inviteUserToChannel(channelId: number, user: User) {
+		const channel = await this.channelRepository.findOne({
+			where: {
+			  id: channelId,
+			},
+			relations: ['invited'],
+		});
+		if (!channel) {
+			throw new Error(`Channel does not exist`);
+		}
+
+		if (channel.invited) {
+			const isInvited = channel.invited.some(invited => invited.intra_id === user.intra_id);
+			if (isInvited) {
+				throw new Error(`User is already invited`);
+			}
+			channel.invited.push(user);
+		}
+		else {
+			channel.invited = [user];
+		}
+		await this.channelRepository.save(channel);
+	}
+
+	async changePassword(channelId: number, pass: string) {
+		const channel = await this.channelRepository.findOne({
+			where: {
+			  id: channelId,
+			},
+		});
+		if (!pass) {
+			channel.password = null;
+		} else {
+			channel.password = encodePassword(pass);
+		}
+		await this.channelRepository.save(channel);
 	}
 }

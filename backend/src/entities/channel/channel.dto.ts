@@ -1,7 +1,7 @@
 import { IsBoolean, IsNotEmpty, IsNumber, IsString } from "class-validator"
 import { User } from "../user/user.entity";
 
-export class ChannelDto {
+export class ChannelDto { 
 	@IsString()
 	@IsNotEmpty()
 	name: string;

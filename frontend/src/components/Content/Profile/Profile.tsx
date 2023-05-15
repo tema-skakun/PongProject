@@ -3,18 +3,45 @@ import FriendsAPIComponent from './Friends/FriendsAPIComponent';
 import MatchItems from "./MatchItems/MatchItems";
 import EditProfile from "./EditProfile/EditProfile";
 import { useParams } from 'react-router-dom';
+import { WinsAndLosses } from './WinsAndLosses';
+import { useEffect, useState } from 'react';
+import axios, { AxiosResponse } from 'axios';
+import JSCookies from 'js-cookie';
+import { Ladder } from './Ladder';
+import { Achievement } from './Achievement';
+
 const Profile = (props: any) => {
 	const {intra_id} = useParams();
+	const [fetchedUser, setFetchedUser] = useState<Record<string, any>>({});
+
+	let endpoint: string = `http://${process.env.REACT_APP_IP_BACKEND}:6969/users/`;
+	if (intra_id)
+		endpoint = endpoint.concat(intra_id);
+
+	console.log(endpoint);
+	useEffect(() => {
+		axios.get(endpoint, {
+			headers: {
+				'Content-Type': 'application/json',
+				'Authorization': `Bearer ${JSCookies.get('accessToken')}`,
+			}
+		}).then((res: AxiosResponse<any, any>) => {
+			// console.log(`inital: ${JSON.stringify(props.profilePage.user)}`);
+			// console.log(JSON.stringify(res.data));
+			// props.profilePage.user = res.data;
+			setFetchedUser(res.data);
+		})
+	}, []);
 
     return (
         <div className={style.profile}>
             <div className={style.user}>
                 <img
-                    src={props.profilePage.user.userAvatar}
+                    src={fetchedUser.picture_url}
                     alt="Avatar"
                 />
                 <div>
-                    {props.profilePage.user.name}
+                    {fetchedUser.username}
                 </div>
 				{ (intra_id) ?
 				<></>:
@@ -23,15 +50,15 @@ const Profile = (props: any) => {
                 </div>
 				}
                 <div>
-                    wins and losses
+                    <WinsAndLosses user={fetchedUser} />
                 </div>
                 <div>
-                    Ladder level
+                    <Ladder/>
                 </div>
                 <div>
-                    Achievement
+                    <Achievement/>
                 </div>
-            </div>
+            </div> 
             <div className={style.stat}>
                 <h2>Match history</h2>
 				<div>

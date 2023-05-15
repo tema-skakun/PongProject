@@ -3,6 +3,7 @@ import {
 	Controller,
 	Delete,
 	Get,
+	Param,
 	Post,
 	Put,
 	Req,
@@ -18,6 +19,19 @@ import { UserTransformed } from 'src/entities/user/user.transformed';
 @Controller('users')
 export class UserController {
 	constructor(private readonly userservice: UserService) {
+	}
+
+	@Get('/:id?')
+	@UseGuards(JwtTwoFactorGuard)
+	async getMyself(@Req() req: any, @Param('id') id: string) {
+		let chosenId: number = req.user.intra_id;
+
+		if (id && !isNaN(Number(id))) {
+			chosenId = Number(id);
+		}
+
+		console.log(`Requesting: ${chosenId}`);
+		return ObjectPruning( UserTransformed, await this.userservice.findUsersById(chosenId));
 	}
 
 	@Get('all')

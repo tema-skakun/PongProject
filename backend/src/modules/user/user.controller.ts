@@ -12,6 +12,8 @@ import {
 import JwtTwoFactorGuard from 'src/GuardStrategies/Jwt2F.guard';
 import { UserDto } from '../../entities/user/user.dto';
 import { UserService } from './user.service'
+import { ObjectPruning, ObjectPruningMany } from 'src/tools/objectPruning';
+import { UserTransformed } from 'src/entities/user/user.transformed';
 
 @Controller('users')
 export class UserController {
@@ -20,7 +22,7 @@ export class UserController {
 
 	@Get('all')
 	async getalluser() {
-		return await this.userservice.getUsers();
+		return ObjectPruningMany(UserTransformed, await this.userservice.getUsers());
 	}
 
 	@Get('notBlockedUsers')
@@ -31,7 +33,7 @@ export class UserController {
 	) {
 		try {
 			const users = await this.userservice.getnotBlockedUsers(req.user.intra_id);
-			res.status(200).json(users);
+			res.status(200).json(ObjectPruningMany(UserTransformed, users));
 		}catch(err) {
 			console.log('error: ' + err);
 			res.status(400).json(err);
@@ -47,8 +49,8 @@ export class UserController {
 	}
 
 	@Post('create')
-	createUser(@Body() dto: UserDto) {
-		return this.userservice.createUser(dto);
+	async createUser(@Body() dto: UserDto) {
+		return ObjectPruning(UserTransformed , await this.userservice.createUser(dto));
 	}
 
 	@Delete('delete')

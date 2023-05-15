@@ -1,3 +1,4 @@
+import { useParams } from "react-router-dom";
 import defaultAvatar from "../../../../assets/images/defaultAvatar.png";
 import React from "react";
 
@@ -9,6 +10,7 @@ type FriendDto = {
 };
 
 let Friends = (props: any) => {
+	const {intra_id} = useParams();
 
     return (
         <div>
@@ -22,9 +24,12 @@ let Friends = (props: any) => {
                                     />
                                 </div>
                                 <div>
+									{
+									(intra_id) ? <></> :
                                     <button onClick={() => {
                                         props.unfriend(u.id)
                                     }}>Unfriend</button>
+									}
                                 </div>
                             </span>
                     <span>

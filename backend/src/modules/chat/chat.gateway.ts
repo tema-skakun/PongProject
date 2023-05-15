@@ -13,6 +13,8 @@ import { ForbiddenException } from "@nestjs/common";
 import { comparePassword, encodePassword } from "src/tools/bcrypt";
 import { channel } from "diagnostics_channel";
 import { User } from "src/entities";
+import { ObjectPruning } from "src/tools/objectPruning";
+import { MessageTransformed } from "src/entities/message/message.transformed";
 
 
 @WebSocketGateway({
@@ -108,7 +110,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 			}
 
 			const newMessage = await this.messageservice.createMessage(message);
-			this.server.to('' + channel.id).emit('getMessage', newMessage);
+			this.server.to('' + channel.id).emit('getMessage', ObjectPruning(MessageTransformed, newMessage));
 			return ;
 		} catch(err) {
 			return(err.message);

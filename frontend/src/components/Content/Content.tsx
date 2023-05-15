@@ -10,6 +10,7 @@ const Content = (props: any) => {
     return (
         <div className={style.content}>
             <Routes>
+				<Route path="/profile/:intra_id" element={<ProfileContainer/>}/>
                 <Route path='/profile' element={<ProfileContainer />}/>
                 <Route path='/chat' element={<Chat
                         dispatch={ props.dispatch }

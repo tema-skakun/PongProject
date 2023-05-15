@@ -15,7 +15,7 @@ export const Numbers = ({
 	x,
 	y,
 	font,
-	color = 'black'
+	color = 'white'
 }: NumberProps) => {
 	if (!drawingContext)
 		return ;

@@ -344,6 +344,7 @@ export class Client extends Socket {
 		if (typeof cookieContent === 'string')
 		{
 			console.warn('incomplete cookie');
+			return ;
 		}
 		
 		this.cookie = cookieContent;

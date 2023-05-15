@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import style from './MatchItems.module.css'
 import axios, { AxiosResponse } from "axios";
 import JSCookies from 'js-cookie';
+import { useParams } from "react-router-dom";
 
 type MatchHistoryEntry = {
 	id: number;
@@ -20,11 +21,17 @@ type MatchHistoryEntry = {
 }
 
 let MatchItems = (props: any) => {
+	const {intra_id} = useParams();
+	console.log(JSON.stringify(intra_id));
 
 	const [matchHistoryList, setMatchHistoryList] = useState<MatchHistoryEntry []>([]);
 
+	let endpoint: string = `http://${process.env.REACT_APP_IP_BACKEND}:6969/match-history/`;
+	if (intra_id)
+		endpoint.concat(intra_id);
+
 	useEffect(() => {
-		axios.get(`http://${process.env.REACT_APP_IP_BACKEND}:6969/match-history/`, {
+		axios.get(endpoint, {
 			headers: {
 				'Content-Type': 'application/json',
 				'Authorization': `Bearer ${JSCookies.get('accessToken')}`,

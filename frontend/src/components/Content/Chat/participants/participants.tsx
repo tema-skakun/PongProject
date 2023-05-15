@@ -5,6 +5,7 @@ import { Button, Dropdown } from 'react-bootstrap';
 import { BsGearFill } from 'react-icons/bs';
 import ParticipantsDropdown from './Dropdown/Dropdown';
 import JSCookies from 'js-cookie';
+import { NavLink, Route } from 'react-router-dom';
 
 export default function Participants({ channel, currentUser, socket}: {channel: any, currentUser: any, socket: any}) {
 	const[members, setMembers] = useState<any>([])
@@ -49,7 +50,9 @@ export default function Participants({ channel, currentUser, socket}: {channel: 
 							alt=''
 						/>
 					</div>
-					<span className='chatParticipantsName'>{o.username}</span>
+					<NavLink to={`/profile/${o.intra_id}`}>
+						<span className='chatParticipantsName'>{o.username}</span>
+					</NavLink>
 					<div>
 						< ParticipantsDropdown userProfile={o} currentUser={currentUser} socket={socket} channel={channel}/>
 					</div>

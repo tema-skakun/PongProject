@@ -2,7 +2,10 @@ import style from './Profile.module.css';
 import FriendsAPIComponent from './Friends/FriendsAPIComponent';
 import MatchItems from "./MatchItems/MatchItems";
 import EditProfile from "./EditProfile/EditProfile";
+import { useParams } from 'react-router-dom';
 const Profile = (props: any) => {
+	const {intra_id} = useParams();
+
     return (
         <div className={style.profile}>
             <div className={style.user}>
@@ -13,9 +16,12 @@ const Profile = (props: any) => {
                 <div>
                     {props.profilePage.user.name}
                 </div>
+				{ (intra_id) ?
+				<></>:
                 <div>
                     <EditProfile/>
                 </div>
+				}
                 <div>
                     wins and losses
                 </div>

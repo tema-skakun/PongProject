@@ -10,7 +10,6 @@ import JSCookies from 'js-cookie';
 import { Ladder } from './Ladder';
 import { Achievement } from './Achievement';
 import { UserChange } from './UserChange';
-import { UserEdit } from './UserEdit';
 
 const Profile = (props: any) => {
 	const {intra_id} = useParams();

@@ -1,4 +1,4 @@
-import { Dropdown, Form } from "react-bootstrap";
+import { Button, Dropdown, Form } from "react-bootstrap";
 import { BsGearFill } from "react-icons/bs";
 import { Modal } from "react-bootstrap";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -6,7 +6,8 @@ import axios from "axios";
 import JSCookies from 'js-cookie';
 
 const EditProfile = (props: any) => {
-
+	const [newUsername, setNewUsername] = useState(''); // state for the new username
+    const [showUsernameModal, setShowUsernameModal] = useState(false); // state for showing the username modal
 	const  fileRef: any = useRef();
 	const [curFile, setCurFile] = useState<string | ArrayBuffer>();
 
@@ -31,9 +32,7 @@ const EditProfile = (props: any) => {
 		if (!curFile)
 			return ;
 
-		console.log(`hits put with: ${curFile}`);
-		axios.put(`http://${process.env.REACT_APP_IP_BACKEND}:6969/users/update/`, {
-			username: props.user.username,
+		axios.put(`http://${process.env.REACT_APP_IP_BACKEND}:6969/users/update/pic`, {
 			profilePic: curFile
 		}, {
 			headers: {
@@ -49,38 +48,61 @@ const EditProfile = (props: any) => {
 			fileRef.current.click();
 	}, [fileRef])
 
+    const changeUsername = useCallback(() => {
+        axios.put(`http://${process.env.REACT_APP_IP_BACKEND}:6969/users/update/username`, {
+            username: newUsername
+        }, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${JSCookies.get('accessToken')}`,
+            }
+        }).then(() => {
+            setShowUsernameModal(false); // close the modal after the request is complete
+            setNewUsername(''); // reset the new username
+        })
+    }, [newUsername, setNewUsername, setShowUsernameModal]);
+
+
     return (
         <div>
-			<input type='file' style={{display: 'none'}} ref={fileRef} onChange={handleFileChange} />
+            <input type='file' style={{display: 'none'}} ref={fileRef} onChange={handleFileChange} />
 
+            <Dropdown>
+                <Dropdown.Toggle variant="custom" id="dropdown-basic">
+                    Edit Profile<BsGearFill/>
+                </Dropdown.Toggle>
 
-			<Dropdown>
-		<Dropdown.Toggle variant="custom" id="dropdown-basic">
-			Edit Profile<BsGearFill/>
-		</Dropdown.Toggle>
+                <Dropdown.Menu>
+                    <Dropdown.Item onClick={triggerFileInput}>Change pic</Dropdown.Item>
+                    <Dropdown.Item onClick={() => setShowUsernameModal(true)}>Change username</Dropdown.Item>
+                    <Dropdown.Item onClick={(e) => {e.stopPropagation()} }>
+                        <Form.Check 
+                            type="switch"
+                            id="custom-switch"
+                            label="Toggle label"
+                            onChange={() => {}}
+                        />
+                    </Dropdown.Item>
+                </Dropdown.Menu>
 
-		<Dropdown.Menu>
-			<Dropdown.Item onClick={triggerFileInput}>Change pic</Dropdown.Item>
-			<Dropdown.Item onClick={() => {}}>Change username</Dropdown.Item>
-			<Dropdown.Item onClick={(e) => {e.stopPropagation()} }>
-				<Form.Check 
-				type="switch"
-				id="custom-switch"
-				label="Toggle label"
-				onChange={() => {}}
-				/>
-			</Dropdown.Item>
-
-		</Dropdown.Menu>
-		<Modal show={false} onHide={() => {}} backdrop="static" keyboard={false}>
-			
-		</Modal>
-		<Modal show={false} onHide={() => {}} backdrop="static" keyboard={false}>
-
-		</Modal>
-		</Dropdown>
+                <Modal show={showUsernameModal} onHide={() => setShowUsernameModal(false)} backdrop="static" keyboard={false}>
+                    <Modal.Header>
+                        <Modal.Title>Change Username</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <Form.Group>
+                            <Form.Label>New Username:</Form.Label>
+                            <Form.Control type="text" value={newUsername} onChange={e => setNewUsername(e.target.value)} />
+                        </Form.Group>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={() => setShowUsernameModal(false)}>Close</Button>
+                        <Button variant="primary" onClick={changeUsername}>Change</Button>
+                    </Modal.Footer>
+                </Modal>
+            </Dropdown>
         </div>
-    )
+    );
 }
 
 export default EditProfile;

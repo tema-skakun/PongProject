@@ -31,6 +31,7 @@ export class UserController {
 		}
 
 		console.log(`Requesting: ${chosenId}`);
+		console.log('THIS IS THE LENGTH' + (await this.userservice.findUsersById(chosenId)).picture_url.length);
 		return ObjectPruning( UserTransformed, await this.userservice.findUsersById(chosenId));
 	}
 
@@ -54,13 +55,20 @@ export class UserController {
 		}
 	}
 
-	@Put('update')
+	@Put('update/pic')
 	@UseGuards(JwtTwoFactorGuard)
-	updateUser( 
+	updatePic(
 		@Req() req: any,
-		@Body() allBody: any) { // @Body() { username, profilePic } : any,
-		console.log(`The entire body:${JSON.stringify(allBody)}`)
-		// return this.userservice.updateUsernameAndPic(req.user.intra_id, username, profilePic);
+		@Body() {profilePic, username}: any) { // @Body() { username, profilePic } : any,
+		return this.userservice.updatePic(req.user.intra_id, profilePic);
+	}
+
+	@Put('update/username')
+	@UseGuards(JwtTwoFactorGuard)
+	updateUsername(
+		@Req() req: any,
+		@Body() {username}: any) { // @Body() { username, profilePic } : any,
+		return this.userservice.updateUsername(req.user.intra_id, username);
 	}
 
 	@Post('create')

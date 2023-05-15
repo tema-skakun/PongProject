@@ -96,21 +96,17 @@ export class UserService {
 		});
 	}
 
-	async updateUsernameAndPic(userid: number, newUsername: string, newPicUrl: string) {
-		
-		const userBefore: User = await this.userRepository.findOne({
-			where: {
-				intra_id: userid
-			}
-		})
-
-		console.log(`The picture itself: ${JSON.stringify(newPicUrl)}`)
-		console.log(`Users picture beforehand: ${userBefore.picture_url}`);
+	async updatePic(userid: number, newPicUrl: string) {
 
 		await this.userRepository.update({
 			intra_id: userid, },  {
 			picture_url: newPicUrl,
 		});
+		
+	}
+
+	async updateUsername(userid: number, newUsername: string) {
+
 		try {
 			await this.userRepository.update({
 				intra_id: userid, },   {
@@ -119,15 +115,6 @@ export class UserService {
 		} catch {
 			throw new ForbiddenException('Username already exists');
 		}
-
-		const userAfter: User = await this.userRepository.findOne({
-			where: {
-				intra_id: userid
-			}
-		})
-
-		console.log(`Users picture afterwards: ${userAfter.picture_url}`);
-		
 	}
 
 	async deleteuser(id: number) {

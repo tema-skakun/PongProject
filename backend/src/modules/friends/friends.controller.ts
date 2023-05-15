@@ -4,6 +4,8 @@ import { Param } from '@nestjs/common';
 import JwtTwoFactorGuard from 'src/GuardStrategies/Jwt2F.guard';
 import { User } from 'src/entities';
 import { ClientStatus, StatusService } from '../status/status.service';
+import { ObjectPruning } from 'src/tools/objectPruning';
+import { UserTransformed } from 'src/entities/user/user.transformed';
 
 
 export type FriendDto = {
@@ -34,14 +36,14 @@ export class FriendsController {
 
 	@Post('/:id')
 	@UseGuards(JwtTwoFactorGuard)
-	async addFriend(@Param('id') id: string, @Req() req: any): Promise<User> {
+	async addFriend(@Param('id') id: string, @Req() req: any): Promise<UserTransformed> {
 		let chosenId: number = req.user.intra_id;
 
 		if (id && !isNaN(Number(id))) {
 			chosenId = Number(id);
 		}
 
-		return await this.friendsService.addFriend(req.user.intra_id , chosenId);
+		return ObjectPruning(UserTransformed, await this.friendsService.addFriend(req.user.intra_id , chosenId));
 	}
 
 	@Get('/displayable/:id?')

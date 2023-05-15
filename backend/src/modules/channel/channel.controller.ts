@@ -6,6 +6,9 @@ import { ChannelService } from "./channel.service";
 import { encodePassword } from "src/tools/bcrypt";
 import { comparePassword } from 'src/tools/bcrypt';
 import { ExceptionsHandler } from "@nestjs/core/exceptions/exceptions-handler";
+import { ObjectPruningMany } from "src/tools/objectPruning";
+import { ChannelTransformed } from "src/entities/channel/channel.transformed";
+import { UserTransformed } from "src/entities/user/user.transformed";
 
 
 @Controller('chat')
@@ -15,8 +18,8 @@ export class ChannelController {
 		) {}
 
 	@Get('all')
-	getUsers() {
-		return this.channelservice.getChannels();
+	async getUsers() {
+		return ObjectPruningMany(ChannelTransformed, await this.channelservice.getChannels());
 	}
 
 	@Get('channelUsers/:channel_id')
@@ -27,7 +30,7 @@ export class ChannelController {
 	) {
 		try {
 			const userChannels = await this.channelservice.findChannelUsers(req.params.channel_id);
-			res.status(200).json(userChannels);
+			res.status(200).json(ObjectPruningMany(UserTransformed, userChannels));
 		}catch(err) {
 			console.log('error: ' + err);
 			res.status(400).json(err.message);
@@ -42,7 +45,7 @@ export class ChannelController {
 	{
 		try {
 			const channels = await this.channelservice.findChannelsUserCanJoin(req.user);
-			res.status(200).json(channels);
+			res.status(200).json(ObjectPruningMany(ChannelTransformed, channels));
 		}catch(err) {
 			res.status(400).json(err.message);
 		}
@@ -58,7 +61,7 @@ export class ChannelController {
 			if (req.params.intra_id !== req.user.intra_id)
 				throw new ForbiddenException('you did something wrong');
 			const userChannels = await this.channelservice.findUserChannels(req.params.intra_id);
-			res.status(200).json(userChannels);
+			res.status(200).json(ObjectPruningMany(ChannelTransformed, userChannels));
 		}catch(err) {
 			console.log('error: ' + err);
 			res.status(400).json(err.message);

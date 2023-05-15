@@ -260,17 +260,20 @@ export class Client extends Socket {
 	{
 		console.log(`Calling instance: ${this.playernum}`);
 		// <Destructuring>
+
+		const myEventFunction: EventFunction = eventFunctionXClient(this);
+		// </Destructuring>
+		
+		this.onSave(clientEventName, myEventFunction);
+
 		const other: Client = this._otherPlayerObj;
 		if (!other)
 		{
-			console.warn('other player not in here');
+			console.info('other player not in here');
+			return ;
 		}
 
-		const myEventFunction: EventFunction = eventFunctionXClient(this);
 		const otherEventFunction: EventFunction = eventFunctionXClient(other);
-		// </Destructuring>
-
-		this.onSave(clientEventName, myEventFunction);
 		other.onSave(clientEventName, otherEventFunction);
 	}
 

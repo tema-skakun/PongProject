@@ -34,7 +34,7 @@ function Game({CONFIG, setCONFIG, winningRef}: {CONFIG: Config, setCONFIG: Funct
 	// <Means for displaying>
 	const backgroundImg: React.MutableRefObject<HTMLImageElement> = useRef((() => {
 		const img = new Image();
-		img.src = '/xmas.jpeg';
+		img.src = '/default.png';
 		return img;
 	})());
 	const gameStateRef: React.MutableRefObject<GameState | null> = useRef(null)

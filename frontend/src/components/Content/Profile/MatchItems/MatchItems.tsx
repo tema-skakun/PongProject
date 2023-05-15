@@ -22,7 +22,6 @@ type MatchHistoryEntry = {
 
 let MatchItems = (props: any) => {
 	const {intra_id} = useParams();
-	console.log(JSON.stringify(intra_id));
 
 	const [matchHistoryList, setMatchHistoryList] = useState<MatchHistoryEntry []>([]);
 

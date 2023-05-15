@@ -58,8 +58,9 @@ export class UserController {
 	@UseGuards(JwtTwoFactorGuard)
 	updateUser( 
 		@Req() req: any,
-		@Body() { username, profilePic } : any) {
-		return this.userservice.updateUsernameAndPic(req.user.intra_id, username, profilePic);
+		@Body() allBody: any) { // @Body() { username, profilePic } : any,
+		console.log(`The entire body:${JSON.stringify(allBody)}`)
+		// return this.userservice.updateUsernameAndPic(req.user.intra_id, username, profilePic);
 	}
 
 	@Post('create')

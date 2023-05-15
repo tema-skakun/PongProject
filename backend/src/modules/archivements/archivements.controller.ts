@@ -11,7 +11,7 @@ export class ArchivementsController {
 		private usrService: UserService,
 	) {}
 
-	@Get('/:id')
+	@Get('/:id?')
 	@UseGuards(JwtTwoFactorGuard)
 	async getArchivements(@Param('id') intraId: string, @Req() req: any): Promise<ArchivementsTransformed []> {
 		let chosenId: number = req.user.intra_id;

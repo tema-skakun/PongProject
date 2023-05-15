@@ -10,7 +10,7 @@ export class LadderController {
 		private usrService: UserService
 	) {}
 
-	@Get('/percentile/:id')
+	@Get('/percentile/:id?')
 	@UseGuards(JwtTwoFactorGuard)
 	async percentile(@Param('id') intraId: string, @Req() req: any): Promise<string | number> // if string then not ranked yet
 	{

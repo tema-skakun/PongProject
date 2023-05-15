@@ -2,7 +2,7 @@ import { ForbiddenException, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { UserDto } from '../../entities/user/user.dto';
 import { User } from "../../entities/user/user.entity";
-import { Repository } from "typeorm";
+import { JsonContains, Repository } from "typeorm";
 import { MatchHistoryEntry } from "src/entities/matchHistoryEntry/matchHistoryEntry.entity";
 
 @Injectable()
@@ -97,6 +97,16 @@ export class UserService {
 	}
 
 	async updateUsernameAndPic(userid: number, newUsername: string, newPicUrl: string) {
+		
+		const userBefore: User = await this.userRepository.findOne({
+			where: {
+				intra_id: userid
+			}
+		})
+
+		console.log(`The picture itself: ${JSON.stringify(newPicUrl)}`)
+		console.log(`Users picture beforehand: ${userBefore.picture_url}`);
+
 		await this.userRepository.update({
 			intra_id: userid, },  {
 			picture_url: newPicUrl,
@@ -109,6 +119,15 @@ export class UserService {
 		} catch {
 			throw new ForbiddenException('Username already exists');
 		}
+
+		const userAfter: User = await this.userRepository.findOne({
+			where: {
+				intra_id: userid
+			}
+		})
+
+		console.log(`Users picture afterwards: ${userAfter.picture_url}`);
+		
 	}
 
 	async deleteuser(id: number) {

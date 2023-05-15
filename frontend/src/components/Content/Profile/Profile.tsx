@@ -9,6 +9,8 @@ import axios, { AxiosResponse } from 'axios';
 import JSCookies from 'js-cookie';
 import { Ladder } from './Ladder';
 import { Achievement } from './Achievement';
+import { UserChange } from './UserChange';
+import { UserEdit } from './UserEdit';
 
 const Profile = (props: any) => {
 	const {intra_id} = useParams();
@@ -27,11 +29,13 @@ const Profile = (props: any) => {
 			}
 		}).then((res: AxiosResponse<any, any>) => {
 			// console.log(`inital: ${JSON.stringify(props.profilePage.user)}`);
-			// console.log(JSON.stringify(res.data));
+			console.log(JSON.stringify(res.data));
 			// props.profilePage.user = res.data;
 			setFetchedUser(res.data);
 		})
 	}, []);
+
+	console.log(`newPicture: ${fetchedUser.picture_url}`);
 
     return (
         <div className={style.profile}>
@@ -46,7 +50,7 @@ const Profile = (props: any) => {
 				{ (intra_id) ?
 				<></>:
                 <div>
-                    <EditProfile/>
+                    <EditProfile user={fetchedUser} />
                 </div>
 				}
                 <div>
@@ -55,6 +59,9 @@ const Profile = (props: any) => {
                 <div>
                     <Ladder/>
                 </div>
+				{/* <div>
+					<UserChange user={fetchedUser} />
+				</div> */}
                 <div>
                     <Achievement/>
                 </div>

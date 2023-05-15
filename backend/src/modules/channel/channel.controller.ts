@@ -6,7 +6,7 @@ import { ChannelService } from "./channel.service";
 import { encodePassword } from "src/tools/bcrypt";
 import { comparePassword } from 'src/tools/bcrypt';
 import { ExceptionsHandler } from "@nestjs/core/exceptions/exceptions-handler";
-import { ObjectPruningMany } from "src/tools/objectPruning";
+import { ObjectPruning, ObjectPruningMany } from "src/tools/objectPruning";
 import { ChannelTransformed } from "src/entities/channel/channel.transformed";
 import { UserTransformed } from "src/entities/user/user.transformed";
 

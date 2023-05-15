@@ -26,12 +26,7 @@ export class ChannelService {
 	}
 
 	async getChannels() {
-		return await this.channelRepository.find({
-			where: {
-				id: 25,
-			},
-			relations: ['bannedUsers'],
-		});
+		return await this.channelRepository.find();
 	}
 
 	async findUserChannels(intra_id: number) {
@@ -326,7 +321,11 @@ export class ChannelService {
 			  id: channelId,
 			},
 		});
-		channel.password = encodePassword(pass);
+		if (!pass) {
+			channel.password = null;
+		} else {
+			channel.password = encodePassword(pass);
+		}
 		await this.channelRepository.save(channel);
 	}
 }

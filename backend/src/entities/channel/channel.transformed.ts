@@ -19,21 +19,30 @@ export class ChannelTransformed {
 	@Expose()
 	isDM: boolean;
   
-	@Transform(({value}) => isNotEmpty(value))
+	@Expose()
+	@Transform(({value}) => {
+		console.log(`password value: ${value}`);
+		console.log(`expression value: ${isNotEmpty(value) && (value !== '')}`); 
+		return isNotEmpty(value) && (value !== '')})
 	password?: boolean;
   
+	@Expose()
 	@Transform(({value}) => ObjectPruning(UserTransformed, value))
 	owner?: UserTransformed;
   
+	@Expose()
 	@Transform(({value}) => ObjectPruning(UserTransformed, value))
 	users: UserTransformed[];
   
+	@Expose()
 	@Transform(({value}) => ObjectPruning(UserTransformed, value))
 	administrators?: UserTransformed[];
 
+	@Expose()
 	@Transform(({value}) => ObjectPruning(UserTransformed, value))
   	invited?: UserTransformed[];
 
+	@Expose()
 	@Transform(({value}) => ObjectPruning(UserTransformed, value))
   	bannedUsers?: UserTransformed[];
 

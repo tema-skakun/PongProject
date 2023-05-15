@@ -17,9 +17,11 @@ export class MessageTransformed {
   @Expose()
   createdAt: Date;
 
+  @Expose()
   @Transform(({value}) => ObjectPruning(UserTransformed, value))
   sender: UserTransformed;
 
+  @Expose()
   @Transform(({value}) => ObjectPruning(ChannelTransformed, value))
   channel: ChannelTransformed;
 }

@@ -1,25 +1,29 @@
 .profile {
     display: grid;
     grid-template-rows: 1fr;
-    grid-template-columns: 0.8fr 2.5fr 1.2fr;
+    grid-template-columns: 1.1fr 2.5fr 1.2fr;
     padding: 20px;
     height: 100%;
     background-color: #a9d2c4;
-
+	
 }
 
 .profile img {
     align-items: start;
-    width: 200px;
+    width: 20vw;
+	/* max-width: 150px; */
     height: auto;
     border-radius: 50px;
     justify-self: self-end;
+	
 }
 
 .user {
     position: fixed;
     grid-column: 1;
-    padding: 20px;
+    /* padding: 0.2vw; */
+	width: 20vw;
+	/* max-width: 225px; */
 }
 
 .stat {

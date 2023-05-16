@@ -20,10 +20,7 @@ export class ChannelTransformed {
 	isDM: boolean;
   
 	@Expose()
-	@Transform(({value}) => {
-		console.log(`password value: ${value}`);
-		console.log(`expression value: ${isNotEmpty(value) && (value !== '')}`); 
-		return isNotEmpty(value) && (value !== '')})
+	@Transform(({value}) => {return isNotEmpty(value) && (value !== '')})
 	password?: boolean;
   
 	@Expose()

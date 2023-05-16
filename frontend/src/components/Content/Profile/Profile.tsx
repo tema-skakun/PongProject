@@ -19,7 +19,7 @@ const Profile = (props: any) => {
 	if (intra_id)
 		endpoint = endpoint.concat(intra_id);
 
-	console.log(endpoint);
+	// console.log(endpoint);
 	useEffect(() => {
 		axios.get(endpoint, {
 			headers: {
@@ -28,13 +28,13 @@ const Profile = (props: any) => {
 			}
 		}).then((res: AxiosResponse<any, any>) => {
 			// console.log(`inital: ${JSON.stringify(props.profilePage.user)}`);
-			console.log(JSON.stringify(res.data));
+			// console.log(JSON.stringify(res.data));
 			// props.profilePage.user = res.data;
 			setFetchedUser(res.data);
 		})
 	}, []);
 
-	console.log(`newPicture: ${fetchedUser.picture_url}`);
+	// console.log(`newPicture: ${fetchedUser.picture_url}`);
 
     return (
         <div className={style.profile}>

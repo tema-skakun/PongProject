@@ -4,6 +4,7 @@ import { Modal } from "react-bootstrap";
 import { useCallback, useEffect, useRef, useState } from "react";
 import axios from "axios";
 import JSCookies from 'js-cookie';
+import TwoFactorAuthSwitch from "./twofactor";
 
 const EditProfile = (props: any) => {
 	const [newUsername, setNewUsername] = useState(''); // state for the new username
@@ -75,13 +76,8 @@ const EditProfile = (props: any) => {
                 <Dropdown.Menu>
                     <Dropdown.Item onClick={triggerFileInput}>Change pic</Dropdown.Item>
                     <Dropdown.Item onClick={() => setShowUsernameModal(true)}>Change username</Dropdown.Item>
-                    <Dropdown.Item onClick={(e) => {e.stopPropagation()} }>
-                        <Form.Check 
-                            type="switch"
-                            id="custom-switch"
-                            label="Toggle label"
-                            onChange={() => {}}
-                        />
+                    <Dropdown.Item onClick={(e) => {e.stopPropagation(); } }>
+                        <TwoFactorAuthSwitch/>
                     </Dropdown.Item>
                 </Dropdown.Menu>
 

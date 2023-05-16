@@ -10,20 +10,13 @@ const EditProfile = (props: any) => {
 	const [newUsername, setNewUsername] = useState(''); // state for the new username
     const [showUsernameModal, setShowUsernameModal] = useState(false); // state for showing the username modal
 	const  fileRef: any = useRef();
-	const [curFile, setCurFile] = useState<string | ArrayBuffer>();
+	const [curFile, setCurFile] = useState<string | Blob>();
 
 	const handleFileChange = useCallback(async (e: any) => {
 		const file = e.target.files[0];
 
 		if (file && file.type.startsWith('image/')) {
-			const reader = new FileReader();
-
-			reader.onloadend = () => {
-				if (reader.result)
-					setCurFile(reader.result);
-			}
-			reader.readAsDataURL(file);
-
+			setCurFile(file);
 		  } else {
 			alert('please select an image file.');
 		  }
@@ -33,13 +26,22 @@ const EditProfile = (props: any) => {
 		if (!curFile)
 			return ;
 
-		axios.put(`http://${process.env.REACT_APP_IP_BACKEND}:6969/users/update/pic`, {
-			profilePic: curFile
-		}, {
+		console.log(`This should be true: ${curFile instanceof File}`);
+		const formData =  new FormData();
+		formData.append('file', curFile);
+
+		axios.put(`http://${process.env.REACT_APP_IP_BACKEND}:6969/aws/upload`, formData, {
 			headers: {
-				'Content-Type': 'application/json',
+				'Content-Type': 'multipart/form-data',
 				'Authorization': `Bearer ${JSCookies.get('accessToken')}`,
 			}
+		})
+		.then(response => {
+			props.setUser({...props.user, picture_url: response.data.url})
+			console.log(`uploaded file successfully to: ${JSON.stringify(response)}`);
+		})
+		.catch(error => {
+			console.log(JSON.stringify(error));
 		})
 
 	}, [curFile])

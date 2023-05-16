@@ -49,7 +49,7 @@ const Profile = (props: any) => {
 				{ (intra_id) ?
 				<></>:
                 <div>
-                    <EditProfile user={fetchedUser} />
+                    <EditProfile user={fetchedUser} setUser={setFetchedUser} />
                 </div>
 				}
                 <div>

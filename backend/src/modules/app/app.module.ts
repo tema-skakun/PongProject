@@ -28,10 +28,11 @@ import { ChannelModule } from '../channel/channel.module';
 import { MessageModule } from '../message/message.module';
 import { ChatGateway } from '../chat/chat.gateway';
 import { PreGameController } from '../game/game.controller';
+import { AwsModule } from '../aws/aws.module';
 
 
 @Module({
-  imports: [ FriendsModule, StatusModule, ArchivementsModule, LadderModule, MatchHistoryModule, AuthModule, UserModule, UserModule, twoFactorAuthModule,
+  imports: [ AwsModule, FriendsModule, StatusModule, ArchivementsModule, LadderModule, MatchHistoryModule, AuthModule, UserModule, UserModule, twoFactorAuthModule,
 	JwtModule, ChannelModule, MessageModule,
 	ConfigModule.forRoot({isGlobal: true }),
 

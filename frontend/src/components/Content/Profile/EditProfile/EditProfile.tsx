@@ -59,7 +59,7 @@ const EditProfile = (props: any) => {
 			console.log(JSON.stringify(error));
 		})
 
-	}, [curFile, props])
+	}, [curFile])
 
 	const triggerFileInput = useCallback(() => {
 		if (fileRef.current)

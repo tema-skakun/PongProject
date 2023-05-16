@@ -42,7 +42,7 @@ export class MessageController {
 	// 		}
 	// }
 
-	@Get('/:channelId')
+	@Get('channel/:channelId')
 	@UseGuards(JwtTwoFactorGuard)
 	async getChannelMessages(
 		@Req() req: any,

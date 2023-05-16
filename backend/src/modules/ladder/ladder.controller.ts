@@ -40,7 +40,7 @@ export class LadderController {
 		return this.usrService.getWinsToLossesArray(); 
 	}
 
-	@Get('/:id')
+	@Get('ladder/:id')
 	@UseGuards(JwtTwoFactorGuard)
 	async winsToLosses(@Param('id') intraId: string, @Req() req: any): Promise<number | string> // if string then not ranked yet
 	{

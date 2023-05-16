@@ -146,6 +146,12 @@ export class UserService {
 		});
 	}
 
+	async turnOffTwoFactorAuthentication(intra_id: number) {
+		return this.userRepository.update(intra_id, {
+		  isTwoFactorAuthenticationEnabled: false
+		});
+	}
+
 	incr_totalWins(usrEntity: User) {
 		if (!usrEntity.total_wins)
 			usrEntity.total_wins = 0;

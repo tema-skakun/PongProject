@@ -18,10 +18,11 @@ const Profile = (props: any) => {
 	const [fetchedUser, setFetchedUser] = useState<Record<string, any>>({});
 	const [matchHistoryList, setMatchHistoryList] = useState<MatchHistoryEntry []>([]);
 
-	let endpoint: string = `http://${process.env.REACT_APP_IP_BACKEND}:6969/users/`;
+	let endpoint: string = `http://${process.env.REACT_APP_IP_BACKEND}:6969/users/user/`;
 	if (intra_id)
 		endpoint = endpoint.concat(intra_id);
 
+	// console.log(endpoint);
 	useEffect(() => {
 		axios.get(endpoint, {
 			headers: {
@@ -29,9 +30,14 @@ const Profile = (props: any) => {
 				'Authorization': `Bearer ${JSCookies.get('accessToken')}`,
 			}
 		}).then((res: AxiosResponse<any, any>) => {
+			// console.log(`inital: ${JSON.stringify(props.profilePage.user)}`);
+			// console.log(JSON.stringify(res.data));
+			// props.profilePage.user = res.data;
 			setFetchedUser(res.data);
 		})
 	}, []);
+
+	// console.log(`newPicture: ${fetchedUser.picture_url}`);
 
     return (
         <div className={style.profile}>

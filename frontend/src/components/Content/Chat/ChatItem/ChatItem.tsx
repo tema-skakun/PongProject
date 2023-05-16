@@ -3,7 +3,7 @@ import React from "react";
 import {NavLink} from "react-router-dom";
 
 const DialogItem = (props:any) => {
-    let path = "/chat/" + props.id;
+    let path = "/chat/chat/" + props.id;
 
     return (
         <div className={style.dialogsItems}>

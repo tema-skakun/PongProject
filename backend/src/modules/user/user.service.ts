@@ -112,6 +112,7 @@ export class UserService {
 				intra_id: userid, },   {
 					username: newUsername,
 				});
+			return newUsername
 		} catch {
 			throw new ForbiddenException('Username already exists');
 		}

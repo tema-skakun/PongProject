@@ -4,7 +4,7 @@ import axios, { AxiosResponse } from "axios";
 import JSCookies from 'js-cookie';
 import { useParams } from "react-router-dom";
 
-type MatchHistoryEntry = {
+export type MatchHistoryEntry = {
 	id: number;
 	looser: {
 		intra_id: number;
@@ -23,8 +23,6 @@ type MatchHistoryEntry = {
 let MatchItems = (props: any) => {
 	const {intra_id} = useParams();
 
-	const [matchHistoryList, setMatchHistoryList] = useState<MatchHistoryEntry []>([]);
-
 	let endpoint: string = `http://${process.env.REACT_APP_IP_BACKEND}:6969/match-history/`;
 	if (intra_id)
 		endpoint.concat(intra_id);
@@ -37,14 +35,14 @@ let MatchItems = (props: any) => {
 			}
 		})
 		.then((res: AxiosResponse<any, any>) => {
-			setMatchHistoryList(res.data);
+			props.setMatchHistoryList(res.data);
 		})
-	}, [setMatchHistoryList])
+	}, [props.setMatchHistoryList])
 
     return (
 		<span>
 			{
-			matchHistoryList.map((entry: MatchHistoryEntry) => 
+			props.matchHistoryList.map((entry: MatchHistoryEntry) => 
 			<div className={style.match} key={entry.id}>
 				<div className={style.player1}>
 					<img src={entry.winner.picture_url}></img>

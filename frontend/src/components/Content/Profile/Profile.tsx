@@ -10,10 +10,13 @@ import JSCookies from 'js-cookie';
 import { Ladder } from './Ladder';
 import { Achievement } from './Achievement';
 import { UserChange } from './UserChange';
+import { MatchHistoryEntry } from './MatchItems/MatchItems';
+import { match } from 'assert';
 
 const Profile = (props: any) => {
 	const {intra_id} = useParams();
 	const [fetchedUser, setFetchedUser] = useState<Record<string, any>>({});
+	const [matchHistoryList, setMatchHistoryList] = useState<MatchHistoryEntry []>([]);
 
 	let endpoint: string = `http://${process.env.REACT_APP_IP_BACKEND}:6969/users/`;
 	if (intra_id)
@@ -43,7 +46,7 @@ const Profile = (props: any) => {
 				{ (intra_id) ?
 				<></>:
                 <div>
-                    <EditProfile user={fetchedUser} setUser={setFetchedUser} />
+                    <EditProfile user={fetchedUser} setUser={setFetchedUser} setMatchHistoryList={setMatchHistoryList} matchHistoryList={matchHistoryList} />
                 </div>
 				}
                 <div>
@@ -62,7 +65,7 @@ const Profile = (props: any) => {
             <div className={style.stat}>
                 <h2>Match history</h2>
 				<div>
-                    <MatchItems />
+                    <MatchItems matchHistoryList={matchHistoryList} setMatchHistoryList={setMatchHistoryList} />
                 </div>
             </div>
             <div className={style.friends}>

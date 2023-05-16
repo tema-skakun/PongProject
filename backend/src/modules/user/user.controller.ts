@@ -21,7 +21,7 @@ export class UserController {
 	constructor(private readonly userservice: UserService) {
 	}
 
-	@Get('/:id?')
+	@Get('user/:id?')
 	@UseGuards(JwtTwoFactorGuard)
 	async getMyself(@Req() req: any, @Param('id') id: string) {
 		let chosenId: number = req.user.intra_id;
@@ -37,7 +37,9 @@ export class UserController {
 
 	@Get('all')
 	async getalluser() {
-		return ObjectPruningMany(UserTransformed, await this.userservice.getUsers());
+		console.log('AAAAAA');
+		return await this.userservice.getUsers();
+		// return ObjectPruningMany(UserTransformed, await this.userservice.getUsers());
 	}
 
 	@Get('notBlockedUsers')

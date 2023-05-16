@@ -11,6 +11,7 @@ const EditProfile = (props: any) => {
     const [showUsernameModal, setShowUsernameModal] = useState(false); // state for showing the username modal
 	const  fileRef: any = useRef();
 	const [curFile, setCurFile] = useState<string | Blob>();
+	const [showTwoFactorAuth, setShowTwoFactorAuth] = useState(false);
 
 	const handleFileChange = useCallback(async (e: any) => {
 		const file = e.target.files[0];
@@ -65,6 +66,9 @@ const EditProfile = (props: any) => {
         })
     }, [newUsername, setNewUsername, setShowUsernameModal]);
 
+	const handleTwoFactorAuthClick = () => {
+		setShowTwoFactorAuth(!showTwoFactorAuth);
+	};
 
     return (
         <div>
@@ -78,9 +82,7 @@ const EditProfile = (props: any) => {
                 <Dropdown.Menu>
                     <Dropdown.Item onClick={triggerFileInput}>Change pic</Dropdown.Item>
                     <Dropdown.Item onClick={() => setShowUsernameModal(true)}>Change username</Dropdown.Item>
-                    <Dropdown.Item onClick={(e) => {e.stopPropagation(); } }>
-                        <TwoFactorAuthSwitch/>
-                    </Dropdown.Item>
+                    <Dropdown.Item onClick={handleTwoFactorAuthClick}>Two-Factor Authentication </Dropdown.Item>
                 </Dropdown.Menu>
 
                 <Modal show={showUsernameModal} onHide={() => setShowUsernameModal(false)} backdrop="static" keyboard={false}>
@@ -98,6 +100,7 @@ const EditProfile = (props: any) => {
                         <Button variant="primary" onClick={changeUsername}>Change</Button>
                     </Modal.Footer>
                 </Modal>
+				<TwoFactorAuthSwitch showModal={showTwoFactorAuth} onClose={handleTwoFactorAuthClick} user={props.user} setUser={props.setUser}/>
             </Dropdown>
         </div>
     );

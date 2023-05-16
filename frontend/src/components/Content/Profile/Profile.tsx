@@ -15,7 +15,7 @@ const Profile = (props: any) => {
 	const {intra_id} = useParams();
 	const [fetchedUser, setFetchedUser] = useState<Record<string, any>>({});
 
-	let endpoint: string = `http://${process.env.REACT_APP_IP_BACKEND}:6969/users/`;
+	let endpoint: string = `http://${process.env.REACT_APP_IP_BACKEND}:6969/users/user/`;
 	if (intra_id)
 		endpoint = endpoint.concat(intra_id);
 

@@ -18,6 +18,9 @@ export class UserTransformed {
 	@Expose()
 	total_losses: number;
 
+	@Expose()
+	isTwoFactorAuthenticationEnabled: boolean;
+
 	// Rest excluded!
 
 	@Exclude()
@@ -44,6 +47,4 @@ export class UserTransformed {
 	@Exclude()
 	twoFactorAuthenticationSecret?: string;
 
-	@Exclude()
-	isTwoFactorAuthenticationEnabled: boolean;
 }

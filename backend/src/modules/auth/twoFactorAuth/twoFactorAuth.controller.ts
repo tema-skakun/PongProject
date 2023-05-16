@@ -16,6 +16,7 @@ import { UserService } from 'src/modules/user/user.service';
 import { AuthenticationService } from '../auth.service';
 import JwtGuard from 'src/GuardStrategies/jwt.guard';
 import * as qrcode from 'qrcode';
+import JwtTwoFactorGuard from 'src/GuardStrategies/Jwt2F.guard';
    
   @Controller('2fa')
   @UseInterceptors(ClassSerializerInterceptor)
@@ -31,6 +32,7 @@ import * as qrcode from 'qrcode';
 	@UseGuards(JwtGuard)
 	async turnOnTwoFactorAuthentication(
 		@Req() request: any,
+		@Res() response: any,
 		@Body() { twoFactorAuthenticationCode } : any
 	) {
 		const isCodeValid = this.twoFactorAuthenticationService.isTwoFactorAuthenticationCodeValid(
@@ -40,6 +42,9 @@ import * as qrcode from 'qrcode';
 			throw new UnauthorizedException('Wrong authentication code');
 		}
 		await this.userService.turnOnTwoFactorAuthentication(request.user.intra_id);
+		const accessToken = this.authenticationService.getCookieWithJwtAccessToken(request.user.id, true);
+		console.log('NEW TOKEN: ' +accessToken);
+		return accessToken;
 	}
 
 	@Post('generate')
@@ -63,11 +68,19 @@ import * as qrcode from 'qrcode';
 		twoFactorAuthenticationCode, request.user
 		);
 		if (!isCodeValid) {
-		throw new UnauthorizedException('Wrong authentication code');
+			throw new UnauthorizedException('Wrong authentication code');
 		}
 	
 		const accessToken = this.authenticationService.getCookieWithJwtAccessToken(request.user.id, true);
 	
 		return accessToken;
+	}
+	
+	@Post('turn-off')
+	@UseGuards(JwtTwoFactorGuard)
+	async turnOffTwoFactorAuthentication(
+		@Req() request: any,
+	) {
+		await this.userService.turnOffTwoFactorAuthentication(request.user.intra_id);
 	}
   }

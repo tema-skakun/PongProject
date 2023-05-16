@@ -3,6 +3,7 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import { Modal } from 'react-bootstrap';
 import JSCookies from 'js-cookie';
+import axios from 'axios';
 
 function TwoFactorAuthSwitch(props: any) {
   const [bool, setBool] = useState(false);
@@ -10,38 +11,42 @@ function TwoFactorAuthSwitch(props: any) {
   const [code, setCode] = useState('');
 
 console.log("bool: " + props.user.isTwoFactorAuthenticationEnabled);
-  const handleActivate = useCallback(() => {
+  const handleActivate =  () => {
 	console.log('code: ' + code);
     if (code) {
-		const url = 'http://localhost:6969/2fa/turn-on'; // replace with your API endpoint URL
-		const headers = {
-			'Content-Type': 'application/json', // set the appropriate Content-Type header
-			'Authorization': `Bearer ${JSCookies.get('accessToken')}`,
-		};
-		const body = JSON.stringify({
-			twoFactorAuthenticationCode: code,
-		});
-		fetch(url, {
-			method: 'POST', // set the appropriate HTTP method
-			headers: headers,
-			body: body,
-		})
-		.then(response => {
-		if (response.ok) {
-			// handle success response
-			console.log('response ok: ' + response);
-		} else {
-			alert('wrong code');
-		}
-		})
+		// const info = {
+		// 	twoFactorAuthenticationCode: newPassword,
+		// }
+		// try {
+		// 	const res = await axios.post(`http://${process.env.REACT_APP_IP_BACKEND}:6969/chat/changePassword/` + channel.id, info, {
+		// 		headers: {
+		// 			'Content-Type': 'application/json',
+		// 			'Authorization': `Bearer ${JSCookies.get('accessToken')}`,
+		// 		},
+		// 	})
+		// } catch(err: any) {
+		// 	alert(err.response.data.error)
+		// }
+		// closePass();
+		
 	}
-  }, [code]);
+  };
 
-  const handleDeactivate = useCallback(() => {
-    // Add your deactivation logic here
-    // For now, it will toggle the bool state and display an alert
-    setBool((prevBool) => !prevBool);
-    alert('Deactivate button clicked!');
+  const handleDeactivate = useCallback(async () => {
+    try {
+		console.log('before turn off')
+		const res = await axios.post(`http://${process.env.REACT_APP_IP_BACKEND}:6969/2fa/turn-off/`, {}, {
+			headers: {
+				'Content-Type': 'application/json',
+				'Authorization': `Bearer ${JSCookies.get('accessToken')}`,
+			}
+		});
+		props.user.isTwoFactorAuthenticationEnabled = false;
+		console.log('close deactivate');
+		props.onClose();
+	}catch(err) {
+		console.log('ERROR in conversation: ' + err);
+	}
   }, []);
 
   useEffect(() => {

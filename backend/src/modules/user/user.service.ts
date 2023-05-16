@@ -112,6 +112,7 @@ export class UserService {
 				intra_id: userid, },   {
 					username: newUsername,
 				});
+			return newUsername
 		} catch {
 			throw new ForbiddenException('Username already exists');
 		}
@@ -142,6 +143,12 @@ export class UserService {
 	async turnOnTwoFactorAuthentication(intra_id: number) {
 		return this.userRepository.update(intra_id, {
 		  isTwoFactorAuthenticationEnabled: true
+		});
+	}
+
+	async turnOffTwoFactorAuthentication(intra_id: number) {
+		return this.userRepository.update(intra_id, {
+		  isTwoFactorAuthenticationEnabled: false
 		});
 	}
 

@@ -106,7 +106,7 @@ export class ChannelController {
 		}
 	}
 
-	@Get('/:intra_id')
+	@Get('chat/:intra_id')
 	@UseGuards(JwtTwoFactorGuard)
 	async getUserChannels(
 		@Req() req: any,

@@ -5,6 +5,8 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import axios from "axios";
 import JSCookies from 'js-cookie';
 import TwoFactorAuthSwitch from "./twofactor";
+import { propTypes } from "react-bootstrap/esm/Image";
+import { MatchHistoryEntry } from "../MatchItems/MatchItems";
 
 const EditProfile = (props: any) => {
 	const [newUsername, setNewUsername] = useState(''); // state for the new username
@@ -39,6 +41,20 @@ const EditProfile = (props: any) => {
 		})
 		.then(response => {
 			props.setUser({...props.user, picture_url: response.data.url})
+
+			const newList: MatchHistoryEntry [] = [];
+			for (const entry of props.matchHistoryList)
+			{
+				if (entry.looser.intra_id === props.user.intra_id)
+				{
+					newList.push({...entry, looser: {...entry.looser, picture_url: response.data.url}});
+				} 
+				else if (entry.winner.intra_id === props.user.intra_id){
+					newList.push({...entry, winner: {...entry.winner, picture_url: response.data.url}});
+				}
+			}
+			props.setMatchHistoryList(newList);
+
 			console.log(`uploaded file successfully to: ${JSON.stringify(response)}`);
 		})
 		.catch(error => {
@@ -60,9 +76,10 @@ const EditProfile = (props: any) => {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${JSCookies.get('accessToken')}`,
             }
-        }).then(() => {
+        }).then((response) => {
             setShowUsernameModal(false); // close the modal after the request is complete
             setNewUsername(''); // reset the new username
+			props.setUser({...props.user, username: response.data})
         })
     }, [newUsername, setNewUsername, setShowUsernameModal]);
 

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import { Modal } from 'react-bootstrap';
@@ -6,78 +6,75 @@ import JSCookies from 'js-cookie';
 import axios from 'axios';
 
 function TwoFactorAuthSwitch(props: any) {
-  const [bool, setBool] = useState(false);
-  const [picture, setPicture] = useState('');
-  const [code, setCode] = useState('');
+	const [picture, setPicture] = useState('');
+	const [code, setCode] = useState('');
 
-console.log("bool: " + props.user.isTwoFactorAuthenticationEnabled);
-  const handleActivate =  () => {
-	console.log('code: ' + code);
-    if (code) {
-		// const info = {
-		// 	twoFactorAuthenticationCode: newPassword,
-		// }
-		// try {
-		// 	const res = await axios.post(`http://${process.env.REACT_APP_IP_BACKEND}:6969/chat/changePassword/` + channel.id, info, {
-		// 		headers: {
-		// 			'Content-Type': 'application/json',
-		// 			'Authorization': `Bearer ${JSCookies.get('accessToken')}`,
-		// 		},
-		// 	})
-		// } catch(err: any) {
-		// 	alert(err.response.data.error)
-		// }
-		// closePass();
-		
-	}
-  };
-
-  const handleDeactivate = useCallback(async () => {
-    try {
-		console.log('before turn off')
-		const res = await axios.post(`http://${process.env.REACT_APP_IP_BACKEND}:6969/2fa/turn-off/`, {}, {
-			headers: {
-				'Content-Type': 'application/json',
-				'Authorization': `Bearer ${JSCookies.get('accessToken')}`,
+	async function handleActivate() {
+		try {
+			const info = {
+				twoFactorAuthenticationCode: code,
 			}
-		});
-		props.user.isTwoFactorAuthenticationEnabled = false;
-		console.log('close deactivate');
-		props.onClose();
-	}catch(err) {
-		console.log('ERROR in conversation: ' + err);
-	}
-  }, []);
-
-  useEffect(() => {
-	const generateQRCode = async () => {
-		if (!props.user.isTwoFactorAuthenticationEnabled) {
-			const url = 'http://localhost:6969/2fa/generate'; // replace with your API endpoint URL
-			const headers = {
-				Accept: 'image/png',
-				'Authorization': `Bearer ${JSCookies.get('accessToken')}`,
-			};
-			try {
-				const response = await fetch(url, {
-					method: 'POST', // set the appropriate HTTP method
-					headers: headers,
-				});
-			if (response.ok) {
-				const qrCodeBuffer = await response.arrayBuffer();
-				const qrCodeBlob = new Blob([qrCodeBuffer], { type: 'image/png' }); // Update with the appropriate MIME type
-				const qrCodeImageUrl = URL.createObjectURL(qrCodeBlob);
-				setPicture(qrCodeImageUrl);
-			} else {
-				console.error('Error generating QR code:', response.status, response.statusText);
-			} 
-			} catch (error) {
-				console.error('Error generating QR code:', error);
-			}
+			const res = await axios.post(`http://${process.env.REACT_APP_IP_BACKEND}:6969/2fa/turn-on`, info, {
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': `Bearer ${JSCookies.get('accessToken')}`,
+				}
+			})
+			const newToken = await res.data;
+			JSCookies.set('accessToken', newToken);
+			props.onClose();
+			props.user.isTwoFactorAuthenticationEnabled = true;
+		}catch(err: any) {
+			props.onClose();
+			alert(err.response.data.message);
 		}
-	};
-	generateQRCode();
+	}
 
-  }, [props.user.isTwoFactorAuthenticationEnabled]);
+	async function handleDeactivate() {
+		try {
+			const res = await axios.post(`http://${process.env.REACT_APP_IP_BACKEND}:6969/2fa/turn-off`, {}, {
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': `Bearer ${JSCookies.get('accessToken')}`,
+				}
+			})
+			props.onClose();
+			props.user.isTwoFactorAuthenticationEnabled = false;
+		}catch(err: any) {
+			props.onClose();
+			alert(err.response.data.message);
+		}
+	}
+
+	useEffect(() => {
+		const generateQRCode = async () => {
+			if (!props.user.isTwoFactorAuthenticationEnabled) {
+				const url = 'http://localhost:6969/2fa/generate'; 
+				const headers = {
+					Accept: 'image/png',
+					'Authorization': `Bearer ${JSCookies.get('accessToken')}`,
+				};
+				try {
+					const response = await fetch(url, {
+						method: 'POST', 
+						headers: headers,
+					});
+				if (response.ok) {
+					const qrCodeBuffer = await response.arrayBuffer();
+					const qrCodeBlob = new Blob([qrCodeBuffer], { type: 'image/png' }); 
+					const qrCodeImageUrl = URL.createObjectURL(qrCodeBlob);
+					setPicture(qrCodeImageUrl);
+				} else {
+					console.error('Error generating QR code:', response.status, response.statusText);
+				} 
+				} catch (error) {
+					console.error('Error generating QR code:', error);
+				}
+			}
+		};
+		generateQRCode();
+
+  }, []);
 
   return (
     <Modal show={props.showModal} onHide={props.onClose}>

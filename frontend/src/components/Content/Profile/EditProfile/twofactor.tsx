@@ -9,6 +9,7 @@ function TwoFactorAuthSwitch(props: any) {
 	const [picture, setPicture] = useState('');
 	const [code, setCode] = useState('');
 
+	// console.log('2f profile');
 	async function handleActivate() {
 		try {
 			const info = {

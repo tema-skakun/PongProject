@@ -18,6 +18,7 @@ const Profile = (props: any) => {
 	const [fetchedUser, setFetchedUser] = useState<Record<string, any>>({});
 	const [matchHistoryList, setMatchHistoryList] = useState<MatchHistoryEntry []>([]);
 
+	// console.log('profile');
 	let endpoint: string = `http://${process.env.REACT_APP_IP_BACKEND}:6969/users/user/`;
 	if (intra_id)
 		endpoint = endpoint.concat(intra_id);

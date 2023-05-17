@@ -176,23 +176,15 @@ export class UserService {
 		const usr: User = await this.userRepository.findOneBy({
 			intra_id: intra_id
 		})
-		if (usr.total_losses === 0) 
-			return "not ranked yet";
-		return usr.total_wins / usr.total_losses
+		return (usr.total_wins / (usr.total_losses + usr.total_wins))
 	}
 
-	async getWinsToLossesArray(): Promise<number []> {
+	async getWinsToGamesArray(): Promise<number []> {
 		const usr: User [] = await this.userRepository.find();
-		console.log(`length of usr arr: ${usr.length}`);
 
 		const ratio_arr: number [] = [];
 		for (const usrEntity of usr) {
-			console.log(`total losses:  ${usrEntity.total_losses}`)
-			console.log(`total wins:  ${usrEntity.total_wins}`)
-			if (usrEntity.total_losses === 0)
-				continue;
-			else
-				ratio_arr.push(usrEntity.total_wins / usrEntity.total_losses);
+			ratio_arr.push(usrEntity.total_wins / (usrEntity.total_losses + usrEntity.total_wins));
 		}
 		
 		ratio_arr.sort();

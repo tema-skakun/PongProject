@@ -9,9 +9,7 @@ import axios, { AxiosResponse } from 'axios';
 import JSCookies from 'js-cookie';
 import { Ladder } from './Ladder';
 import { Achievement } from './Achievement';
-import { UserChange } from './UserChange';
 import { MatchHistoryEntry } from './MatchItems/MatchItems';
-import { match } from 'assert';
 
 const Profile = (props: any) => {
 	const {intra_id} = useParams();
@@ -36,9 +34,10 @@ const Profile = (props: any) => {
 			// props.profilePage.user = res.data;
 			setFetchedUser(res.data);
 		})
-	}, []);
+	}, [endpoint]);
 
 	// console.log(`newPicture: ${fetchedUser.picture_url}`);
+	console.log('akldfjljdafslöjdsfalö');
 
     return (
         <div className={style.profile}>
@@ -62,9 +61,6 @@ const Profile = (props: any) => {
                 <div>
                     <Ladder/>
                 </div>
-				{/* <div>
-					<UserChange user={fetchedUser} />
-				</div> */}
                 <div>
                     <Achievement/>
                 </div>

@@ -50,7 +50,7 @@ export class UserController {
 	) {
 		try {
 			const users = await this.userservice.getnotBlockedUsers(req.user.intra_id);
-			res.status(200).json(ObjectPruningMany(UserTransformed, users));
+			return ObjectPruningMany(UserTransformed, users)
 		}catch(err) {
 			console.log('error: ' + err);
 			res.status(400).json(err);

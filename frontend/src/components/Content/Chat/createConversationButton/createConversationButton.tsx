@@ -9,7 +9,7 @@ import JSCookies from 'js-cookie';
 export default function CreateChannelButton({ closeModal, socket }: {closeModal: any, socket: any}) {
 	const [selectedContactIds, setSelectedContactIds] = useState<any>([]);
 	const [channelName, setChannelName] = useState<string>('');
-	const [users, setUsers] = useState<any>([]);
+	const [users, setUsers] = useState<any []>([]);
 	const [channelType, setChannelType] = useState<string>('');
   	const [channelPassword, setChannelPassword] = useState<string>('');
 

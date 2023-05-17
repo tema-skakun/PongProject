@@ -43,7 +43,7 @@ const Chat = (props: any) => {
 	useEffect(() => {
 		arrivalMessage && currentChannel && currentChannel.id === arrivalMessage.channel.id &&
 		setMessages((prev: any)=> [...prev, arrivalMessage]);
-	}, [arrivalMessage])
+	}, [arrivalMessage, currentChannel])
 
 
 	useEffect(() =>{
@@ -72,7 +72,7 @@ const Chat = (props: any) => {
 		socket.current.on('updateChannels', async (channelId: any) => {
 			getChannels(channelId);
 		})
-	}, [props.userdata.intra_id])
+	}, [props.userdata.intra_id, channels])
 
 	useEffect(() =>{
 		if (currentChannel) {
@@ -92,7 +92,7 @@ const Chat = (props: any) => {
 			}
 			getMessages();
 		}
-	},[currentChannel]);
+	},[currentChannel, messages]);
 
 	const handleSubmit = async (e: any) => {
 		e.preventDefault();

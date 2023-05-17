@@ -17,7 +17,7 @@ function unfriend(intraId: number) {
         'Authorization': `Bearer ${JSCookies.get('accessToken')}`,
     };
 
-    axios.delete(ROOT_ADDR_OF_FRIENDS, {
+    axios.delete(ROOT_ADDR_OF_FRIENDS + intraId, {
         method: 'DELETE',
         headers: headers,
     })

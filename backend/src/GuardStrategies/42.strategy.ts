@@ -34,7 +34,7 @@ export class Forty2Strategy extends PassportStrategy(Strategy, '42') {
 				})
 				const apiResponse = await apiClient.get('/v2/users/' + profile.id);
 				const user = {
-					intra_id: apiResponse.data.id,
+					intra_id: Number(apiResponse.data.id),
 					email: apiResponse.data.email,
 					username: apiResponse.data.login,
 					picture_url: apiResponse.data.image.versions.medium,

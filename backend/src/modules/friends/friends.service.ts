@@ -71,11 +71,11 @@ export class FriendsService {
 		const userStatus: Map<number, ClientStatus> = await this.statusService.getStatus();
 
 		let friendStatus: string = 'No status set';
-		if (userStatus.get(user.intra_id) === ClientStatus.OFFLINE)
+		if (userStatus.get(Number(user.intra_id)) === ClientStatus.OFFLINE)
 			friendStatus = 'Offline';
-		else if (userStatus.get(user.intra_id) === ClientStatus.CONNECTED)
+		else if (userStatus.get(Number(user.intra_id)) === ClientStatus.CONNECTED)
 			friendStatus = 'Connected';
-		else if (userStatus.get(user.intra_id) === ClientStatus.INGAME)
+		else if (userStatus.get(Number(user.intra_id)) === ClientStatus.INGAME)
 			friendStatus = 'In game';
 
 		return {

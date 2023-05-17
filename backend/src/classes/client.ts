@@ -374,6 +374,11 @@ export class Client extends Socket {
 	private befriendedBy: Set<number> = new Set();
 	private _status: ClientStatus = ClientStatus.OFFLINE;
 
+	get status()
+	{
+		return this._status;
+	}
+
 	setStatus(newStatus: ClientStatus, moreEngaged: boolean)
 	{
 		console.log('RIGHT AFTER DIGESTING');

@@ -20,6 +20,7 @@ import { MatchHistoryEntry } from 'src/entities/matchHistoryEntry/matchHistoryEn
 import { UserService } from '../user/user.service';
 import { MatchHistoryService } from './match-history/match-history.service';
 import { ArchivementsService } from '../archivements/archivements.service';
+import { ClientStatus } from '../status/status.service';
 // </self defined>
 
 export const clients = new Map<string, Client>();
@@ -136,26 +137,24 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
 		console.log('server recieved invite');
 		clients.forEach((cl: Client) => {
-			console.log(`Searched intra Id: ${intraId}`);
-			console.log(`Found intra id: ${cl.intraId}`);
-			console.log(`First part: ${cl.intraId == +intraId}`);
-			console.log(`Unwanted socket.id: ${client.id}`);
-			console.log(`recieved socket.id: ${cl.id}`);
-			console.log(`Second part: ${client.id !== cl.id}`);
-			// console.log(`in the set: ${cl.id}`);
 			if ((cl.intraId == +intraId) && (client.id !== cl.id))
 			{
 				console.log(`send invite req`);
-				cl.emit('inviteReq', client.intraId, (resToServer: string) => {
-					if (resToServer === 'I will destory you') // Client accepted the game
-					{
-						client.addReactivator('join', joinCb);
-						client.addReactivator('join', joinCb);
-						this.kickoffGroup(client, cl);
-					}
+				if (cl.status === ClientStatus.INGAME) {
+					callback('Fuck off');
+				}
+				else {
+					cl.emit('inviteReq', client.intraId, (resToServer: string) => {
+						if (resToServer === 'I will destory you') // Client accepted the game
+						{
+							client.addReactivator('join', joinCb);
+							client.addReactivator('join', joinCb);
+							this.kickoffGroup(client, cl);
+						}
 
-					callback(resToServer);
-				});
+						callback(resToServer);
+					});
+				}
 			}
 		})
 

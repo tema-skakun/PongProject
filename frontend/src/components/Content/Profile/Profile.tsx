@@ -19,6 +19,15 @@ const Profile = (props: any) => {
 	// console.log('profile');
 	let endpoint: string = `http://${process.env.REACT_APP_IP_BACKEND}:6969/users/user/`;
 
+	useEffect(() => {
+		console.log('Empty dependencies of MatchItems');
+	}, [])
+
+	useEffect(() => {
+		console.log('Props dependeny of matchItems');
+	}, [props])
+
+
 	// console.log(endpoint);
 	useEffect(() => {
 		const fullEnpoint = endpoint + intra_id;
@@ -33,10 +42,9 @@ const Profile = (props: any) => {
 			// props.profilePage.user = res.data;
 			setFetchedUser(res.data);
 		})
-	}, [endpoint]);
+	}, [endpoint, intra_id]);
 
 	// console.log(`newPicture: ${fetchedUser.picture_url}`);
-	console.log('akldfjljdafslöjdsfalö');
 
     return (
         <div className={style.profile}>

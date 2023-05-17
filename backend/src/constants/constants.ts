@@ -51,7 +51,7 @@ export interface ConfigInter {
 }
 
 export default {
-	POINTS: 1,
+	POINTS: 5,
 	MAX_VEL: WIDTH / (2 + 2/3) / 60,
 	BACKGROUND_COLOR: 'red',
 	SPAWN_EXCLUSION: HEIGHT / 4,

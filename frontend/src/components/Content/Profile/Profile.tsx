@@ -18,12 +18,11 @@ const Profile = (props: any) => {
 
 	// console.log('profile');
 	let endpoint: string = `http://${process.env.REACT_APP_IP_BACKEND}:6969/users/user/`;
-	if (intra_id)
-		endpoint = endpoint.concat(intra_id);
 
 	// console.log(endpoint);
 	useEffect(() => {
-		axios.get(endpoint, {
+		const fullEnpoint = endpoint + intra_id;
+		axios.get(fullEnpoint, {
 			headers: {
 				'Content-Type': 'application/json',
 				'Authorization': `Bearer ${JSCookies.get('accessToken')}`,

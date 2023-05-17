@@ -15,10 +15,20 @@ const Profile = (props: any) => {
 	const {intra_id} = useParams();
 	const [fetchedUser, setFetchedUser] = useState<Record<string, any>>({});
 	const [matchHistoryList, setMatchHistoryList] = useState<MatchHistoryEntry []>([]);
+	const [picUrl, setPicUrl] = useState<string>('');
+	const [username, setUsername] = useState<string>('Schlongo');
 
 	let endpoint: string = `http://${process.env.REACT_APP_IP_BACKEND}:6969/users/user/`;
 
-	// console.log(endpoint);
+	useEffect(() => {
+		console.log('Empty dependencies of MatchItems');
+	}, [])
+
+	useEffect(() => {
+		console.log('Props dependeny of matchItems');
+	}, [props])
+
+
 	useEffect(() => {
 		const fullEnpoint = endpoint + intra_id;
 		axios.get(fullEnpoint, {
@@ -27,30 +37,29 @@ const Profile = (props: any) => {
 				'Authorization': `Bearer ${JSCookies.get('accessToken')}`,
 			}
 		}).then((res: AxiosResponse<any, any>) => {
+			setPicUrl(res.data.picture_url);
+			setUsername(res.data.username);
 			// console.log(`inital: ${JSON.stringify(props.profilePage.user)}`);
 			// console.log(JSON.stringify(res.data));
 			// props.profilePage.user = res.data;
 			setFetchedUser(res.data);
 		})
-	}, [endpoint]);
-
-	// console.log(`newPicture: ${fetchedUser.picture_url}`);
-	console.log('akldfjljdafslöjdsfalö');
+	}, [endpoint, intra_id, setPicUrl]);
 
     return (
         <div className={style.profile}>
             <div className={style.user}>
                 <img
-                    src={fetchedUser.picture_url}
+                    src={picUrl}
                     alt="Avatar"
                 />
                 <div>
-                    {fetchedUser.username}
+                    {username}
                 </div>
 				{ (intra_id) ?
 				<></>:
                 <div>
-                    <EditProfile user={fetchedUser} setUser={setFetchedUser} setMatchHistoryList={setMatchHistoryList} matchHistoryList={matchHistoryList} />
+                    <EditProfile setUsername={setUsername} setPicUrl={setPicUrl} user={fetchedUser} setUser={setFetchedUser} />
                 </div>
 				}
                 <div>
@@ -66,7 +75,7 @@ const Profile = (props: any) => {
             <div className={style.stat}>
                 <h2>Match history</h2>
 				<div>
-                    <MatchItems matchHistoryList={matchHistoryList} setMatchHistoryList={setMatchHistoryList} />
+                    <MatchItems username={username} picUrl={picUrl} matchHistoryList={matchHistoryList} setMatchHistoryList={setMatchHistoryList} user={fetchedUser} />
                 </div>
             </div>
             <div className={style.friends}>

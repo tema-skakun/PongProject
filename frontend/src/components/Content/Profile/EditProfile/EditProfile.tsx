@@ -5,7 +5,6 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import axios from "axios";
 import JSCookies from 'js-cookie';
 import TwoFactorAuthSwitch from "./twofactor";
-import { MatchHistoryEntry } from "../MatchItems/MatchItems";
 
 const EditProfile = (props: any) => {
 	const [newUsername, setNewUsername] = useState(''); // state for the new username
@@ -14,6 +13,7 @@ const EditProfile = (props: any) => {
 	const [curFile, setCurFile] = useState<string | Blob>();
 	const [showTwoFactorAuth, setShowTwoFactorAuth] = useState(false);
 
+	// console.log('edit profile');
 	const handleFileChange = useCallback(async (e: any) => {
 		const file = e.target.files[0];
 
@@ -28,7 +28,7 @@ const EditProfile = (props: any) => {
 		if (!curFile)
 			return ;
 
-		console.log(`This should be true: ${curFile instanceof File}`);
+		// console.log(`This should be true: ${curFile instanceof File}`);
 		const formData =  new FormData();
 		formData.append('file', curFile);
 
@@ -39,20 +39,8 @@ const EditProfile = (props: any) => {
 			}
 		})
 		.then(response => {
-			props.setUser({...props.user, picture_url: response.data.url})
 
-			const newList: MatchHistoryEntry [] = [];
-			for (const entry of props.matchHistoryList)
-			{
-				if (entry.looser.intra_id === props.user.intra_id)
-				{
-					newList.push({...entry, looser: {...entry.looser, picture_url: response.data.url}});
-				} 
-				else if (entry.winner.intra_id === props.user.intra_id){
-					newList.push({...entry, winner: {...entry.winner, picture_url: response.data.url}});
-				}
-			}
-			props.setMatchHistoryList(newList);
+			props.setPicUrl(response.data.url);
 
 			console.log(`uploaded file successfully to: ${JSON.stringify(response)}`);
 		})
@@ -76,6 +64,7 @@ const EditProfile = (props: any) => {
                 'Authorization': `Bearer ${JSCookies.get('accessToken')}`,
             }
         }).then((response) => {
+			props.setUsername(response.data);
             setShowUsernameModal(false); // close the modal after the request is complete
             setNewUsername(''); // reset the new username
 			props.setUser({...props.user, username: response.data})

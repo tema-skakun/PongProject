@@ -27,7 +27,7 @@ const Chat = (props: any) => {
 	const [modalOpen, setModalOpen] = useState(false)
 	const [activeKey, setActiveKey] = useState(CREATE_KEY)
 
-
+	console.log('chat tsx')
 	useEffect(() => {
 		socket.current = io(`ws://${process.env.REACT_APP_IP_BACKEND}:6969/chat`, {
 			query: { accessToken:  JSCookies.get('accessToken')},
@@ -41,9 +41,11 @@ const Chat = (props: any) => {
 	}, []);
 
 	useEffect(() => {
-		arrivalMessage && currentChannel && currentChannel.id === arrivalMessage.channel.id &&
-		setMessages((prev: any)=> [...prev, arrivalMessage]);
-	}, [arrivalMessage, currentChannel])
+		if (arrivalMessage && currentChannel && currentChannel.id === arrivalMessage.channel.id) {
+			setMessages((prev: any)=> [...prev, arrivalMessage]);
+		}
+		setArrivalMessage(null);
+	}, [arrivalMessage])
 
 
 	useEffect(() =>{
@@ -72,7 +74,7 @@ const Chat = (props: any) => {
 		socket.current.on('updateChannels', async (channelId: any) => {
 			getChannels(channelId);
 		})
-	}, [props.userdata.intra_id, channels])
+	}, [props.userdata.intra_id])
 
 	useEffect(() =>{
 		if (currentChannel) {
@@ -92,7 +94,7 @@ const Chat = (props: any) => {
 			}
 			getMessages();
 		}
-	},[currentChannel, messages]);
+	},[currentChannel]);
 
 	const handleSubmit = async (e: any) => {
 		e.preventDefault();

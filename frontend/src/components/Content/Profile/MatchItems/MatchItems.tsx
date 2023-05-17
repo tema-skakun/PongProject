@@ -26,6 +26,14 @@ let MatchItems = (props: any) => {
 
 	const { setMatchHistoryList } = props;
 
+	// useEffect(() => {
+	// 	console.log('Empty dependencies of MatchItems');
+	// }, [])
+
+	// useEffect(() => {
+	// 	console.log('Props dependeny of matchItems');
+	// }, [props])
+
 	useEffect(() => {
 		const baseUrl = (intra_id) ? endpoint + intra_id : endpoint;
 		axios.get(baseUrl, {
@@ -35,7 +43,6 @@ let MatchItems = (props: any) => {
 			}
 		})
 		.then((res: AxiosResponse<any, any>) => {
-			console.log('EXECUTED ONCE');
 			setMatchHistoryList(res.data);
 		})
 	}, [setMatchHistoryList])
@@ -46,16 +53,36 @@ let MatchItems = (props: any) => {
 			props.matchHistoryList.map((entry: MatchHistoryEntry) => 
 			<div className={style.match} key={entry.id}>
 				<div className={style.player1}>
-					<img alt="winner profile pic" src={entry.winner.picture_url}></img>
-					<div>{entry.winner.username}</div>
+
+					{ (props.user.intra_id === entry.winner.intra_id) ?
+					<span>
+						<img alt="winner profile pic" src={props.picUrl}></img>
+						<div>{props.username}</div>
+					</span>
+					:
+					<span>
+						<img alt="winner profile pic" src={entry.winner.picture_url}/>
+						<div>{entry.winner.username}</div>
+					</span>
+					}
+					
 				</div>
 				<div className={style.score}>
 					<h3>VS</h3>
 					<div>{entry.winnerGoals} : {entry.looserGoals}</div>
 				</div>
 				<div className={style.player2}>
-					<img alt="looser profile pic" src={entry.looser.picture_url}></img>
-					<div>{entry.looser.username}</div>
+					{ (props.user.intra_id === entry.looser.intra_id) ?
+					<span>
+						<img alt="looser profile pic" src={props.picUrl}></img>
+						<div>{props.username}</div>
+					</span>
+					:
+					<span>
+						<img alt="looser profile pic" src={entry.looser.picture_url}/>
+						<div>{entry.looser.username}</div>
+					</span>
+					}
 				</div>
 			</div>)
 			}

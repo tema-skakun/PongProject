@@ -27,5 +27,5 @@ export const Ladder: React.FC<any> = (props) => {
 	if (isNaN(Number(percentile)))
 		return <span>Not ranked yet</span>
 
-	return <span> PERCENTILE: {percentile}th</span>
+	return <span> PERCENTILE: {Number(percentile).toFixed(2)}th</span>
 }

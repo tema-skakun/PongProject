@@ -25,7 +25,8 @@ export class StatusService {
 
 		console.log(`clients size: ${clients.size}`);
 		clients.forEach((client, socketId) => {
-			statusMap.set( clients.get(socketId).intraId , client.playernum ? ClientStatus.INGAME : ClientStatus.CONNECTED)
+			if ( statusMap.get(clients.get(socketId).intraId) !== ClientStatus.INGAME )
+				statusMap.set( clients.get(socketId).intraId , client.playernum ? ClientStatus.INGAME : ClientStatus.CONNECTED)
 		});
 
 		statusMap.forEach((intra, key) => {

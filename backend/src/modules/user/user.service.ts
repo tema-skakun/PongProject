@@ -16,6 +16,13 @@ export class UserService {
 		return this.userRepository.save(newUser);
 	}
 
+	async findBefrienders(intra_id: number) {
+		const befrienders = await this.userRepository.createQueryBuilder('user')
+			.innerJoin('user.friends', 'friend', 'friend.intra_id = :intra_id', { intra_id })
+			.getMany();
+		return new Set(befrienders.map(befriender => Number(befriender.intra_id) ));
+	}
+
 	async getnotBlockedUsers(intra_id: number) {
 		const allUsers = await this.userRepository.find({
 			relations: ['blockedUsers'],

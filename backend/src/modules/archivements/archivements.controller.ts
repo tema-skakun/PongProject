@@ -1,6 +1,9 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, Req, UseGuards } from '@nestjs/common';
 import { User } from 'src/entities';
 import { UserService } from '../user/user.service';
+import JwtTwoFactorGuard from 'src/GuardStrategies/Jwt2F.guard';
+import { ObjectPruningMany } from 'src/tools/objectPruning';
+import { ArchivementsTransformed } from 'src/entities/archivements/archivments.transformend.entity';
 
 @Controller('archivements')
 export class ArchivementsController {
@@ -8,15 +11,18 @@ export class ArchivementsController {
 		private usrService: UserService,
 	) {}
 
-	@Get('/')
-	test() {
-		return "HEELLLo";
-	}
+	@Get('/:id?')
+	@UseGuards(JwtTwoFactorGuard)
+	async getArchivements(@Param('id') intraId: string, @Req() req: any): Promise<ArchivementsTransformed []> {
+		let chosenId: number = req.user.intra_id;
 
-	@Get('/:id')
-	async getArchivements(@Param('id') intraId: number) {
-		const user: User = await this.usrService.findUserByIdAndGetRelated(intraId, ['archivements']);
-		return user.archivements;
+		if (intraId && !isNaN(Number(intraId))) {
+			chosenId = Number(intraId);
+		}
+
+		const user: User = await this.usrService.findUserByIdAndGetRelated(chosenId, ['archivements']);
+
+		return ObjectPruningMany(ArchivementsTransformed ,user.archivements);
 	}
 
 }

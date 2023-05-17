@@ -12,7 +12,9 @@ export function spawnY(): number {
 export function socketToCookie(socket: Socket) : string
 {
 	if (!socket.handshake.headers.cookie)
-		throw Error('no cookie was set');
+	{
+		console.warn('no cookie was set');
+	}
 	return (socket.handshake.headers.cookie)
 }
 

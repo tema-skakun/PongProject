@@ -4,6 +4,8 @@ import { ChannelService } from "../channel/channel.service";
 import { UserService } from "../user/user.service";
 import { MessageService } from "./message.service";
 import JwtTwoFactorGuard from "src/GuardStrategies/Jwt2F.guard";
+import { ObjectPruningMany } from "src/tools/objectPruning";
+import { MessageTransformed } from "src/entities/message/message.transformed";
 
 
 @Controller('messages')
@@ -14,8 +16,9 @@ export class MessageController {
 	}
 	
 	@Get('all')
+	@UseGuards(JwtTwoFactorGuard)
 	async getAllMess() {
-		return await this.messageservice.getAll();
+		return ObjectPruningMany(MessageTransformed, await this.messageservice.getAll());
 	}
 
 	// @Post('create')
@@ -39,7 +42,7 @@ export class MessageController {
 	// 		}
 	// }
 
-	@Get('/:channelId')
+	@Get('channel/:channelId')
 	@UseGuards(JwtTwoFactorGuard)
 	async getChannelMessages(
 		@Req() req: any,

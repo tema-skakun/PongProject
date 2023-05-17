@@ -4,6 +4,8 @@ import { Param } from '@nestjs/common';
 import JwtTwoFactorGuard from 'src/GuardStrategies/Jwt2F.guard';
 import { User } from 'src/entities';
 import { ClientStatus, StatusService } from '../status/status.service';
+import { ObjectPruning } from 'src/tools/objectPruning';
+import { UserTransformed } from 'src/entities/user/user.transformed';
 
 
 export type FriendDto = {
@@ -21,31 +23,39 @@ export class FriendsController {
 
 	@Delete('/:id')
 	@UseGuards(JwtTwoFactorGuard)
-	async deleteFriend(@Param('id') id: number, @Req() req: any): Promise<boolean> {
-		return await this.friendsService.deleteFriend(req.user.intra_id, id);
+	async deleteFriend(@Param('id') id: string, @Req() req: any): Promise<boolean> {
+		let chosenId: number = req.user.intra_id;
+
+		if (id && !isNaN(Number(id))) {
+			chosenId = Number(id);
+		}
+
+		return await this.friendsService.deleteFriend(req.user.intra_id, chosenId);
 	}
 
 
 	@Post('/:id')
 	@UseGuards(JwtTwoFactorGuard)
-	async addFriend(@Param('id') id: number, @Req() req: any): Promise<User> {
-		return await this.friendsService.addFriend(req.user.intra_id , id);
+	async addFriend(@Param('id') id: string, @Req() req: any): Promise<UserTransformed> {
+		let chosenId: number = req.user.intra_id;
+
+		if (id && !isNaN(Number(id))) {
+			chosenId = Number(id);
+		}
+
+		return ObjectPruning(UserTransformed, await this.friendsService.addFriend(req.user.intra_id , chosenId));
 	}
 
-	@Get('/displayable/:id')
-	// @UseGuards(JwtTwoFactorGuard)
-	async getDisplayables(@Param('id') id: number): Promise<FriendDto []> {
-		const friendsEntity: User [] = await this.friendsService.getFriends(id);
-
-		const friendsDto: FriendDto [] = await Promise.all(friendsEntity.map(async friend => {
-			return await this.friendsService.entityToDisplayable(friend);
-		}))
-		return (friendsDto);
-	}
-	@Get('/displayable')
+	@Get('/displayable/:id?')
 	@UseGuards(JwtTwoFactorGuard)
-	async getDisplayablesAll(@Req() req: any): Promise<FriendDto []> {
-		const friendsEntity: User [] = await this.friendsService.getFriends(req.user.intra_id);
+	async getDisplayablesAll(@Req() req: any, @Param('id') id?: string): Promise<FriendDto []> {
+		let chosenId: number = req.user.intra_id;
+
+		if (id && !isNaN(Number(id))) {
+			chosenId = Number(id);
+		}
+
+		const friendsEntity: User [] = await this.friendsService.getFriends(chosenId);
 		if (friendsEntity.length === 0)
 			return [];
 		const friendsDto: FriendDto [] = await Promise.all(friendsEntity.map(async friend => {

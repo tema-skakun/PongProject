@@ -1,4 +1,4 @@
-import { Controller, Req, UseGuards } from '@nestjs/common';
+import { Controller, Param, Req, UseGuards } from '@nestjs/common';
 import { ClientStatus, StatusService } from './status.service';
 import { Get } from '@nestjs/common';
 import JwtTwoFactorGuard from '../../GuardStrategies/Jwt2F.guard'
@@ -11,12 +11,18 @@ export class StatusController {
 	constructor(private statusService: StatusService,
 		@InjectRepository(User) private userRep: Repository<User>) {}
 
-	@Get('/')
+	@Get('/:id?')
 	@UseGuards(JwtTwoFactorGuard)
-	async getStatus(@Req() req: any): Promise< Object > {
+	async getStatus(@Req() req: any, @Param() id: number): Promise< Object > {
+		let chosenId: number = req.user.intra_id;
+
+		if (id && !isNaN(Number(id))) {
+			chosenId = Number(id);
+		}
+
 		const requesterEntity: User = await this.userRep.findOne({
 			where: {
-				intra_id: req.user.intra_id
+				intra_id: chosenId
 			},
 			relations: ['friends']
 		})
@@ -39,4 +45,5 @@ export class StatusController {
 		})
 		return retObj;
 	}
+	
 }

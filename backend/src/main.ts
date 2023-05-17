@@ -4,10 +4,7 @@ import { AppModule } from './modules/app/app.module';
 import * as cookieParser from 'cookie-parser';
 import { Server } from 'socket.io';
 import * as cors from 'cors';
-
-// if (!process.env.FRONTEND_URL) {
-// 	  throw new Error('FRONTEND_URL is not set in .env file');
-// }
+import * as bodyParser from 'body-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { cors: true});
@@ -15,11 +12,9 @@ async function bootstrap() {
 	whitelist: true,
   }
   ));
+  app.use(bodyParser.json({limit: '50mb'}));
+  app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
   app.use(cookieParser());
- //  app.enableCors({
-	// origin: process.env.FRONTEND_URL,
-	// credentials: true,
- //  });
 
 app.use(cors((req, callback) => {
 	// Replace this with your own logic to validate the request's origin.

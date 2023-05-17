@@ -6,6 +6,7 @@ import { Repository } from 'typeorm';
 import { FriendDto } from './friends.controller';
 import { StatusService } from '../status/status.service';
 import { ClientStatus } from '../status/status.service';
+import { clients } from '../game/game.gateway';
 
 @Injectable()
 export class FriendsService {

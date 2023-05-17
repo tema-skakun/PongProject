@@ -2,7 +2,7 @@ import { ForbiddenException, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { UserDto } from '../../entities/user/user.dto';
 import { User } from "../../entities/user/user.entity";
-import { Repository } from "typeorm";
+import { JsonContains, Repository } from "typeorm";
 import { MatchHistoryEntry } from "src/entities/matchHistoryEntry/matchHistoryEntry.entity";
 
 @Injectable()
@@ -26,7 +26,7 @@ export class UserService {
 			},
 			relations: ['blockedUsers'],
 		});
-		const notBannedUsers: User[] = [];
+		const notBlockedUsers: User[] = [];
 		for (const user of allUsers) {
 			if (user.intra_id === intra_id) {
 				continue;
@@ -37,9 +37,9 @@ export class UserService {
 			if (user.blockedUsers.some((blockedUser) => blockedUser.intra_id === intra_id)) {
 			continue;
 			}
-			notBannedUsers.push(user);
+			notBlockedUsers.push(user);
 		}
-		return notBannedUsers;
+		return notBlockedUsers;
 	}
 
 	async isBlocked(intra_id: number, userIdToCheck: number) {
@@ -96,16 +96,23 @@ export class UserService {
 		});
 	}
 
-	async updateUsernameAndPic(userid: number, newUsername: string, newPicUrl: string) {
+	async updatePic(userid: number, newPicUrl: string) {
+
 		await this.userRepository.update({
 			intra_id: userid, },  {
 			picture_url: newPicUrl,
 		});
+		
+	}
+
+	async updateUsername(userid: number, newUsername: string) {
+
 		try {
 			await this.userRepository.update({
 				intra_id: userid, },   {
 					username: newUsername,
 				});
+			return newUsername
 		} catch {
 			throw new ForbiddenException('Username already exists');
 		}
@@ -139,6 +146,12 @@ export class UserService {
 		});
 	}
 
+	async turnOffTwoFactorAuthentication(intra_id: number) {
+		return this.userRepository.update(intra_id, {
+		  isTwoFactorAuthenticationEnabled: false
+		});
+	}
+
 	incr_totalWins(usrEntity: User) {
 		if (!usrEntity.total_wins)
 			usrEntity.total_wins = 0;
@@ -163,23 +176,18 @@ export class UserService {
 		const usr: User = await this.userRepository.findOneBy({
 			intra_id: intra_id
 		})
-		if (usr.total_losses === 0) 
-			return "not ranked yet";
-		return usr.total_wins / usr.total_losses
+		if (usr.total_losses === 0 && usr.total_wins === 0)
+			return 'not ranked yet'
+
+		return (usr.total_wins / (usr.total_losses + usr.total_wins))
 	}
 
-	async getWinsToLossesArray(): Promise<number []> {
+	async getWinsToGamesArray(): Promise<number []> {
 		const usr: User [] = await this.userRepository.find();
-		console.log(`length of usr arr: ${usr.length}`);
 
 		const ratio_arr: number [] = [];
 		for (const usrEntity of usr) {
-			console.log(`total losses:  ${usrEntity.total_losses}`)
-			console.log(`total wins:  ${usrEntity.total_wins}`)
-			if (usrEntity.total_losses === 0)
-				continue;
-			else
-				ratio_arr.push(usrEntity.total_wins / usrEntity.total_losses);
+			ratio_arr.push(usrEntity.total_wins / (usrEntity.total_losses + usrEntity.total_wins));
 		}
 		
 		ratio_arr.sort();

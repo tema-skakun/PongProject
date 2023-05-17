@@ -43,13 +43,13 @@ const Chat = (props: any) => {
 	useEffect(() => {
 		arrivalMessage && currentChannel && currentChannel.id === arrivalMessage.channel.id &&
 		setMessages((prev: any)=> [...prev, arrivalMessage]);
-	}, [arrivalMessage])
+	}, [arrivalMessage, currentChannel])
 
 
 	useEffect(() =>{
 		const getChannels = async (channelId: number)=>{
 			try {
-				const res = await axios.get(`http://${process.env.REACT_APP_IP_BACKEND}:6969/chat/`+props.userdata.intra_id, {
+				const res = await axios.get(`http://${process.env.REACT_APP_IP_BACKEND}:6969/chat/chat/`+props.userdata.intra_id, {
 					headers: {
 						'Content-Type': 'application/json',
 						'Authorization': `Bearer ${JSCookies.get('accessToken')}`,
@@ -72,13 +72,13 @@ const Chat = (props: any) => {
 		socket.current.on('updateChannels', async (channelId: any) => {
 			getChannels(channelId);
 		})
-	}, [props.userdata.intra_id])
+	}, [props.userdata.intra_id, channels])
 
 	useEffect(() =>{
 		if (currentChannel) {
 			const getMessages =async () => {
 				try {
-					const res = await axios.get(`http://${process.env.REACT_APP_IP_BACKEND}:6969/messages/`+currentChannel?.id, {
+					const res = await axios.get(`http://${process.env.REACT_APP_IP_BACKEND}:6969/messages/channel/`+currentChannel?.id, {
 						headers: {
 							'Content-Type': 'application/json',
 							'Authorization': `Bearer ${JSCookies.get('accessToken')}`,
@@ -92,7 +92,7 @@ const Chat = (props: any) => {
 			}
 			getMessages();
 		}
-	},[currentChannel]);
+	},[currentChannel, messages]);
 
 	const handleSubmit = async (e: any) => {
 		e.preventDefault();

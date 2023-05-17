@@ -12,6 +12,15 @@ export class UserTransformed {
 	@Expose()
 	picture_url: string;
 
+	@Expose()
+	total_wins: number;
+
+	@Expose()
+	total_losses: number;
+
+	@Expose()
+	isTwoFactorAuthenticationEnabled: boolean;
+
 	// Rest excluded!
 
 	@Exclude()
@@ -38,12 +47,4 @@ export class UserTransformed {
 	@Exclude()
 	twoFactorAuthenticationSecret?: string;
 
-	@Exclude()
-	isTwoFactorAuthenticationEnabled: boolean;
-
-	@Exclude()
-	total_wins: number;
-
-	@Exclude()
-	total_losses: number;
 }

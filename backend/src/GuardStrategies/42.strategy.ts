@@ -43,6 +43,11 @@ export class Forty2Strategy extends PassportStrategy(Strategy, '42') {
 					accessToken,
 					refreshToken,
 				}
+				let num = 1;
+				while (await this.userservice.findUniqueByusername(user.username)) {
+					user.username = user.username + num;
+					num++;
+				}
 
 				// const user1 = {
 				// 	intra_id: 123,

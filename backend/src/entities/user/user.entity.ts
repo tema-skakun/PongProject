@@ -108,4 +108,7 @@ export class User {
 	@ManyToMany(() => Channel, channel => channel.bannedUsers)
 	bannedFromChannels?: Channel[];
 
+	@ManyToMany(() => Channel, channel => channel.invited)
+	invitedToChannels?: Channel[];
+
 }

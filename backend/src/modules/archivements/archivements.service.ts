@@ -16,8 +16,14 @@ export class ArchivementsService {
 	{
 		const archivmentEntity: Archivements = new Archivements();
 		const user: User = await this.usrService.findUsersById(intraId);
-		archivmentEntity.holder = user;
-		archivmentEntity.type = type;
-		this.rep.save(archivmentEntity);
+		
+		const archivementsArr: Archivements [] = await this.rep.find();
+		archivementsArr.filter(arch => arch.type === type);
+		if (archivementsArr.length === 0)
+		{
+			archivmentEntity.holder = user;
+			archivmentEntity.type = type;
+			this.rep.save(archivmentEntity);
+		}
 	}
 }

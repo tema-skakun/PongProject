@@ -79,8 +79,6 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
 	// <Loop>
 		player2.gameLoop = setInterval(async () => {
-		console.timeLog('process');
-		console.timeEnd('process');
 		this.gameService.physics(player2);
 
 		// <Emission>
@@ -89,7 +87,6 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 		this.gameService.goals(player2);
 		// </Emission>
 
-		console.time('process');
 		}, CONFIG.UPDATE_INTERVAL)
 	// </Loop>
   }

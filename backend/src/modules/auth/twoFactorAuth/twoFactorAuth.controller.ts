@@ -16,6 +16,7 @@ import { UserService } from 'src/modules/user/user.service';
 import { AuthenticationService } from '../auth.service';
 import JwtGuard from 'src/GuardStrategies/jwt.guard';
 import * as qrcode from 'qrcode';
+import JwtTwoFactorGuard from 'src/GuardStrategies/Jwt2F.guard';
    
   @Controller('2fa')
   @UseInterceptors(ClassSerializerInterceptor)
@@ -31,25 +32,34 @@ import * as qrcode from 'qrcode';
 	@UseGuards(JwtGuard)
 	async turnOnTwoFactorAuthentication(
 		@Req() request: any,
+		@Res() res: any,
 		@Body() { twoFactorAuthenticationCode } : any
 	) {
-		const isCodeValid = this.twoFactorAuthenticationService.isTwoFactorAuthenticationCodeValid(
-		twoFactorAuthenticationCode, request.user
-		);
-		if (!isCodeValid) {
-			throw new UnauthorizedException('Wrong authentication code');
+		try {
+			const isCodeValid = this.twoFactorAuthenticationService.isTwoFactorAuthenticationCodeValid(
+			twoFactorAuthenticationCode, request.user
+			);
+			if (!isCodeValid) {
+				throw new Error('Wrong authentication code');
+			}
+			await this.userService.turnOnTwoFactorAuthentication(request.user.intra_id);
+			const accessToken = this.authenticationService.getCookieWithJwtAccessToken(request.user.id, true);
+			res.status(200).json(accessToken);
+		} catch(err) {
+			res.status(400).json({ message: err.message });
 		}
-		await this.userService.turnOnTwoFactorAuthentication(request.user.intra_id);
 	}
 
 	@Post('generate')
 	@UseGuards(JwtGuard)
 	async register(@Res() res: Response, @Req() req: any) {
-	  	const { otpauthUrl } = await this.twoFactorAuthenticationService.generateTwoFactorAuthenticationSecret(req.user);
-		const qrCode = await qrcode.toBuffer(otpauthUrl);
+		if (!req.user.isTwoFactorAuthenticationEnabled) {
+			const { otpauthUrl } = await this.twoFactorAuthenticationService.generateTwoFactorAuthenticationSecret(req.user);
+			const qrCode = await qrcode.toBuffer(otpauthUrl);
 
-		res.setHeader('Content-Type', 'image/png'); // Update with the appropriate MIME type
-		res.send(qrCode);
+			res.setHeader('Content-Type', 'image/png'); // Update with the appropriate MIME type
+			res.send(qrCode);
+		}
 	}
 
 	@Post('authenticate')
@@ -63,11 +73,25 @@ import * as qrcode from 'qrcode';
 		twoFactorAuthenticationCode, request.user
 		);
 		if (!isCodeValid) {
-		throw new UnauthorizedException('Wrong authentication code');
+			throw new UnauthorizedException('Wrong authentication code');
 		}
 	
 		const accessToken = this.authenticationService.getCookieWithJwtAccessToken(request.user.id, true);
 	
 		return accessToken;
+	}
+	
+	@Post('turn-off')
+	@UseGuards(JwtTwoFactorGuard)
+	async turnOffTwoFactorAuthentication(
+		@Req() request: any,
+		@Res() res: any,
+	) {
+		try {
+			await this.userService.turnOffTwoFactorAuthentication(request.user.intra_id);
+			res.status(200).json();
+		} catch (err) {
+			res.status(400).json(err);
+		}
 	}
   }

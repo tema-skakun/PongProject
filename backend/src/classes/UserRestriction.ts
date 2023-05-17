@@ -28,7 +28,9 @@ export class UserRestriction {
 
 	switch(on: boolean, userId: string, action: string, props: any = undefined) {
 		if (!this.restrictions.has(action))
-			throw Error('Action does not exists');
+		{
+			console.warn('Action does not exists');
+		}
 		else if (!this.restrictions.get(action).has(userId))
 			{
 				console.log(`Notice: state switch was not yet attached to ${userId}`);
@@ -50,7 +52,9 @@ export class UserRestriction {
 
 	attachStateSwitch(userId: string, action: string, stateSwitch: SwitchFunction, initalState: boolean = true) {
 		if (!this.restrictions.has(action))
-			throw Error('Action does not exist');
+		{
+			console.warn('Action does not exist');
+		}
 
 		this.restrictions.set(action, this.restrictions.get(action).set(userId, {state: initalState, stateChange: stateSwitch}) )
 	}

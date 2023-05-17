@@ -18,7 +18,6 @@ const Profile = (props: any) => {
 	const [picUrl, setPicUrl] = useState<string>('');
 	const [username, setUsername] = useState<string>('Schlongo');
 
-	// console.log('profile');
 	let endpoint: string = `http://${process.env.REACT_APP_IP_BACKEND}:6969/users/user/`;
 
 	useEffect(() => {
@@ -30,7 +29,6 @@ const Profile = (props: any) => {
 	}, [props])
 
 
-	// console.log(endpoint);
 	useEffect(() => {
 		const fullEnpoint = endpoint + intra_id;
 		axios.get(fullEnpoint, {

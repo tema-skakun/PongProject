@@ -17,7 +17,7 @@ function unfriend(intraId: number) {
         'Authorization': `Bearer ${JSCookies.get('accessToken')}`,
     };
 
-    axios.delete(ROOT_ADDR_OF_FRIENDS, {
+    axios.delete(ROOT_ADDR_OF_FRIENDS + intraId, {
         method: 'DELETE',
         headers: headers,
     })
@@ -25,7 +25,6 @@ function unfriend(intraId: number) {
 
 class FriendsAPIComponent extends React.Component<any, any> {
     componentDidMount() {
-
         const headers: any = {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${JSCookies.get('accessToken')}`,
@@ -55,6 +54,7 @@ class FriendsAPIComponent extends React.Component<any, any> {
                 follow={this.props.follow}
                 unfollow={this.props.unfollow}
                 unfriend={unfriend}
+				setUsers={this.props.setUsers}
             />
         )
     }

@@ -28,6 +28,7 @@ let Friends = (props: any) => {
 									(intra_id) ? <></> :
                                     <button onClick={() => {
                                         props.unfriend(u.id)
+										props.setUsers(props.users.filter((user: FriendDto) => user.id !== u.id));
                                     }}>Unfriend</button>
 									}
                                 </div>

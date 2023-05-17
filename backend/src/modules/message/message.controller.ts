@@ -51,7 +51,7 @@ export class MessageController {
 		try {
 			const channel = await this.channelservice.findChannelById(req.params.channelId);
 			if (!channel)
-				throw new BadRequestException
+				throw new Error('No such channel')
 			const channelMessages = await this.messageservice.findChannelMessages(channel);
 			res.status(200).json(channelMessages);
 		}catch(err) {

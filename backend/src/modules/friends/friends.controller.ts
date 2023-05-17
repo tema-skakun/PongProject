@@ -49,7 +49,7 @@ export class FriendsController {
 	@Get('/displayable/:id?')
 	@UseGuards(JwtTwoFactorGuard)
 	async getDisplayablesAll(@Req() req: any, @Param('id') id?: string): Promise<FriendDto []> {
-		let chosenId: number = req.user.intra_id;
+		let chosenId: number = Number(req.user.intra_id);
 
 		if (id && !isNaN(Number(id))) {
 			chosenId = Number(id);

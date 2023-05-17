@@ -180,7 +180,7 @@ export class Client extends Socket {
 	private _intraId: number;
 	set cookie(aCookie: Record<string, any>) {
 		this._cookie = aCookie;
-		this._intraId = aCookie.intra_id;
+		this._intraId = Number(aCookie.intra_id);
 	}
 	get cookie(): Record<string, any> {
 		return (this._cookie);

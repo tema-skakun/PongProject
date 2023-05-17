@@ -22,13 +22,11 @@ export type MatchHistoryEntry = {
 
 let MatchItems = (props: any) => {
 	const {intra_id} = useParams();
-
-	let endpoint: string = `http://${process.env.REACT_APP_IP_BACKEND}:6969/match-history/`;
-	if (intra_id)
-		endpoint.concat(intra_id);
+	const endpoint = `http://${process.env.REACT_APP_IP_BACKEND}:6969/match-history/`;
 
 	useEffect(() => {
-		axios.get(endpoint, {
+		const baseUrl = (intra_id) ? endpoint.concat(intra_id) : endpoint;
+		axios.get(baseUrl, {
 			headers: {
 				'Content-Type': 'application/json',
 				'Authorization': `Bearer ${JSCookies.get('accessToken')}`,
@@ -37,7 +35,7 @@ let MatchItems = (props: any) => {
 		.then((res: AxiosResponse<any, any>) => {
 			props.setMatchHistoryList(res.data);
 		})
-	}, [props.setMatchHistoryList])
+	}, [props, endpoint])
 
     return (
 		<span>
@@ -45,7 +43,7 @@ let MatchItems = (props: any) => {
 			props.matchHistoryList.map((entry: MatchHistoryEntry) => 
 			<div className={style.match} key={entry.id}>
 				<div className={style.player1}>
-					<img src={entry.winner.picture_url}></img>
+					<img alt="winner profile pic" src={entry.winner.picture_url}></img>
 					<div>{entry.winner.username}</div>
 				</div>
 				<div className={style.score}>
@@ -53,7 +51,7 @@ let MatchItems = (props: any) => {
 					<div>{entry.winnerGoals} : {entry.looserGoals}</div>
 				</div>
 				<div className={style.player2}>
-					<img src={entry.looser.picture_url}></img>
+					<img alt="looser profile pic" src={entry.looser.picture_url}></img>
 					<div>{entry.looser.username}</div>
 				</div>
 			</div>)

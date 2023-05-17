@@ -5,7 +5,6 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import axios from "axios";
 import JSCookies from 'js-cookie';
 import TwoFactorAuthSwitch from "./twofactor";
-import { propTypes } from "react-bootstrap/esm/Image";
 import { MatchHistoryEntry } from "../MatchItems/MatchItems";
 
 const EditProfile = (props: any) => {
@@ -61,7 +60,7 @@ const EditProfile = (props: any) => {
 			console.log(JSON.stringify(error));
 		})
 
-	}, [curFile])
+	}, [curFile, props])
 
 	const triggerFileInput = useCallback(() => {
 		if (fileRef.current)
@@ -81,7 +80,7 @@ const EditProfile = (props: any) => {
             setNewUsername(''); // reset the new username
 			props.setUser({...props.user, username: response.data})
         })
-    }, [newUsername, setNewUsername, setShowUsernameModal]);
+    }, [newUsername, setNewUsername, setShowUsernameModal, props]);
 
 	const handleTwoFactorAuthClick = () => {
 		setShowTwoFactorAuth(!showTwoFactorAuth);

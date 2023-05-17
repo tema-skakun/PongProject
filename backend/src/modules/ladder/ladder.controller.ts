@@ -20,7 +20,7 @@ export class LadderController {
 			chosenId = Number(intraId);
 		}
 
-		const winsToLosses: number [] = await this.usrService.getWinsToLossesArray();
+		const winsToLosses: number [] = await this.usrService.getWinsToGamesArray();
 		const myWinToLoss: number | string = await this.usrService.getWinsToLossesRatio(chosenId);
 		if (typeof myWinToLoss === 'string')
 		{
@@ -37,7 +37,7 @@ export class LadderController {
 	@UseGuards(JwtTwoFactorGuard)
 	async winsToLossesAll()
 	{
-		return this.usrService.getWinsToLossesArray(); 
+		return this.usrService.getWinsToGamesArray(); 
 	}
 
 	@Get('ladder/:id')

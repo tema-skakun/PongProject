@@ -176,6 +176,9 @@ export class UserService {
 		const usr: User = await this.userRepository.findOneBy({
 			intra_id: intra_id
 		})
+		if (usr.total_losses === 0 && usr.total_wins === 0)
+			return 'not ranked yet'
+
 		return (usr.total_wins / (usr.total_losses + usr.total_wins))
 	}
 

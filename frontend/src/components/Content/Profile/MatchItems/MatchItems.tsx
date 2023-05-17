@@ -26,6 +26,14 @@ let MatchItems = (props: any) => {
 
 	const { setMatchHistoryList } = props;
 
+	// useEffect(() => {
+	// 	console.log('Empty dependencies of MatchItems');
+	// }, [])
+
+	// useEffect(() => {
+	// 	console.log('Props dependeny of matchItems');
+	// }, [props])
+
 	useEffect(() => {
 		const baseUrl = (intra_id) ? endpoint + intra_id : endpoint;
 		axios.get(baseUrl, {
@@ -35,7 +43,6 @@ let MatchItems = (props: any) => {
 			}
 		})
 		.then((res: AxiosResponse<any, any>) => {
-			console.log('EXECUTED ONCE');
 			setMatchHistoryList(res.data);
 		})
 	}, [setMatchHistoryList])

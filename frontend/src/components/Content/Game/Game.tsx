@@ -52,6 +52,22 @@ function Game({CONFIG, setCONFIG, winningRef}: {CONFIG: Config, setCONFIG: Funct
 		setDisplayPopUp(!displayPopUp);
 	}, [setDisplayPopUp, displayPopUp]);
 
+	useEffect(() => {
+		axios.get(`http://${process.env.REACT_APP_IP_BACKEND}:6969/status/self`, {
+			headers: {
+				'Content-Type': 'application/json',
+				'Authorization': `Bearer ${JSCookies.get('accessToken')}`,
+			}
+		})
+		.then(res => {
+			const myStatus = res.data;
+			if (myStatus === "INGAME")
+			{
+				setDisplayBtn(false);
+			}
+		})
+	})
+
 	const displayMeme = useCallback((arch: archivements) => {
 		if (arch === archivements.chad)
 			memeUrl.current = '/pug-dance.gif';

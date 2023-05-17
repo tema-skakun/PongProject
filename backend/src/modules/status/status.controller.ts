@@ -11,7 +11,15 @@ export class StatusController {
 	constructor(private statusService: StatusService,
 		@InjectRepository(User) private userRep: Repository<User>) {}
 
-	@Get('/:id?')
+	@Get('/self')
+	@UseGuards(JwtTwoFactorGuard)
+	async getOwnStatus(@Req() req: any) {
+
+		const statusMap: Map<number, ClientStatus> =  await this.statusService.getStatus();
+		return statusMap.get(Number(req.user.intra_id));
+	}
+	
+	@Get('status/:id?')
 	@UseGuards(JwtTwoFactorGuard)
 	async getStatus(@Req() req: any, @Param() id: number): Promise< Object > {
 		let chosenId: number = req.user.intra_id;

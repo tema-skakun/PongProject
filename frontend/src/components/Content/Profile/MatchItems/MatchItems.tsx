@@ -53,7 +53,11 @@ let MatchItems = (props: any) => {
 			props.matchHistoryList.map((entry: MatchHistoryEntry) => 
 			<div className={style.match} key={entry.id}>
 				<div className={style.player1}>
-					<img alt="winner profile pic" src={entry.winner.picture_url}></img>
+
+					{ (props.user.intra_id === entry.winner.intra_id) ?
+					<img alt="winner profile pic" src={props.picUrl}></img> :
+					<img alt="winner profile pic" src={entry.winner.picture_url}/>
+					}
 					<div>{entry.winner.username}</div>
 				</div>
 				<div className={style.score}>
@@ -61,7 +65,10 @@ let MatchItems = (props: any) => {
 					<div>{entry.winnerGoals} : {entry.looserGoals}</div>
 				</div>
 				<div className={style.player2}>
-					<img alt="looser profile pic" src={entry.looser.picture_url}></img>
+					{ (props.user.intra_id === entry.looser.intra_id) ?
+					<img alt="looser profile pic" src={props.picUrl}></img> :
+					<img alt="looser profile pic" src={entry.looser.picture_url}/>
+					}
 					<div>{entry.looser.username}</div>
 				</div>
 			</div>)

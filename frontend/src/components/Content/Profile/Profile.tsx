@@ -15,6 +15,7 @@ const Profile = (props: any) => {
 	const {intra_id} = useParams();
 	const [fetchedUser, setFetchedUser] = useState<Record<string, any>>({});
 	const [matchHistoryList, setMatchHistoryList] = useState<MatchHistoryEntry []>([]);
+	const [picUrl, setPicUrl] = useState<string>('');
 
 	// console.log('profile');
 	let endpoint: string = `http://${process.env.REACT_APP_IP_BACKEND}:6969/users/user/`;
@@ -37,20 +38,19 @@ const Profile = (props: any) => {
 				'Authorization': `Bearer ${JSCookies.get('accessToken')}`,
 			}
 		}).then((res: AxiosResponse<any, any>) => {
+			setPicUrl(res.data.picture_url);
 			// console.log(`inital: ${JSON.stringify(props.profilePage.user)}`);
 			// console.log(JSON.stringify(res.data));
 			// props.profilePage.user = res.data;
 			setFetchedUser(res.data);
 		})
-	}, [endpoint, intra_id]);
-
-	// console.log(`newPicture: ${fetchedUser.picture_url}`);
+	}, [endpoint, intra_id, setPicUrl]);
 
     return (
         <div className={style.profile}>
             <div className={style.user}>
                 <img
-                    src={fetchedUser.picture_url}
+                    src={picUrl}
                     alt="Avatar"
                 />
                 <div>
@@ -59,7 +59,7 @@ const Profile = (props: any) => {
 				{ (intra_id) ?
 				<></>:
                 <div>
-                    <EditProfile user={fetchedUser} setUser={setFetchedUser} setMatchHistoryList={setMatchHistoryList} matchHistoryList={matchHistoryList} />
+                    <EditProfile setPicUrl={setPicUrl} user={fetchedUser} setUser={setFetchedUser} />
                 </div>
 				}
                 <div>
@@ -75,7 +75,7 @@ const Profile = (props: any) => {
             <div className={style.stat}>
                 <h2>Match history</h2>
 				<div>
-                    <MatchItems matchHistoryList={matchHistoryList} setMatchHistoryList={setMatchHistoryList} />
+                    <MatchItems picUrl={picUrl} matchHistoryList={matchHistoryList} setMatchHistoryList={setMatchHistoryList} user={fetchedUser} />
                 </div>
             </div>
             <div className={style.friends}>

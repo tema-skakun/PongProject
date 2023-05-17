@@ -1,6 +1,7 @@
 import { useParams } from "react-router-dom";
 import defaultAvatar from "../../../../assets/images/defaultAvatar.png";
-import React from "react";
+import React, { useCallback, useEffect, useState } from "react";
+import { socket } from "../../../../App";
 
 type FriendDto = {
     name: string;
@@ -10,7 +11,34 @@ type FriendDto = {
 };
 
 let Friends = (props: any) => {
+	const [status, setStatus] = useState<Map<number, string> >(new Map());
 	const {intra_id} = useParams();
+
+	const eventHandler = useCallback((change: any) => {
+		console.log(`Getting into the event handler ${change.intra_id} to ${change.newStatus}`);
+		const copyMap = status;
+		console.log(typeof change.intra_id);
+		setStatus(copyMap.set(change.intra_id, change.newStatus));
+	}, [setStatus, status])
+
+	useEffect(() => {
+		const copyMap = status;
+		for (const user of props.users)
+		{
+			setStatus(copyMap.set(Number(user.id), user.status));
+		}
+
+		if (!socket)
+			return ;
+
+		socket.on('statusChange', eventHandler);
+
+		return (() => {
+			if (!socket)
+				return;
+			socket.off('statusChange', eventHandler);
+		})
+	}, [props.users])
 
     return (
         <div>
@@ -36,7 +64,7 @@ let Friends = (props: any) => {
                     <span>
                                 <span>
                                     <div>{u.name}</div>
-                                    <div>{u.status}</div>
+                                    <div>{status.get(u.id)}</div>
                                 </span>
                             </span>
                 </div>)

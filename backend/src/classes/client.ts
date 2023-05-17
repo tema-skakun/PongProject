@@ -330,7 +330,7 @@ export class Client extends Socket {
 			if (this.befriendedBy.has(client[1].intraId))
 			{
 				client[1].emit('statusChange', {
-					intra_id: client[1].intraId,
+					intra_id: this.intraId,
 					newStatus: status
 				})
 			}

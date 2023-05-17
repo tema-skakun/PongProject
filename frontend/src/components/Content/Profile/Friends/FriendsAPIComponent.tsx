@@ -1,7 +1,8 @@
 import axios from 'axios';
-import React from 'react';
+import React, { useEffect } from 'react';
 import JSCookies from 'js-cookie';
 import Friends from './Friends';
+import { socket } from '../../../../App';
 
 const BACKEND_PORT: string = ':6969';
 const URL: string = '/friends/displayable';
@@ -46,6 +47,10 @@ class FriendsAPIComponent extends React.Component<any, any> {
         // });
 
     }
+
+	componentWillUnmount(): void {
+		
+	}
 
     render() {
         return (

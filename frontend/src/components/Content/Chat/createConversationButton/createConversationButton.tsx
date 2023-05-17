@@ -35,7 +35,7 @@ export default function CreateChannelButton({ closeModal, socket }: {closeModal:
 
 	async function handleSubmit(e: any) {
 		e.preventDefault();
-		if (channelName === '' || !selectedContactIds[0] || (channelType === 'protected' && channelPassword === '')) {
+		if (channelName === '' || !selectedContactIds[0] || !channelType || (channelType === 'protected' && channelPassword === '')) {
 			alert('Please fill out all fields');
 			return;
 		}

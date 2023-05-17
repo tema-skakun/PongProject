@@ -16,6 +16,7 @@ const Profile = (props: any) => {
 	const [fetchedUser, setFetchedUser] = useState<Record<string, any>>({});
 	const [matchHistoryList, setMatchHistoryList] = useState<MatchHistoryEntry []>([]);
 	const [picUrl, setPicUrl] = useState<string>('');
+	const [username, setUsername] = useState<string>('Schlongo');
 
 	// console.log('profile');
 	let endpoint: string = `http://${process.env.REACT_APP_IP_BACKEND}:6969/users/user/`;
@@ -39,6 +40,7 @@ const Profile = (props: any) => {
 			}
 		}).then((res: AxiosResponse<any, any>) => {
 			setPicUrl(res.data.picture_url);
+			setUsername(res.data.username);
 			// console.log(`inital: ${JSON.stringify(props.profilePage.user)}`);
 			// console.log(JSON.stringify(res.data));
 			// props.profilePage.user = res.data;
@@ -54,12 +56,12 @@ const Profile = (props: any) => {
                     alt="Avatar"
                 />
                 <div>
-                    {fetchedUser.username}
+                    {username}
                 </div>
 				{ (intra_id) ?
 				<></>:
                 <div>
-                    <EditProfile setPicUrl={setPicUrl} user={fetchedUser} setUser={setFetchedUser} />
+                    <EditProfile setUsername={setUsername} setPicUrl={setPicUrl} user={fetchedUser} setUser={setFetchedUser} />
                 </div>
 				}
                 <div>
@@ -75,7 +77,7 @@ const Profile = (props: any) => {
             <div className={style.stat}>
                 <h2>Match history</h2>
 				<div>
-                    <MatchItems picUrl={picUrl} matchHistoryList={matchHistoryList} setMatchHistoryList={setMatchHistoryList} user={fetchedUser} />
+                    <MatchItems username={username} picUrl={picUrl} matchHistoryList={matchHistoryList} setMatchHistoryList={setMatchHistoryList} user={fetchedUser} />
                 </div>
             </div>
             <div className={style.friends}>

@@ -64,6 +64,7 @@ const EditProfile = (props: any) => {
                 'Authorization': `Bearer ${JSCookies.get('accessToken')}`,
             }
         }).then((response) => {
+			props.setUsername(response.data);
             setShowUsernameModal(false); // close the modal after the request is complete
             setNewUsername(''); // reset the new username
 			props.setUser({...props.user, username: response.data})

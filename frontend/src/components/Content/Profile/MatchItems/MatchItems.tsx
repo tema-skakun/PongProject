@@ -55,10 +55,17 @@ let MatchItems = (props: any) => {
 				<div className={style.player1}>
 
 					{ (props.user.intra_id === entry.winner.intra_id) ?
-					<img alt="winner profile pic" src={props.picUrl}></img> :
-					<img alt="winner profile pic" src={entry.winner.picture_url}/>
+					<span>
+						<img alt="winner profile pic" src={props.picUrl}></img>
+						<div>{props.username}</div>
+					</span>
+					:
+					<span>
+						<img alt="winner profile pic" src={entry.winner.picture_url}/>
+						<div>{entry.winner.username}</div>
+					</span>
 					}
-					<div>{entry.winner.username}</div>
+					
 				</div>
 				<div className={style.score}>
 					<h3>VS</h3>
@@ -66,10 +73,16 @@ let MatchItems = (props: any) => {
 				</div>
 				<div className={style.player2}>
 					{ (props.user.intra_id === entry.looser.intra_id) ?
-					<img alt="looser profile pic" src={props.picUrl}></img> :
-					<img alt="looser profile pic" src={entry.looser.picture_url}/>
+					<span>
+						<img alt="looser profile pic" src={props.picUrl}></img>
+						<div>{props.username}</div>
+					</span>
+					:
+					<span>
+						<img alt="looser profile pic" src={entry.looser.picture_url}/>
+						<div>{entry.looser.username}</div>
+					</span>
 					}
-					<div>{entry.looser.username}</div>
 				</div>
 			</div>)
 			}

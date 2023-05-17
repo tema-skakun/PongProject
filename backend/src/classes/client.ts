@@ -10,7 +10,7 @@ import { MatchHistoryService } from 'src/modules/game/match-history/match-histor
 import { MatchHistoryEntry } from 'src/entities/matchHistoryEntry/matchHistoryEntry.entity';
 import { ArchivementsService } from 'src/modules/archivements/archivements.service';
 import { archivement_vals } from 'src/entities/archivements/archivments.entity';
-import { ClientStatus } from 'src/modules/status/status.service';
+import { ClientStatus, metric } from 'src/modules/status/status.service';
 
 type EventFunction = (...args: any[]) => void;
 type EventFunctionXClient = (player: Client) => EventFunction;
@@ -73,10 +73,10 @@ export class Client extends Socket {
 		return this._playernum
 	}
 	set playernum(val: number) {
-		this.emitStatusChange(ClientStatus.INGAME);
+		this.setStatus(ClientStatus.INGAME, true);
 		if (this.otherPlayerObj)
 		{
-			this.otherPlayerObj.emitStatusChange(ClientStatus.INGAME);
+			this.otherPlayerObj.setStatus(ClientStatus.INGAME, true);
 			if (val === 1)
 				this.otherPlayerObj.playernumUncoupled = 2;
 			else
@@ -296,6 +296,7 @@ export class Client extends Socket {
 
 	cancelPlayer()
 	{
+		this.setStatus(ClientStatus.CONNECTED, false);
 		this.cleanUp();
 		this.key = Key.NoKey;
 		this.zero_goals();
@@ -310,21 +311,18 @@ export class Client extends Socket {
 	}
 
 	cancelGame() {
-		this.emitStatusChange(ClientStatus.CONNECTED);
 		this.cancelPlayer();
 
 		if (!this.otherPlayerObj)
 			return;
 
-		this.otherPlayerObj.emitStatusChange(ClientStatus.CONNECTED);
 		this.otherPlayerObj.cancelPlayer();
 	}
 
 	emitStatusChange(status: ClientStatus) {
 		if (!clients)
 			return ;
-
-		console.log(`is emitting status change`);
+	
 		for (const client of clients)
 		{
 			if (this.befriendedBy.has(client[1].intraId))
@@ -339,16 +337,14 @@ export class Client extends Socket {
 	}
   
 	tearDown() {
+		this.setStatus(ClientStatus.OFFLINE, false);
 		if (!this._otherPlayerObj)
 		{
-			this.emitStatusChange(ClientStatus.OFFLINE);
 			resetGlobalPendingMatch();
 			return ;
 		}
 		this.cancelGame();
-		this.emitStatusChange(ClientStatus.OFFLINE);
 
-		this.otherPlayerObj.emitStatusChange(ClientStatus.OFFLINE);
 		this.otherPlayerObj.emit('playerDisconnect');
 	}
 
@@ -366,7 +362,22 @@ export class Client extends Socket {
 	  console.log(`client in: ${this.id}`);
 	}
 
-	private befriendedBy: Set<number> = new Set<number>();
+	private befriendedBy: Set<number> = new Set();
+	private _status: ClientStatus;
+
+	setStatus(newStatus: ClientStatus, moreEngaged: boolean)
+	{
+		if ( (metric(this._status, newStatus) > 0) && moreEngaged)
+		{
+			this._status = newStatus;
+			this.emitStatusChange(newStatus);
+		}
+		else if ( (metric(this._status, newStatus) < 0) && !moreEngaged)
+		{
+			this._status = newStatus;
+			this.emitStatusChange(newStatus);
+		}
+	}
 
 	async _digestCookie(cookieStr: string, decrypthMethod: any, decryptObj: any) {
 		const searchStr: string = "accesToken=";
@@ -380,7 +391,7 @@ export class Client extends Socket {
 		
 		this.cookie = cookieContent;
 		this.befriendedBy =  await this.userService.findBefrienders(this.intraId);
-		this.emitStatusChange(ClientStatus.CONNECTED);
+		this.setStatus(ClientStatus.CONNECTED, true);
 	}
 
 	get intraId(): number {

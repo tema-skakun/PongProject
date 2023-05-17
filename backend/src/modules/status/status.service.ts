@@ -10,6 +10,16 @@ export enum ClientStatus {
 	OFFLINE = 'OFFLINE',
 }
 
+export function metric(before: ClientStatus, after: ClientStatus): number {
+	const mapping = {
+		[ClientStatus.OFFLINE]: 0,
+		[ClientStatus.CONNECTED]: 1,
+		[ClientStatus.INGAME]: 2 
+	}
+
+	return mapping[after] - mapping[before];
+}
+
 @Injectable()
 export class StatusService {
 
@@ -25,7 +35,7 @@ export class StatusService {
 
 		console.log(`clients size: ${clients.size}`);
 		clients.forEach((client, socketId) => {
-			if ( statusMap.get(clients.get(socketId).intraId) !== ClientStatus.INGAME )
+			if (statusMap.get(clients.get(socketId).intraId) !== ClientStatus.INGAME )
 				statusMap.set( clients.get(socketId).intraId , client.playernum ? ClientStatus.INGAME : ClientStatus.CONNECTED)
 		});
 

@@ -15,18 +15,19 @@ let Friends = (props: any) => {
 	const {intra_id} = useParams();
 
 	const eventHandler = useCallback((change: any) => {
-		console.log(`Getting into the event handler ${change.intra_id} to ${change.newStatus}`);
-		const copyMap = status;
-		console.log(typeof change.intra_id);
-		setStatus(copyMap.set(change.intra_id, change.newStatus));
-	}, [setStatus, status])
+		setStatus((prevStatus) => {
+			const updatedStatus = new Map(prevStatus);
+			updatedStatus.set(change.intra_id, change.newStatus);
+			return updatedStatus;
+		  });
+	}, [])
 
 	useEffect(() => {
-		const copyMap = status;
-		for (const user of props.users)
-		{
-			setStatus(copyMap.set(Number(user.id), user.status));
+		const initialStatus = new Map<number, string>();
+		for (const user of props.users) {
+		initialStatus.set(Number(user.id), user.status);
 		}
+    	setStatus(initialStatus);
 
 		if (!socket)
 			return ;
@@ -38,7 +39,8 @@ let Friends = (props: any) => {
 				return;
 			socket.off('statusChange', eventHandler);
 		})
-	}, [props.users])
+	}, [props.users, eventHandler])
+
 
     return (
         <div>
@@ -64,7 +66,7 @@ let Friends = (props: any) => {
                     <span>
                                 <span>
                                     <div>{u.name}</div>
-                                    <div>{status.get(u.id)}</div>
+                                    <div >{status.get(Number(u.id))}</div>
                                 </span>
                             </span>
                 </div>)

@@ -11,13 +11,13 @@ export enum ClientStatus {
 }
 
 export function metric(before: ClientStatus, after: ClientStatus): number {
-	const mapping = {
-		[ClientStatus.OFFLINE]: 0,
-		[ClientStatus.CONNECTED]: 1,
-		[ClientStatus.INGAME]: 2 
-	}
 
-	return mapping[after] - mapping[before];
+	const map = new Map<ClientStatus, number>();
+	map.set(ClientStatus.OFFLINE, 0);
+	map.set(ClientStatus.CONNECTED, 1);
+	map.set(ClientStatus.INGAME, 2);
+
+	return map.get(after) - map.get(before);
 }
 
 @Injectable()

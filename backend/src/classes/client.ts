@@ -73,6 +73,12 @@ export class Client extends Socket {
 		return this._playernum
 	}
 	set playernum(val: number) {
+		if (!val)
+		{
+			this.playernumUncoupled = undefined;
+			return ;
+		}
+
 		this.setStatus(ClientStatus.INGAME, true);
 		if (this.otherPlayerObj)
 		{
@@ -323,10 +329,12 @@ export class Client extends Socket {
 		if (!clients)
 			return ;
 	
+		console.log('only gets till here');
 		for (const client of clients)
 		{
 			if (this.befriendedBy.has(client[1].intraId))
 			{
+				console.log('gets till the emit');
 				client[1].emit('statusChange', {
 					intra_id: this.intraId,
 					newStatus: status
@@ -337,6 +345,7 @@ export class Client extends Socket {
 	}
   
 	tearDown() {
+		console.log('tears down client');
 		this.setStatus(ClientStatus.OFFLINE, false);
 		if (!this._otherPlayerObj)
 		{
@@ -363,17 +372,22 @@ export class Client extends Socket {
 	}
 
 	private befriendedBy: Set<number> = new Set();
-	private _status: ClientStatus;
+	private _status: ClientStatus = ClientStatus.OFFLINE;
 
 	setStatus(newStatus: ClientStatus, moreEngaged: boolean)
 	{
-		if ( (metric(this._status, newStatus) > 0) && moreEngaged)
+		console.log('RIGHT AFTER DIGESTING');
+		console.log(`for user: ${this.intraId}`);
+		console.log(`change to ${newStatus}, wich is more engaged? ${moreEngaged} then ${this._status}}`)
+		if ( (metric(this._status, newStatus) >= 0) && moreEngaged)
 		{
+			console.log('hits with' + newStatus);
 			this._status = newStatus;
 			this.emitStatusChange(newStatus);
 		}
-		else if ( (metric(this._status, newStatus) < 0) && !moreEngaged)
+		else if ( (metric(this._status, newStatus) <= 0) && !moreEngaged)
 		{
+			console.log('hits the other one' + newStatus);
 			this._status = newStatus;
 			this.emitStatusChange(newStatus);
 		}

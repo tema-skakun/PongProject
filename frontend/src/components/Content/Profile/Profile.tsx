@@ -68,7 +68,7 @@ const Profile = (props: any) => {
                 <div>
                     <Ladder/>
                 </div>
-                <div>
+                <div className={style.achievement}>
                     <Achievement/>
                 </div>
             </div> 

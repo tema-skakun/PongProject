@@ -11,7 +11,7 @@
 .profile img {
     align-items: start;
     width: 20vw;
-	/* max-width: 150px; */
+	/* max-width: 150px;*/
     height: auto;
     border-radius: 50px;
     justify-self: self-end;
@@ -52,3 +52,11 @@
     border-radius: 30px;
     justify-self: self-end;
 }
+
+.achievement img{
+    width: auto;
+    max-height: 5vw;
+    border-radius: 10px;
+    padding: 2px;
+}
+

@@ -24,8 +24,10 @@ let MatchItems = (props: any) => {
 	const {intra_id} = useParams();
 	const endpoint = `http://${process.env.REACT_APP_IP_BACKEND}:6969/match-history/`;
 
+	const { setMatchHistoryList } = props;
+
 	useEffect(() => {
-		const baseUrl = (intra_id) ? endpoint.concat(intra_id) : endpoint;
+		const baseUrl = (intra_id) ? endpoint + intra_id : endpoint;
 		axios.get(baseUrl, {
 			headers: {
 				'Content-Type': 'application/json',
@@ -33,9 +35,10 @@ let MatchItems = (props: any) => {
 			}
 		})
 		.then((res: AxiosResponse<any, any>) => {
-			props.setMatchHistoryList(res.data);
+			console.log('EXECUTED ONCE');
+			setMatchHistoryList(res.data);
 		})
-	}, [props, endpoint])
+	}, [setMatchHistoryList])
 
     return (
 		<span>

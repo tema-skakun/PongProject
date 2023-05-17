@@ -25,7 +25,6 @@ function unfriend(intraId: number) {
 
 class FriendsAPIComponent extends React.Component<any, any> {
     componentDidMount() {
-
         const headers: any = {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${JSCookies.get('accessToken')}`,
@@ -55,6 +54,7 @@ class FriendsAPIComponent extends React.Component<any, any> {
                 follow={this.props.follow}
                 unfollow={this.props.unfollow}
                 unfriend={unfriend}
+				setUsers={this.props.setUsers}
             />
         )
     }

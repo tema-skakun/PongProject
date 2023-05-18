@@ -328,15 +328,17 @@ export class Client extends Socket {
 		this.inGame = false;
 		console.log(`Reactivate listerns is called`);
 		this.reactivateListeners();
+		this._otherPlayerObj = undefined;
 	}
 
 	cancelGame() {
+		const otherPlayer = this.otherPlayerObj;
 		this.cancelPlayer();
 
-		if (!this.otherPlayerObj)
+		if (!otherPlayer)
 			return;
 
-		this.otherPlayerObj.cancelPlayer();
+		otherPlayer.cancelPlayer();
 	}
 
 	emitStatusChange(status: ClientStatus) {
@@ -359,16 +361,18 @@ export class Client extends Socket {
 	}
   
 	tearDown() {
+		const otherPlayer = this.otherPlayerObj;
 		console.log('tears down client');
 		this.setStatus(ClientStatus.OFFLINE, false);
-		if (!this._otherPlayerObj)
+		if (!otherPlayer)
 		{
 			resetGlobalPendingMatch();
 			return ;
 		}
 		this.cancelGame();
 
-		this.otherPlayerObj.emit('playerDisconnect');
+		otherPlayer.emit('playerDisconnect');
+		this._otherPlayerObj = undefined;
 	}
 
 	constructor(socket: Socket, userService: UserService, matchHistoryService: MatchHistoryService, archivementService: ArchivementsService) {

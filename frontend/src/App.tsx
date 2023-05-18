@@ -82,7 +82,6 @@ function App(props: any) {
 			return ;
 
 		socket.on('handshake', (CONFIG_STR: string) => {
-			// console.log('HANDSHAKE');
 			setCONFIG(JSON.parse(CONFIG_STR))
 		})
 

@@ -28,7 +28,6 @@ export function useSocketRecieve(socket: Socket<any, any> | null,
 					displayMeme(archivements.chad);
 					break;
 				case 'inviteReq':
-					console.log(`recieved invite Req`);
 					toggleDisplayPopUp();
 					break;
 				case 'tripple loose':
@@ -53,7 +52,6 @@ export function useSocketRecieve(socket: Socket<any, any> | null,
 					}, 3000);
 					break;
 				case 'disconnect':
-					console.log('disconnected');
 					setTimeout(() => {
 						gameStateRef.current = null;
 						setDisplayBtn(true);
@@ -66,16 +64,13 @@ export function useSocketRecieve(socket: Socket<any, any> | null,
 					gameStateRef.current = JSON.parse(args[0] as string);
 					break;
 				case 'playerDisconnect':
-					console.log('player disconnected');
 					setDisplayBtn(true);
 					gameStateRef.current = null;
 					winningRef.current = winningStates.undecided;
 					break;
 				case 'handshake':
-					// console.log('moved to app.tsx');
 					break;
 				default:
-					console.log('no such listener');
 					break;
 			}
 		})

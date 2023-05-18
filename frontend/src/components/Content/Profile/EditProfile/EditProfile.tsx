@@ -13,7 +13,6 @@ const EditProfile = (props: any) => {
 	const [curFile, setCurFile] = useState<string | Blob>();
 	const [showTwoFactorAuth, setShowTwoFactorAuth] = useState(false);
 
-	// console.log('edit profile');
 	const handleFileChange = useCallback(async (e: any) => {
 		const file = e.target.files[0];
 
@@ -28,7 +27,6 @@ const EditProfile = (props: any) => {
 		if (!curFile)
 			return ;
 
-		// console.log(`This should be true: ${curFile instanceof File}`);
 		const formData =  new FormData();
 		formData.append('file', curFile);
 
@@ -41,11 +39,8 @@ const EditProfile = (props: any) => {
 		.then(response => {
 
 			props.setPicUrl(response.data.url);
-
-			console.log(`uploaded file successfully to: ${JSON.stringify(response)}`);
 		})
 		.catch(error => {
-			console.log(JSON.stringify(error));
 		})
 
 	}, [curFile, props])

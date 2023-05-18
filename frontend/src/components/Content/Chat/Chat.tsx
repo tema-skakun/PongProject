@@ -27,7 +27,6 @@ const Chat = (props: any) => {
 	const [modalOpen, setModalOpen] = useState(false)
 	const [activeKey, setActiveKey] = useState(CREATE_KEY)
 
-	console.log('chat tsx')
 	useEffect(() => {
 		socket.current = io(`ws://${process.env.REACT_APP_IP_BACKEND}:6969/chat`, {
 			query: { accessToken:  JSCookies.get('accessToken')},
@@ -67,7 +66,6 @@ const Chat = (props: any) => {
 					setCurrentChannel(chann);
 				}
 			} catch(err) {
-				console.log(err);
 			}
 		}
 		getChannels(0);
@@ -89,7 +87,6 @@ const Chat = (props: any) => {
 					if (res.data !== messages)
 						setMessages(res.data);
 				} catch(err) {
-					console.log(err);
 				}
 			}
 			getMessages();

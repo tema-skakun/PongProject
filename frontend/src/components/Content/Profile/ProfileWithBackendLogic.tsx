@@ -29,7 +29,6 @@ const Profile = (props: any) => {
     };
 
     async function handleActivate2f() {
-        console.log('handleActivate2f');
         setactivating2f(true);
         const url = `http://${process.env.IP_BACKEND}:6969/2fa/generate`; // replace with your API endpoint URL
         const headers = {
@@ -48,7 +47,6 @@ const Profile = (props: any) => {
 
     const formSubmit = async (e: any) => {
         e.preventDefault();
-        console.log('form submit editing user data');
         if (activationCode) {
             const url = `http://${process.env.IP_BACKEND}:6969/2fa/turn-on`; // replace with your API endpoint URL
             const headers = {
@@ -66,7 +64,6 @@ const Profile = (props: any) => {
                 .then(response => {
                     if (response.ok) {
                         // handle success response
-                        console.log('response ok: ' + response);
                     } else {
                         alert('wrong code');
                     }
@@ -92,7 +89,6 @@ const Profile = (props: any) => {
                         // handle success response
                         props.userdata.username = username;
                         props.userdata.picture_url = profilePic;
-                        console.log('response ok: ' + response);
                     } else {
                         alert('something wrong with picture or username update');
                     }

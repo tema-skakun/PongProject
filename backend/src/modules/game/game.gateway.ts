@@ -122,15 +122,12 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 	try {
 		client._digestCookie(socketToCookie(socket), this.jwtService.decode, this.jwtService);
 	} catch (err) {
-		console.log(err.message);
 		client.disconnect();
 	}
-		console.log(`client with id: ${client.id} is becoming member`);
 		clients.set(client.id, client);
 
 	// Waiting for 'join' event.
 	const joinCb = (JoinOptsStr: string) => {
-		console.log('Join callback activated');
 		client.addReactivator('join', joinCb);
 		const JoinOpts: Object = JSON.parse(JoinOptsStr);
 		this.join(client, JoinOpts);
@@ -140,11 +137,9 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
 		client.addReactivator('invite', inviteCb);
 
-		console.log('server recieved invite');
 		clients.forEach((cl: Client) => {
 			if ((cl.intraId == +intraId) && (client.id !== cl.id))
 			{
-				console.log(`send invite req`);
 				if (cl.status === ClientStatus.INGAME || cl.status === ClientStatus.OFFLINE) {
 					client.reactiveListener('invite');
 					callback('Fuck off');
@@ -173,7 +168,6 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 	client.on('join', joinCb);
 
 	client.on('disconnect', () => {
-		// console.log(`client out (ignore doubles): ${client.id}`);
 		client.inGame = false;
 		client.tearDown();
 	})

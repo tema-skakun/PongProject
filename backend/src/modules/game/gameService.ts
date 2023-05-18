@@ -48,7 +48,6 @@ export class GameService {
 				const Paddle_box2: math.Matrix = getPaddleBox2(gState);
 			// </Physical objects>
 
-			// console.log('velocity before:' + gState.velocity);
 			let hitPoint: number = 0;
 			if (getHitPoint(Dot_box, UPPERBOUND) || getHitPoint(Dot_box, LOWERBOUND))
 			{
@@ -62,7 +61,6 @@ export class GameService {
 			{
 				gState.velocity = deflection({velocity: gState.velocity, paddle: {hitPoint: hitPoint, paddleNr: 2}})
 			}
-			// console.log('velocity after:' + gState.velocity);
 
 			gState.dotCoordinate.x += gState.velocity.get([0, 0]);
 			gState.dotCoordinate.y += gState.velocity.get([1, 0]);

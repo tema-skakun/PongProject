@@ -52,12 +52,10 @@ export class FriendsService {
 		})
 	
 		userWithoutFriend.friends.push(friend);
-		console.log('add friend')
 		return this.userRepository.save(userWithoutFriend);
 	}
 
 	async getFriends(userId: number): Promise<User []> {
-		console.log(userId);
 		const user: User = await this.userRepository.findOne({
 			where: {
 			intra_id: userId

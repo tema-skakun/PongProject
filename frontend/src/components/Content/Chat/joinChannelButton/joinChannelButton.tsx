@@ -20,7 +20,6 @@ const JoinChannelButton = ({ closeModal, socket }: {closeModal: any, socket: any
 				})
 				setChannels(res.data);
 			} catch(err) {
-				console.log(err);
 			}
 		}
 		getChannels();
@@ -33,7 +32,6 @@ const JoinChannelButton = ({ closeModal, socket }: {closeModal: any, socket: any
 			let password;
 			if (selectedChannel.password) {
 				password = prompt('Enter channel password: ');
-				console.log('pass: ' + password);
 			}
 			const chann = {
 				channelId: selectedChannelId,

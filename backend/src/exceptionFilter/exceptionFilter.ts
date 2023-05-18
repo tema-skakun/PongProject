@@ -6,11 +6,9 @@ export class AllExceptionsFilter implements ExceptionFilter {
   catch(exception: unknown, host: ArgumentsHost) {
     switch (host.getType()) {
       case 'http':
-		console.log('HTTP EXCEPTION'); 
         this.handleHttpException(exception, host.switchToHttp());
         break;
       case 'ws':
-		console.log('WS EXCEPTION');
         this.handleWsException(exception, host.switchToWs());
         break;
       default:

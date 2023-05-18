@@ -33,14 +33,11 @@ export class UserRestriction {
 		}
 		else if (!this.restrictions.get(action).has(userId))
 			{
-				console.log(`Notice: state switch was not yet attached to ${userId}`);
 				return ;
 			}
 
 		if (on === this.restrictions.get(action).get(userId).state)
 		{
-			console.log(on);
-			console.log('this way');
 			return ;
 		}
 

@@ -33,17 +33,11 @@ export class StatusService {
 				statusMap.set(Number(dbClient.intra_id), ClientStatus.OFFLINE);
 		});
 
-		console.log(`clients size: ${clients.size}`);
 		clients.forEach((client, socketId) => {
 			if (statusMap.get(clients.get(socketId).intraId) !== ClientStatus.INGAME )
 				statusMap.set( clients.get(socketId).intraId , client.playernum ? ClientStatus.INGAME : ClientStatus.CONNECTED)
 		});
 
-		statusMap.forEach((intra, key) => {
-			console.log(`value : ${intra}`);
-			console.log(`key: ${key}`);
-			console.log(`typeof key: ${typeof key}`);
-		})
 		return statusMap;
 	}
 

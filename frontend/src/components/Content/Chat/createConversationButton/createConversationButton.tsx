@@ -14,20 +14,16 @@ export default function CreateChannelButton({ closeModal, socket }: {closeModal:
   	const [channelPassword, setChannelPassword] = useState<string>('');
 
 	useEffect(() =>{
-		console.log('users: ');
 		const getUsers = async ()=>{
 			try {
-				console.log('users2222');
 				const res = await axios.get(`http://${process.env.REACT_APP_IP_BACKEND}:6969/users/notBlockedUsers`, {
 					headers: {
 						'Content-Type': 'application/json',
 						'Authorization': `Bearer ${JSCookies.get('accessToken')}`,
 					}
 				})
-				console.log('users: ' + res.data);
 				setUsers(res.data);
 			} catch(err) {
-				console.log(err);
 			}
 		}
 		getUsers();

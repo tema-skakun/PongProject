@@ -50,7 +50,6 @@ const ParticipantsDropdown = (props: any) => {
 				}
 			})
 		}catch(err) {
-			console.log('ERROR in add friend: ' + err);
 		}
 	}
 
@@ -58,7 +57,6 @@ const ParticipantsDropdown = (props: any) => {
 		if (!socket)
 			return ;
 
-		console.log('client emits invite');
 		socket.emit('invite', props.userProfile.intra_id, (res: string) => {
 			if (res === 'Fuck off')
 			{

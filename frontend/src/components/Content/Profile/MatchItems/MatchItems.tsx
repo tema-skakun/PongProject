@@ -24,17 +24,9 @@ const Url = `http://${process.env.REACT_APP_IP_BACKEND}:6969/match-history/`;
 
 let MatchItems = (props: any) => {
 	const {intra_id} = useParams();
-	console.log('match hisory')
 
 	const { setMatchHistoryList } = props;
 
-	// useEffect(() => {
-	// 	console.log('Empty dependencies of MatchItems');
-	// }, [])
-
-	// useEffect(() => {
-	// 	console.log('Props dependeny of matchItems');
-	// }, [props])
 
 	useEffect(() => {
 		const baseUrl = (intra_id) ? Url + intra_id : Url;

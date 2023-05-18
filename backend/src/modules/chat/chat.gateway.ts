@@ -40,7 +40,6 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 	) {}
 	
 	async afterInit() {
-		console.log('WebSocket gateway initialized! ');
 	}
 	  
 	async handleConnection(socket: Socket) {
@@ -63,7 +62,6 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		await Promise.all(channelIds);
 		this.socketToChannels.set(socket.id, channelIds);
  
-		console.log('User connected chat ');
 	}
 
 	async handleDisconnect(socket: Socket) {
@@ -77,7 +75,6 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
 		socket.disconnect();
 
-		console.log('User disconnected chat');
 	}
 
 	@SubscribeMessage('sendMessage')

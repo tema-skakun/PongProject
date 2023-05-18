@@ -22,7 +22,6 @@ export default function Conversation(props: any) {
 					const friend = res.data.find((m: any) => m.intra_id !== props.currentUser.intra_id);
 					setUser(friend);
 				}catch(err) {
-					console.log('ERROR in conversation: ' + err);
 				}
 			}
 		};

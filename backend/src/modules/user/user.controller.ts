@@ -30,8 +30,7 @@ export class UserController {
 			chosenId = Number(id);
 		}
 
-		console.log(`Requesting: ${chosenId}`);
-		console.log('THIS IS THE LENGTH' + (await this.userservice.findUsersById(chosenId)).picture_url.length);
+	
 		return ObjectPruning( UserTransformed, await this.userservice.findUsersById(chosenId));
 	}
 

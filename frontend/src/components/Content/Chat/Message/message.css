@@ -25,6 +25,7 @@
 	color: black;
 	max-width: 300px;
 	word-wrap: break-word;
+	overflow: hidden;
 }
 
 .messageBottom{

@@ -21,13 +21,6 @@ const Profile = (props: any) => {
 
 	let endpoint: string = `http://${process.env.REACT_APP_IP_BACKEND}:6969/users/user/`;
 
-	useEffect(() => {
-		console.log('Empty dependencies of MatchItems');
-	}, [])
-
-	useEffect(() => {
-		console.log('Props dependeny of matchItems');
-	}, [props])
 
 
 	useEffect(() => {
@@ -40,8 +33,7 @@ const Profile = (props: any) => {
 		}).then((res: AxiosResponse<any, any>) => {
 			setPicUrl(res.data.picture_url);
 			setUsername(res.data.username);
-			// console.log(`inital: ${JSON.stringify(props.profilePage.user)}`);
-			// console.log(JSON.stringify(res.data));
+
 			// props.profilePage.user = res.data;
 			setFetchedUser(res.data);
 		})

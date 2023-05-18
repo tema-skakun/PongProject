@@ -18,7 +18,6 @@ export const Ladder: React.FC<any> = (props) => {
 			}
 		})
 		.then((res: AxiosResponse<any, any>) => {
-			console.log(res.data);
 			setPercentile(res.data);
 		})
 	}, [intra_id])

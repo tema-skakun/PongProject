@@ -55,7 +55,6 @@ function Game({CONFIG, setCONFIG, winningRef, backgroundImg}: {CONFIG: Config, s
 			return;
 		}
 
-		console.log(`socketID: ${socket.id}`);
 		axios.get(`http://${process.env.REACT_APP_IP_BACKEND}:6969/status/ws/` + socket.id, {
 			headers: {
 				'Content-Type': 'application/json',
@@ -96,7 +95,6 @@ function Game({CONFIG, setCONFIG, winningRef, backgroundImg}: {CONFIG: Config, s
 		// 	setSocket(newSocketConn);
 		if (socket)
 		{
-			console.log('Emits the join once more');
 			socket.emit('join', JSON.stringify({}));
 		}
 

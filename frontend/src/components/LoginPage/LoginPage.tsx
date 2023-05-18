@@ -10,7 +10,6 @@ async function signin() {
 			window.location.assign(process.env.REACT_APP_INTRA_SIGNIN_LINK);
 	} catch(error)
 	{
-		console.log(error);
 	}
 } 
 

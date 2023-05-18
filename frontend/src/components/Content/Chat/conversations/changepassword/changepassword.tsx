@@ -11,8 +11,6 @@ export default function Changepassword({ closePass, socket, channel }: {closePas
 
 	async function handleSubmit(e: any) {
 		e.preventDefault();
-		console.log(newPassword);
-		// changePassword/
 		const info = {
 			password: newPassword,
 		}

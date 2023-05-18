@@ -42,7 +42,6 @@ export default function InviteButton({ closeModal, socket, channel }: {closeModa
 		const invite = {
 			receiverId: selectedContactIds[0],
 		}
-		console.log('chosen user: ' + selectedContactIds[0]);
 		try {
 			const res = await axios.post(`http://${process.env.REACT_APP_IP_BACKEND}:6969/chat/invite/` + channel.id, invite, {
 				headers: {

@@ -30,7 +30,6 @@ const FriendsAPIComponent: React.FC<any> = (props) =>  {
 	const {intra_id} = useParams();
 
 	useEffect(() => {
-		console.log('gets into the Friend  api call');
 		const addr = (intra_id) ? BACKEND_ADDR + intra_id : BACKEND_ADDR;
 
         const headers: any = {
@@ -43,7 +42,6 @@ const FriendsAPIComponent: React.FC<any> = (props) =>  {
         })
             .then((response: any) => {
                 props.setUsers(response.data);
-				console.log(`new users: ${JSON.stringify(response.data)}`);
             });
 
         // axios.delete(ROOT_ADDR_OF_FRIENDS, {

@@ -13,7 +13,6 @@ export class LB<T> { // Link Back, look in docs!
 	link(objectsToLinkBack: any [], linkTo: T) { // Either make a closure or use the right object right away... Neither because a new object is instantiated.
 		let cnt: number = 0;
 		for (const object of objectsToLinkBack) {
-			console.log(`setting ${cnt} from: ${JSON.stringify(object)} to: ${linkTo} `);
 			this.maps[cnt].set(object, linkTo);
 			++cnt;
 		}

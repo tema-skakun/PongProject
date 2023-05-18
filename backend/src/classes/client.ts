@@ -196,9 +196,6 @@ export class Client extends Socket {
 	private _intraId: number;
 	set cookie(aCookie: Record<string, any>) {
 		this._cookie = aCookie;
-		console.log(`Cookie makes sense: ${JSON.stringify(aCookie)}`)
-		console.log(`intra id in cookie: ${aCookie.intra_id}`);
-		console.log(`intra id to number : ${Number(aCookie.intra_id)}`);
 		this._intraId = Number(aCookie.intra_id);
 	}
 	get cookie(): Record<string, any> {
@@ -260,7 +257,6 @@ export class Client extends Socket {
 
 	coupledOn(clientEventName: string, eventFunctionXClient: EventFunctionXClient)
 	{
-		console.log(`Calling instance: ${this.playernum}`);
 		// <Destructuring>
 
 		const myEventFunction: EventFunction = eventFunctionXClient(this);
@@ -305,7 +301,6 @@ export class Client extends Socket {
 			clearInterval(this.gameLoop);
 
 		this.inGame = false;
-		console.log(`Reactivate listerns is called`);
 		this.reactivateListeners();
 		this._otherPlayerObj = undefined;
 	}
@@ -324,12 +319,10 @@ export class Client extends Socket {
 		if (!clients)
 			return ;
 	
-		console.log('only gets till here');
 		for (const client of clients)
 		{
 			if (this.befriendedBy.has(client[1].intraId))
 			{
-				console.log('gets till the emit');
 				client[1].emit('statusChange', {
 					intra_id: this.intraId,
 					newStatus: status
@@ -341,7 +334,6 @@ export class Client extends Socket {
   
 	tearDown() {
 		const otherPlayer = this.otherPlayerObj;
-		console.log('tears down client');
 		this.setStatus(ClientStatus.OFFLINE, false);
 		if (!otherPlayer)
 			return ;
@@ -362,7 +354,6 @@ export class Client extends Socket {
 	  this.matchHistoryService = matchHistoryService;
 	  this.archivmentService = archivementService;
   
-	  console.log(`client in: ${this.id}`);
 	}
 
 	private befriendedBy: Set<number> = new Set();
@@ -375,18 +366,13 @@ export class Client extends Socket {
 
 	setStatus(newStatus: ClientStatus, moreEngaged: boolean)
 	{
-		console.log('RIGHT AFTER DIGESTING');
-		console.log(`for user: ${this.intraId}`);
-		console.log(`change to ${newStatus}, wich is more engaged? ${moreEngaged} then ${this._status}}`)
 		if ( (metric(this._status, newStatus) >= 0) && moreEngaged)
 		{
-			console.log('hits with' + newStatus);
 			this._status = newStatus;
 			this.emitStatusChange(newStatus);
 		}
 		else if ( (metric(this._status, newStatus) <= 0) && !moreEngaged)
 		{
-			console.log('hits the other one' + newStatus);
 			this._status = newStatus;
 			this.emitStatusChange(newStatus);
 		}

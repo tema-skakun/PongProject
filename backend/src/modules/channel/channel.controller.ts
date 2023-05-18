@@ -139,42 +139,4 @@ export class ChannelController {
 		}
 	}
 
-	// @Post('createDM')
-	// @UseGuards(JwtTwoFactorGuard)
-	// async newDmChannel(
-	// 	@Req() req: any,
-	// 	@Res() res: any) {
-	// 	try {
-	// 		const user = await this.userservice.findUsersById(req.body.senderId);
-	// 		const user1 = await this.userservice.findUsersById(req.body.receiverId);
-	// 		const savedChat = await this.channelservice.createDmChannel({
-	// 			users: [user, user1]
-	// 		});
-	// 		res.status(200).json(savedChat);
-	// 	}catch(err) {
-	// 		console.log('error: ' + err);
-	// 		res.status(500).json(err);
-	// 	}
-	// }
-	
-	// @Post('joinChannel')
-	// @UseGuards(JwtTwoFactorGuard)
-	// async joinChannel(
-	// 	@Req() req: any,
-	// 	@Res() res: any) {
-	// 	try {
-	// 		const channel = await this.channelservice.findChannelById(req.body.channelId);
-	// 		if (!channel)
-	// 			throw new ForbiddenException('No such channel');
-	// 		if (!req.body.password || !comparePassword(req.body.password, channel.password))
-	// 			throw new ForbiddenException('Wrong password');
-	// 		if (channel.isPrivate && !this.channelservice.isInvited(channel.id, req.user)) {
-	// 			throw new ForbiddenException('You are not invited');
-	// 		} 
-	// 		res.status(200).json();
-	// 	} catch (err) {
-	// 		res.status(500).json(err);
-	// 	}
-	// }
-
 }

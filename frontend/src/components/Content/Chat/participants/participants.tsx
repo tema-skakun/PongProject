@@ -24,7 +24,6 @@ export default function Participants({ channel, currentUser, socket}: {channel: 
 						const friends = res.data.filter((obj: any) => obj.intra_id !== friend.intra_id);
 						setMembers(friends);
 					}catch(err) {
-						console.log('ERROR in conversation: ' + err);
 					}
 				}
 				else {

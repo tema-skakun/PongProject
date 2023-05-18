@@ -45,7 +45,6 @@ export class StatusController {
 
 		const filteredStatusMap: Map<number, ClientStatus> = new Map();
 		const statusMap: Map<number, ClientStatus> =  await this.statusService.getStatus();
-		// console.log(`This is my status Map size: ${statusMap.size}`);
 
 		statusMap.forEach((stat, id) => {
 			friends.forEach((intraId) => { // For some reason type checking is false!

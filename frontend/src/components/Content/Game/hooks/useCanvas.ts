@@ -6,8 +6,6 @@ export function useCanvas(SCALAR: number, CanvasRef: React.RefObject<HTMLCanvasE
 	useEffect(() => {
 		if (!CanvasRef.current || !CONFIG)
 		{
-			console.log(`Canvas Ref current: ${CanvasRef.current}`);
-			console.log(`Config: ${CONFIG}`);
 			return ;
 		}
 

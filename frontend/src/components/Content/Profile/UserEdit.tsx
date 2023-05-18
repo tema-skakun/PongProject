@@ -53,7 +53,6 @@ const handleFileChange = (event: any) => {
   
 	  reader.readAsDataURL(file);
 	} else {
-	  console.log('Please select an image file.');
 	}
   };
 

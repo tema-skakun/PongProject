@@ -85,7 +85,6 @@ let store: any = {
         }
     },
     _callSubscriber(state: any) {
-        console.log('state changed');
     },
 
     getState() {

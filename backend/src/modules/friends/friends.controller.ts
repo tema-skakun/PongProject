@@ -26,6 +26,7 @@ export class FriendsController {
 	@UseGuards(ExistsGuardid)
 	@UseGuards(JwtTwoFactorGuard)
 	async deleteFriend(@Param('id') id: string, @Req() req: any): Promise<boolean> {
+		console.log('is getting in here');
 		let chosenId: number = req.user.intra_id;
 
 		if (id && !isNaN(Number(id))) {
@@ -34,6 +35,7 @@ export class FriendsController {
 		return await this.friendsService.deleteFriend(req.user.intra_id, chosenId);
 	}
 
+	
 
 	@Post('/:id')
 	@UseGuards(ExistsGuardid)

@@ -27,22 +27,26 @@ export class FriendsService {
 	}
 
 	async deleteFriend(userId: number, friend_id: number)
-	{
+	{    
 		const userWithFriend: User = await this.initalUser(userId);
 		let success: boolean = false;
 
+		console.log(JSON.stringify(userWithFriend.friends));
 		userWithFriend.friends = userWithFriend.friends.map((friend) => {
-			if (friend.intra_id === friend_id)
+			if (Number(friend.intra_id) === friend_id)
 			{
 				success = true;
 				return ;
 			}
 			return friend;
 		})
+		console.log(JSON.stringify(userWithFriend.friends));
 		await this.userRepository.save(userWithFriend);
 
 		return success;
 	}
+
+
 
 	async addFriend(userId: number, friend_id: number): Promise<User> {
 		const userWithoutFriend: User = await this.initalUser(userId);

@@ -25,6 +25,11 @@ function App(props: any) {
 	const [CONFIG, setCONFIG] = useState<Config | null>(null);
 	const [showRejection, setShowRejection] = useState<boolean>(false);
 	const winningRef: React.MutableRefObject<winningStates> = useRef(winningStates.undecided);
+	const backgroundImg: React.MutableRefObject<HTMLImageElement> = useRef((() => {
+		const img = new Image();
+		img.src = '/default.png';
+		return img;
+	})());
 
     useEffect(() => {
 		gSetShowRejection = setShowRejection;
@@ -101,7 +106,8 @@ function App(props: any) {
                          userdata={userdata.current}
 						 CONFIG={CONFIG}
 						 setCONFIG={setCONFIG}
-						 winningRef={winningRef}/>
+						 winningRef={winningRef}
+						 backgroundImg={backgroundImg}/>
             </div>
         ) : (
             <div className="App">

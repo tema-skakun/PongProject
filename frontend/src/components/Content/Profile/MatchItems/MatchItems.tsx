@@ -20,9 +20,11 @@ export type MatchHistoryEntry = {
 	winnerGoals: number;
 }
 
+const Url = `http://${process.env.REACT_APP_IP_BACKEND}:6969/match-history/`;
+
 let MatchItems = (props: any) => {
 	const {intra_id} = useParams();
-	const endpoint = `http://${process.env.REACT_APP_IP_BACKEND}:6969/match-history/`;
+	console.log('match hisory')
 
 	const { setMatchHistoryList } = props;
 
@@ -35,7 +37,7 @@ let MatchItems = (props: any) => {
 	// }, [props])
 
 	useEffect(() => {
-		const baseUrl = (intra_id) ? endpoint + intra_id : endpoint;
+		const baseUrl = (intra_id) ? Url + intra_id : Url;
 		axios.get(baseUrl, {
 			headers: {
 				'Content-Type': 'application/json',
@@ -45,7 +47,7 @@ let MatchItems = (props: any) => {
 		.then((res: AxiosResponse<any, any>) => {
 			setMatchHistoryList(res.data);
 		})
-	}, [setMatchHistoryList])
+	}, [setMatchHistoryList, intra_id])
 
     return (
 		<span>

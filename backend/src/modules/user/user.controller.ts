@@ -37,7 +37,6 @@ export class UserController {
 
 	@Get('all')
 	async getalluser() {
-		console.log('AAAAAA');
 		return await this.userservice.getUsers();
 		// return ObjectPruningMany(UserTransformed, await this.userservice.getUsers());
 	}
@@ -50,10 +49,8 @@ export class UserController {
 	) {
 		try {
 			const users = await this.userservice.getnotBlockedUsers(req.user.intra_id);
-			console.log('in not blocket Userss')
 			res.status(200).json(ObjectPruningMany(UserTransformed, users));
 		}catch(err) {
-			console.log('error: ' + err);
 			res.status(400).json(err);
 		}
 	}

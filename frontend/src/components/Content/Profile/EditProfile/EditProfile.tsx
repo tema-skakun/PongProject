@@ -71,9 +71,9 @@ const EditProfile = (props: any) => {
         })
     }, [newUsername, setNewUsername, setShowUsernameModal, props]);
 
-	const handleTwoFactorAuthClick = () => {
+	const handleTwoFactorAuthClick = useCallback(() => {
 		setShowTwoFactorAuth(!showTwoFactorAuth);
-	};
+	}, [showTwoFactorAuth]);
 
     return (
         <div>
@@ -105,8 +105,10 @@ const EditProfile = (props: any) => {
                         <Button variant="primary" onClick={changeUsername}>Change</Button>
                     </Modal.Footer>
                 </Modal>
+				{showTwoFactorAuth && (
 				<TwoFactorAuthSwitch showModal={showTwoFactorAuth} onClose={handleTwoFactorAuthClick} user={props.user} setUser={props.setUser}/>
-            </Dropdown>
+				)}
+				</Dropdown>
         </div>
     );
 }

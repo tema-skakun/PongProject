@@ -4,9 +4,10 @@ import { FriendsController } from './friends.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from 'src/entities';
 import { StatusModule } from '../status/status.module';
+import { UserModule } from '../user/user.module';
 
 @Module({
-	imports: [TypeOrmModule.forFeature([User]), StatusModule],
+	imports: [UserModule, TypeOrmModule.forFeature([User]), StatusModule],
   	providers: [FriendsService],
   	controllers: [FriendsController]
 })

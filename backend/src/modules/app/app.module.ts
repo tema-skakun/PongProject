@@ -29,6 +29,7 @@ import { MessageModule } from '../message/message.module';
 import { ChatGateway } from '../chat/chat.gateway';
 import { PreGameController } from '../game/game.controller';
 import { AwsModule } from '../aws/aws.module';
+import { ExistsGuardid, ExistsGuardintra_id } from 'src/GuardStrategies/UrlGuard';
 
 
 @Module({
@@ -53,7 +54,7 @@ import { AwsModule } from '../aws/aws.module';
 	DebugModule,
 	],
   controllers: [PreGameController],
-  providers: [LB, UserRestriction, RelationalTable, GameGateway, GameService,
+  providers: [ExistsGuardid, ExistsGuardintra_id, LB, UserRestriction, RelationalTable, GameGateway, GameService,
 	Forty2Strategy, TwoFactorAuthenticationService, JwtTwoFactorStrategy, JWTStrategy,
 	ChatGateway],
 })

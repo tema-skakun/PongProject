@@ -31,7 +31,8 @@ const Profile = (props: any) => {
 
 
 	useEffect(() => {
-		const fullEnpoint = endpoint + intra_id;
+		const fullEnpoint = (intra_id) ? endpoint + intra_id : endpoint;
+		console.log(`We CALL: ${fullEnpoint}`)
 		axios.get(fullEnpoint, {
 			headers: {
 				'Content-Type': 'application/json',

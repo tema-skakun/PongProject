@@ -11,6 +11,22 @@ export class UserService {
 		@InjectRepository(User) private readonly userRepository: Repository<User>,
 		) {}
 
+	async userExists(intra_id: number): Promise<boolean>
+	{
+		try {
+			const user = await this.userRepository.findOneBy({
+				intra_id: intra_id
+			})
+			if (user === null)
+				return false;
+			
+			return true;
+		} catch (err: unknown)
+		{
+			return false;
+		}
+	}
+
 	createUser(authDto: UserDto) {
 		const newUser = this.userRepository.create(authDto);
 		return this.userRepository.save(newUser);

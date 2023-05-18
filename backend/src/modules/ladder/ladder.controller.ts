@@ -2,6 +2,7 @@ import { Controller, Get, Param, Req, UseGuards } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { LadderService } from './ladder.service';
 import JwtTwoFactorGuard from 'src/GuardStrategies/Jwt2F.guard';
+import { ExistsGuardid } from 'src/GuardStrategies/UrlGuard';
 
 @Controller('ladder')
 export class LadderController {
@@ -11,6 +12,7 @@ export class LadderController {
 	) {}
 
 	@Get('/percentile/:id?')
+	@UseGuards(ExistsGuardid)
 	@UseGuards(JwtTwoFactorGuard)
 	async percentile(@Param('id') intraId: string, @Req() req: any): Promise<string | number> // if string then not ranked yet
 	{
@@ -41,6 +43,7 @@ export class LadderController {
 	}
 
 	@Get('ladder/:id')
+	@UseGuards(ExistsGuardid)
 	@UseGuards(JwtTwoFactorGuard)
 	async winsToLosses(@Param('id') intraId: string, @Req() req: any): Promise<number | string> // if string then not ranked yet
 	{

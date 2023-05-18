@@ -15,6 +15,7 @@ import { UserDto } from '../../entities/user/user.dto';
 import { UserService } from './user.service'
 import { ObjectPruning, ObjectPruningMany } from 'src/tools/objectPruning';
 import { UserTransformed } from 'src/entities/user/user.transformed';
+import { ExistsGuardid } from 'src/GuardStrategies/UrlGuard';
 
 @Controller('users')
 export class UserController {
@@ -22,6 +23,7 @@ export class UserController {
 	}
 
 	@Get('user/:id?')
+	@UseGuards(ExistsGuardid)
 	@UseGuards(JwtTwoFactorGuard)
 	async getMyself(@Req() req: any, @Param('id') id: string) {
 		let chosenId: number = req.user.intra_id;

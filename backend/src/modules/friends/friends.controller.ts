@@ -6,6 +6,7 @@ import { User } from 'src/entities';
 import { ClientStatus, StatusService } from '../status/status.service';
 import { ObjectPruning } from 'src/tools/objectPruning';
 import { UserTransformed } from 'src/entities/user/user.transformed';
+import { ExistsGuardid } from 'src/GuardStrategies/UrlGuard';
 
 
 export type FriendDto = {
@@ -22,6 +23,7 @@ export class FriendsController {
 	) {}
 
 	@Delete('/:id')
+	@UseGuards(ExistsGuardid)
 	@UseGuards(JwtTwoFactorGuard)
 	async deleteFriend(@Param('id') id: string, @Req() req: any): Promise<boolean> {
 		let chosenId: number = req.user.intra_id;
@@ -47,6 +49,7 @@ export class FriendsController {
 	}
 
 	@Get('/displayable/:id?')
+	@UseGuards(ExistsGuardid)
 	@UseGuards(JwtTwoFactorGuard)
 	async getDisplayablesAll(@Req() req: any, @Param('id') id?: string): Promise<FriendDto []> {
 		let chosenId: number = Number(req.user.intra_id);

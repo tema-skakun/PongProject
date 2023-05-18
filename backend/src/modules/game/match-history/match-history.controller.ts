@@ -4,6 +4,7 @@ import { MatchHistoryService } from './match-history.service';
 import { MatchHistoryTransformed } from 'src/entities/matchHistoryEntry/matchHistoryEntry.transformed';
 import { ObjectPruning } from 'src/tools/objectPruning';
 import JwtTwoFactorGuard from 'src/GuardStrategies/Jwt2F.guard';
+import { ExistsGuardid } from 'src/GuardStrategies/UrlGuard';
 
 @Controller('match-history')
 export class MatchHistoryController {
@@ -13,6 +14,7 @@ export class MatchHistoryController {
 	) {}
 
 	@Get('/:id?')
+	@UseGuards(ExistsGuardid)
 	@UseGuards(JwtTwoFactorGuard)
 	async completeMatchHistory(@Req() req: any, @Param('id') id?: string): Promise<MatchHistoryTransformed []> {
 		let chosenId: number = req.user.intra_id;

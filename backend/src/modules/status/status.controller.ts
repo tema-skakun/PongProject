@@ -5,6 +5,7 @@ import JwtTwoFactorGuard from '../../GuardStrategies/Jwt2F.guard'
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/entities';
 import { Repository } from 'typeorm';
+import { ExistsGuardid } from 'src/GuardStrategies/UrlGuard';
 
 @Controller('status')
 export class StatusController {
@@ -27,6 +28,7 @@ export class StatusController {
 	}
 	
 	@Get('status/:id?')
+	@UseGuards(ExistsGuardid)
 	@UseGuards(JwtTwoFactorGuard)
 	async getStatus(@Req() req: any, @Param() id: number): Promise< Object > {
 		let chosenId: number = req.user.intra_id;

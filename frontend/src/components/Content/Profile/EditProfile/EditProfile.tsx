@@ -56,6 +56,12 @@ const EditProfile = (props: any) => {
 	}, [fileRef])
 
     const changeUsername = useCallback(() => {
+		if (!newUsername || (newUsername.indexOf(' ') > -1) || newUsername.length > 12) {
+			alert('No input or have spaces in username or username to long');
+			setNewUsername('');
+			setShowUsernameModal(false);
+			return ;
+		}
         axios.put(`http://${process.env.REACT_APP_IP_BACKEND}:6969/users/update/username`, {
             username: newUsername
         }, {

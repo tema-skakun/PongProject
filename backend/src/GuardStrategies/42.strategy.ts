@@ -20,7 +20,7 @@ export class Forty2Strategy extends PassportStrategy(Strategy, '42') {
 
 	async validate(accessToken: string, refreshToken: string, profile: Profile, done:
 		 VerifyCallback): Promise<User> {
-			const usr = await this.userservice.findUniqueByEmail(profile.emails[0].value);
+			const usr = await this.userservice.findUniqueByEmail(profile.id);
 			if (usr)
 			{
 				return done(null, usr);

@@ -130,6 +130,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 		console.log(err.message);
 		client.disconnect();
 	}
+		console.log(`client with id: ${client.id} is becoming member`);
 		clients.set(client.id, client);
 
 	// Waiting for 'join' event.

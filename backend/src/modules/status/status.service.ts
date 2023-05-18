@@ -46,4 +46,21 @@ export class StatusService {
 		})
 		return statusMap;
 	}
+
+	getWsStatus(ws_id: string): string
+	{
+		if (!clients)
+		{
+			return ClientStatus.OFFLINE;
+		}
+		
+		const websocket = clients.get(ws_id);
+		if (!websocket)
+		{
+			return ClientStatus.OFFLINE;
+		}
+		
+		return websocket.status;
+	}
+
 }

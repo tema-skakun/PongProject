@@ -1,4 +1,4 @@
-import { Controller, Param, Req, UseGuards } from '@nestjs/common';
+import { Controller, HttpException, Param, Req, Res, UseGuards } from '@nestjs/common';
 import { ClientStatus, StatusService } from './status.service';
 import { Get } from '@nestjs/common';
 import JwtTwoFactorGuard from '../../GuardStrategies/Jwt2F.guard'
@@ -17,6 +17,13 @@ export class StatusController {
 
 		const statusMap: Map<number, ClientStatus> =  await this.statusService.getStatus();
 		return statusMap.get(Number(req.user.intra_id));
+	}
+
+	@Get('ws/:ws_id')
+	@UseGuards(JwtTwoFactorGuard)
+	wsStatus(@Param('ws_id') ws_id: string)
+	{
+		return this.statusService.getWsStatus(ws_id);
 	}
 	
 	@Get('status/:id?')

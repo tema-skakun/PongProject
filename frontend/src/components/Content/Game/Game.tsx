@@ -17,6 +17,7 @@ import { InviteForm } from './components/inviteForm';
 import 'reactjs-popup/dist/index.css';
 import { InvitePopUp } from './components/InvitePopUp';
 import axios, { AxiosResponse } from 'axios';
+import { inspect } from 'util';
 import style from './Game.module.css'
 
 export enum archivements {
@@ -49,7 +50,13 @@ function Game({CONFIG, setCONFIG, winningRef, backgroundImg}: {CONFIG: Config, s
 	}, [setDisplayPopUp, displayPopUp]);
 
 	useEffect(() => {
-		axios.get(`http://${process.env.REACT_APP_IP_BACKEND}:6969/status/self`, {
+		if (!socket?.id)
+		{
+			return;
+		}
+
+		console.log(`socketID: ${socket.id}`);
+		axios.get(`http://${process.env.REACT_APP_IP_BACKEND}:6969/status/ws/` + socket.id, {
 			headers: {
 				'Content-Type': 'application/json',
 				'Authorization': `Bearer ${JSCookies.get('accessToken')}`,
@@ -62,7 +69,11 @@ function Game({CONFIG, setCONFIG, winningRef, backgroundImg}: {CONFIG: Config, s
 				setDisplayBtn(false);
 			}
 		})
-	})
+		.catch(err => {
+			throw err;
+		})
+
+	}, [])
 
 	const displayMeme = useCallback((arch: archivements) => {
 		if (arch === archivements.chad)

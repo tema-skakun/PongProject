@@ -3,7 +3,7 @@ import { GameState } from 'src/interfaces/GameState';
 
 import { Key } from 'src/constants/constants';
 import CONFIG from '../constants/constants';
-import { clients, resetGlobalPendingMatch } from 'src/modules/game/game.gateway';
+import { clients } from 'src/modules/game/game.gateway';
 import { UserService } from 'src/modules/user/user.service';
 import { User } from 'src/entities';
 import { MatchHistoryService } from 'src/modules/game/match-history/match-history.service';
@@ -205,23 +205,6 @@ export class Client extends Socket {
 		return (this._cookie);
 	}
 
-	private _pendingMatchRequest: string;
-	async setPendingMatchRequest(uuid: string) {
-		if (this.otherPlayerObj)
-		{
-			await this.otherPlayerObj.join(uuid);
-			this.otherPlayerObj.pendingMatchRequestUncoupled = uuid;
-		}
-		await this.join(uuid);
-		this.pendingMatchRequestUncoupled = uuid;
-	}
-	set pendingMatchRequestUncoupled(uuid: string) {
-		this._pendingMatchRequest = uuid;
-	}
-	get pendingMatchRequest(): string {
-		return this._pendingMatchRequest;
-	}
-
 	private _goals: number = 0;
 	zero_goals() {
 		this.streak = 0;
@@ -361,10 +344,7 @@ export class Client extends Socket {
 		console.log('tears down client');
 		this.setStatus(ClientStatus.OFFLINE, false);
 		if (!otherPlayer)
-		{
-			resetGlobalPendingMatch();
 			return ;
-		}
 		this.cancelGame();
 
 		otherPlayer.emit('playerDisconnect');

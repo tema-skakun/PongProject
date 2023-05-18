@@ -10,7 +10,7 @@ import * as crypto from 'crypto';
 // import crypto from 'crypto';
 import { Client, isClient } from '../../classes/client';
 
-import { roomToSocket, setOtherPlayer, socketToCookie } from 'src/tools/trivial';
+import { roomToSocket, socketToCookie } from 'src/tools/trivial';
 import { GameState } from 'src/interfaces/GameState';
 import { json } from 'stream/consumers';
 import { arrayNotEmpty } from 'class-validator';
@@ -28,9 +28,6 @@ export const clients = new Map<string, Client>();
 type KeyHandler = (...args: any[]) => void;
 type KeyHandlerXClient = (player: Client) => KeyHandler; 
 
-let pendingMatchRequest: string = undefined;
-export const resetGlobalPendingMatch = () => {pendingMatchRequest = undefined}
-
 @WebSocketGateway({
 	cors: {
 			origin: (origin: string, callback: (err: Error | null, allow?: boolean) => void) => {
@@ -47,6 +44,7 @@ export const resetGlobalPendingMatch = () => {pendingMatchRequest = undefined}
 export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   // <state>
+  public matchMakeingQueue: Client [] = [];
   @WebSocketServer() server: Server;
   // </state>
 
@@ -94,24 +92,21 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   async join(client: Client, JoinOpts: Object) {
 
-    if (pendingMatchRequest) {
-		client.playernum = 2;
-		await client.setPendingMatchRequest(pendingMatchRequest);
-  
-		await setOtherPlayer(client, clients);
-  
-		this.start(client);
-		pendingMatchRequest = undefined;
-  
-	  } else { 
-		client.playernum = 1;
-		console.log(`playernum: ${client.playernum}`); 
-  
-		pendingMatchRequest = crypto.randomUUID();
-		await client.setPendingMatchRequest(pendingMatchRequest);
-	  }
-  
 	client.coupledHandshake();
+
+	this.matchMakeingQueue.push(client);
+	if (this.matchMakeingQueue.length === 2)
+	{
+		const player1 = this.matchMakeingQueue.shift();
+		const player2 = this.matchMakeingQueue.shift();
+
+		player1.playernum = 1;
+		player2.playernum = 2;
+
+		player1.otherPlayerObj = player2;
+		this.start(player2);
+	}
+
   }
 
   async handleConnection(socket: Socket): Promise<void> { // Lobby
@@ -188,7 +183,6 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   kickoffGroup(inviter: Client, invitee: Client) {
 	inviter.otherPlayerObj = invitee;
 	inviter.playernum = 2;
-	inviter.setPendingMatchRequest(crypto.randomUUID());
 
 	inviter.coupledHandshake();
 	this.start(inviter);

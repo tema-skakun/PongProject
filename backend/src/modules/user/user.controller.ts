@@ -35,11 +35,11 @@ export class UserController {
 		return ObjectPruning( UserTransformed, await this.userservice.findUsersById(chosenId));
 	}
 
-	@Get('all')
-	async getalluser() {
-		return await this.userservice.getUsers();
-		// return ObjectPruningMany(UserTransformed, await this.userservice.getUsers());
-	}
+	// @Get('all')
+	// async getalluser() {
+	// 	return await this.userservice.getUsers();
+	// 	// return ObjectPruningMany(UserTransformed, await this.userservice.getUsers());
+	// }
 
 	@Get('notBlockedUsers')
 	@UseGuards(JwtTwoFactorGuard)
@@ -71,13 +71,13 @@ export class UserController {
 		return this.userservice.updateUsername(req.user.intra_id, username);
 	}
 
-	@Post('create')
-	async createUser(@Body() dto: UserDto) {
-		return ObjectPruning(UserTransformed , await this.userservice.createUser(dto));
-	}
+	// @Post('create')
+	// async createUser(@Body() dto: UserDto) {
+	// 	return ObjectPruning(UserTransformed , await this.userservice.createUser(dto));
+	// }
 
-	@Delete('delete')
-	deleteusr(@Body() id: any) {
-		this.userservice.deleteuser(id.intra_id);
-	}
+	// @Delete('delete')
+	// deleteusr(@Body() id: any) {
+	// 	this.userservice.deleteuser(id.intra_id);
+	// }
 }

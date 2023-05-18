@@ -17,10 +17,10 @@ export class ChannelController {
 		private readonly userservice: UserService,
 		) {}
 
-	@Get('all')
-	async getUsers() {
-		return ObjectPruningMany(ChannelTransformed, await this.channelservice.getChannels());
-	}
+	// @Get('all')
+	// async getUsers() {
+	// 	return ObjectPruningMany(ChannelTransformed, await this.channelservice.getChannels());
+	// }
 
 	@Get('usersToInvite/:channelId')
 	@UseGuards(JwtTwoFactorGuard)

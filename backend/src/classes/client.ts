@@ -149,6 +149,20 @@ export class Client extends Socket {
 			}
 		}
 	}
+	reactiveListener(eventName: string)
+	{
+		for (const listener of this._listenersToBeReactivated)
+		{
+			if (listener.name === eventName)
+			{
+				if (this.listenerCount(listener.name) === 0)
+				{
+					this.on(listener.name, listener.func);
+				}
+				return ;
+			}
+		}
+	}
 	addReactivator(name: string, func: EventFunction) {
 		console.log(`Adds Reactivator for: ${name}`);
 		this.off(name, func);

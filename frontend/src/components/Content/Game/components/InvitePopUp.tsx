@@ -27,17 +27,19 @@ export const InvitePopUp: React.FC<InvitePopUpArgs> = ({socket, setDisplayBtn}) 
 
 	const acceptInvitation = useCallback(() => {
 		InviterRef.current.callback('I will destory you'); // This message will kick off the handshake
+		InviterRef.current.callback = () => {};
 		setDisplayPopUp(false);
 		navigator('/game');
 	}, [InviterRef, setDisplayPopUp, navigator]);
 
 	const rejectInvitation = useCallback(() => {
 		InviterRef.current.callback('Fuck off');
+		InviterRef.current.callback = () => {};
 		setDisplayPopUp(false);
 	}, [InviterRef, setDisplayPopUp]);
 
 	return (
-	< Popup open={displayPopUp} position='right center' onClose={ () => setDisplayPopUp(false)}>
+	< Popup open={displayPopUp} position='right center' onClose={ () => {rejectInvitation()} }>
 		<div>
 			<p>invitedBy: {InviterRef.current.inviter}</p>
 			<button onClick={acceptInvitation}>feelin' lucky</button>

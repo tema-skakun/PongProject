@@ -5,9 +5,11 @@ import * as cookieParser from 'cookie-parser';
 import { Server } from 'socket.io';
 import * as cors from 'cors';
 import * as bodyParser from 'body-parser';
+import { AllExceptionsFilter } from './exceptionFilter/exceptionFilter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { cors: true});
+  app.useGlobalFilters(new AllExceptionsFilter());
   app.useGlobalPipes(new ValidationPipe({
 	whitelist: true,
   }

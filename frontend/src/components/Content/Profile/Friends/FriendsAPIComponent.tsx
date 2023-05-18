@@ -3,9 +3,10 @@ import React, { useEffect } from 'react';
 import JSCookies from 'js-cookie';
 import Friends from './Friends';
 import { socket } from '../../../../App';
+import { useParams } from 'react-router-dom';
 
 const BACKEND_PORT: string = ':6969';
-const URL: string = '/friends/displayable';
+const URL: string = '/friends/displayable/';
 
 const URL_FOR_DEL_FRIENDS: string = '/friends/';
 
@@ -24,18 +25,25 @@ function unfriend(intraId: number) {
     })
 }
 
-class FriendsAPIComponent extends React.Component<any, any> {
-    componentDidMount() {
+const FriendsAPIComponent: React.FC<any> = (props) =>  {
+
+	const {intra_id} = useParams();
+
+	useEffect(() => {
+		console.log('gets into the Friend  api call');
+		const addr = (intra_id) ? BACKEND_ADDR + intra_id : BACKEND_ADDR;
+
         const headers: any = {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${JSCookies.get('accessToken')}`,
         };
 
-        axios.get(BACKEND_ADDR, {
+        axios.get(addr, {
             headers: headers
         })
             .then((response: any) => {
-                this.props.setUsers(response.data);
+                props.setUsers(response.data);
+				console.log(`new users: ${JSON.stringify(response.data)}`);
             });
 
         // axios.delete(ROOT_ADDR_OF_FRIENDS, {
@@ -46,23 +54,18 @@ class FriendsAPIComponent extends React.Component<any, any> {
         //     this.props.unfriend(response.data.intraId);
         // });
 
-    }
+    }, [intra_id]);
 
-	componentWillUnmount(): void {
-		
-	}
 
-    render() {
-        return (
-            <Friends
-                users={this.props.profilePage.users}
-                follow={this.props.follow}
-                unfollow={this.props.unfollow}
-                unfriend={unfriend}
-				setUsers={this.props.setUsers}
-            />
-        )
-    }
+	return (
+		<Friends
+			users={props.profilePage.users}
+			follow={props.follow}
+			unfollow={props.unfollow}
+			unfriend={unfriend}
+			setUsers={props.setUsers}
+		/>
+	)
 }
 
 export default FriendsAPIComponent

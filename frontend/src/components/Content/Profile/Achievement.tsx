@@ -11,16 +11,15 @@ type ArchivementsTransformed = {
 	type: number;
 }
 
+const Url: string = `http://${process.env.REACT_APP_IP_BACKEND}:6969/archivements/`;
 
 export const Achievement: React.FC<any> = (props) => {
 	const {intra_id} = useParams();
 	const [achievements, setAchievements] = useState<Set<number> >();
 
-	let endpoint: string = `http://${process.env.REACT_APP_IP_BACKEND}:6969/archivements/`;
-	if (intra_id)
-		endpoint = endpoint.concat(intra_id);
-
 	useEffect(() => {
+		const endpoint: string = (intra_id) ? Url + intra_id : Url
+
 		axios.get(endpoint, {
 			headers: {
 				'Content-Type': 'application/json',
@@ -40,7 +39,7 @@ export const Achievement: React.FC<any> = (props) => {
 			}
 			setAchievements(achivementTypes);
 		})
-	}, [])
+	}, [intra_id])
 
 	return <span>{
 		(achievements?.has(0)) ? <img src="/puginpool.jpeg"></img> : <></>}

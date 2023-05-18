@@ -17,6 +17,7 @@ import { InviteForm } from './components/inviteForm';
 import 'reactjs-popup/dist/index.css';
 import { InvitePopUp } from './components/InvitePopUp';
 import axios, { AxiosResponse } from 'axios';
+import style from './Game.module.css'
 
 export enum archivements {
 	chad,
@@ -112,22 +113,27 @@ function Game({CONFIG, setCONFIG, winningRef, backgroundImg}: {CONFIG: Config, s
 	useSocketEmission(socket);
 	
 	if (displayBtn) {
-		return		<div>
-						<form>
-							<Radio backgroundImg={backgroundImg} />
-							<div>
-								<QueueButton handler={queueBtnHandler}/>
-							</div>
-						</form>
+		return (
+			<div className={style.menu}>
+				<form>
+					<Radio backgroundImg={backgroundImg}/>
+					<div>
+						<QueueButton handler={queueBtnHandler}/>
 					</div>
+				</form>
+			</div>
+		)
 	}
 	else {
-		return (<div className='canvas-container'>
-					<div className='canvas-wrapper'>
-						<Canvas gameStateRef={gameStateRef} CONFIG={CONFIG} winningRef={winningRef} backgroundImg={backgroundImg} />
-						<MemeOverlay showMeme={showMe} memeUrl={memeUrl.current}/>
-					</div>
-				</div>)
+		return (
+			<div className={style.canvasContainer}>
+				<div>
+					<Canvas gameStateRef={gameStateRef} CONFIG={CONFIG} winningRef={winningRef}
+							backgroundImg={backgroundImg}/>
+					<MemeOverlay showMeme={showMe} memeUrl={memeUrl.current}/>
+				</div>
+			</div>
+		)
 	}
 }
 

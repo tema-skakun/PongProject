@@ -1,0 +1,49 @@
+.menu {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+.canvasContainer {
+    display: grid;
+    justify-content: center;
+    /*margin-top: 10vh;*/
+    /*align-items: center;*/
+    height: 50vh;
+    width: auto;
+}
+
+.canvasWrapper {
+    /*height: 100px;*/
+    /*position: relative;*/
+    /*width: 100%;*/
+    /*padding-bottom: 66.67%; !* Maintain a 2:3 aspect ratio (height: 2, width: 3) *!*/
+    /*background-color: #ccc; !* Optional, to show the wrapper's background *!*/
+    /*overflow: hidden;*/
+}
+
+#gameScreen {
+    /*position: absolute;*/
+    /*top: 0;*/
+    /*left: 0;*/
+    /*height: 10%;*/
+    /*width: 90%;*/
+}
+
+/* For viewports with a wider aspect ratio than 2:3 */
+@media (min-aspect-ratio: 3/2) {
+    .canvasWrapper {
+        width: calc(100vh * 1.5);
+        padding-bottom: 66.67%;
+    }
+}
+
+/* For viewports with a narrower aspect ratio than 2:3 */
+@media (max-aspect-ratio: 3/2) {
+    .canvasWrapper {
+        width: 100%;
+        padding-bottom: 66.67%;
+    }
+}
+

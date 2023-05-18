@@ -9,7 +9,7 @@ import { JwtService } from '@nestjs/jwt';
 @Injectable()
 export class TwoFactorAuthenticationService {
 	constructor (
-		private readonly usersService: UserService,
+		private readonly usersservice: UserService,
 		private readonly configService: ConfigService,
 		private readonly jwtService: JwtService,
 	) {}
@@ -19,9 +19,8 @@ export class TwoFactorAuthenticationService {
 	 
 		const otpauthUrl = authenticator.keyuri(user.email,
 			this.configService.get('2F_APP_NAME'), secret);
-
-		await this.usersService.setTwoFactorAuthenticationSecret(secret, user.intra_id);
-
+		await this.usersservice.setTwoFactorAuthenticationSecret(secret, user.intra_id);
+		const us = await this.usersservice.findUsersById(user.intra_id);
 		return {
 		  secret,
 		  otpauthUrl

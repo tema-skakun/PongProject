@@ -31,11 +31,11 @@ export const Canvas: React.FC<CanvasProps> = ({gameStateRef, CONFIG, winningRef,
 
 		if ((window.innerHeight / window.innerWidth) < (2/3))
 		{
-			setSCALAR(CONFIG.HEIGHT / window.innerHeight);
+			setSCALAR(CONFIG.HEIGHT / (window.innerHeight * 0.85));
 		}
 		else
 		{
-			setSCALAR(CONFIG.WIDTH / window.innerWidth);
+			setSCALAR(CONFIG.WIDTH / (window.innerWidth * 0.85));
 		}
 		// setSCALAR(1); // Took out scaleing for css.
 	}, [CONFIG])

@@ -22,7 +22,6 @@ async function updateMatchHistory(winner: Client, looser: Client, userService: U
 	const looserEntity: User = await userService.findUserByIdAndGetRelated(looser.intraId, ['wonGames', 'lostGames']);
 	const winnerEntity: User = await userService.findUserByIdAndGetRelated(winner.intraId, ['wonGames', 'lostGames']);
 
-	console.log(`My intraa id: ${winnerEntity.intra_id}`);
 
 	const matchHistoryEntry: MatchHistoryEntry = await matchHistoryService.create({
 		winner: winnerEntity,
@@ -31,16 +30,12 @@ async function updateMatchHistory(winner: Client, looser: Client, userService: U
 		looserGoals: stashedLooserGoals
 	})
 
-	// console.log(`total losses before: ${looserEntity.lostGames}`)
 	userService.incr_totalLosses(looserEntity);
 
 	// const checkLooserEntity: User = await userService.findUserByIdAndGetRelated(looser.intraId, ['wonGames', 'lostGames']);
-	// console.log(`total losses after: ${checkLooserEntity.lostGames}`)
 
 	userService.incr_totalWins(winnerEntity);
 
-	console.log(`lost games: ${looserEntity.lostGames.length}`);
-	console.log(`intraId: ${looserEntity.intra_id}`);
 
 	matchHistoryService.save(matchHistoryEntry);
 }
@@ -144,7 +139,6 @@ export class Client extends Socket {
 		{
 			if (this.listenerCount(listener.name) === 0)
 			{
-				console.log(`Reactivates: ${listener.name}`)
 				this.on(listener.name, listener.func);
 			}
 		}
@@ -164,7 +158,6 @@ export class Client extends Socket {
 		}
 	}
 	addReactivator(name: string, func: EventFunction) {
-		console.log(`Adds Reactivator for: ${name}`);
 		this.off(name, func);
 		this._listenersToBeReactivated.filter(list => list.name !== name);
 		this._listenersToBeReactivated.push({name: name, func: func});
@@ -203,6 +196,9 @@ export class Client extends Socket {
 	private _intraId: number;
 	set cookie(aCookie: Record<string, any>) {
 		this._cookie = aCookie;
+		console.log(`Cookie makes sense: ${JSON.stringify(aCookie)}`)
+		console.log(`intra id in cookie: ${aCookie.intra_id}`);
+		console.log(`intra id to number : ${Number(aCookie.intra_id)}`);
 		this._intraId = Number(aCookie.intra_id);
 	}
 	get cookie(): Record<string, any> {

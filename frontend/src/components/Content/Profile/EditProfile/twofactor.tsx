@@ -9,7 +9,6 @@ function TwoFactorAuthSwitch(props: any) {
 	const [picture, setPicture] = useState('');
 	const [code, setCode] = useState('');
 
-	// console.log('2f profile');
 	async function handleActivate() {
 		try {
 			const info = {
@@ -21,11 +20,14 @@ function TwoFactorAuthSwitch(props: any) {
 					'Authorization': `Bearer ${JSCookies.get('accessToken')}`,
 				}
 			})
+			console.log('res.data: ' + res.data);
 			const newToken = await res.data;
+			console.log('newToken: ' + newToken);
 			JSCookies.set('accessToken', newToken);
 			props.onClose();
 			props.user.isTwoFactorAuthenticationEnabled = true;
 		}catch(err: any) {
+			console.log('error in 2f turn on: ' + err.response.data.message);
 			props.onClose();
 			alert(err.response.data.message);
 		}
@@ -50,7 +52,8 @@ function TwoFactorAuthSwitch(props: any) {
 	useEffect(() => {
 		const generateQRCode = async () => {
 			if (!props.user.isTwoFactorAuthenticationEnabled) {
-				const url = 'http://localhost:6969/2fa/generate'; 
+				console.log('in generateQR code22222');
+				const url = `http://${process.env.REACT_APP_IP_BACKEND}:6969/2fa/generate`; 
 				const headers = {
 					Accept: 'image/png',
 					'Authorization': `Bearer ${JSCookies.get('accessToken')}`,

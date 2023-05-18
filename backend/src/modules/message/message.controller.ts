@@ -55,7 +55,6 @@ export class MessageController {
 			const channelMessages = await this.messageservice.findChannelMessages(channel);
 			res.status(200).json(channelMessages);
 		}catch(err) {
-			console.log('error in  getChannelMessages: ' + err);
 			res.status(500).json(err);
 		}
 	}

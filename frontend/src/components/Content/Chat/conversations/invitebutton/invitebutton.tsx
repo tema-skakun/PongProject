@@ -13,6 +13,11 @@ export default function InviteButton({ closeModal, socket, channel }: {closeModa
 	useEffect(() =>{
 		const getUsers = async ()=>{
 			try {
+				if (!channel.isPrivate) {
+					closeModal();
+					alert('You can only invite to private channel');
+					return;
+				}
 				const res = await axios.get(`http://${process.env.REACT_APP_IP_BACKEND}:6969/chat/usersToInvite/` + channel.id, {
 					headers: {
 						'Content-Type': 'application/json',

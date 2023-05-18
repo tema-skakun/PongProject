@@ -23,27 +23,27 @@ import JwtTwoFactorGuard from 'src/GuardStrategies/Jwt2F.guard';
   export class twoFactorAuthController {
 	constructor(
 	  private readonly twoFactorAuthenticationService: TwoFactorAuthenticationService,
-	  private readonly userService: UserService,
+	  private readonly userservice: UserService,
 	  private readonly authenticationService: AuthenticationService,
 	) {}
 
 	@Post('turn-on')
-	@HttpCode(200)
-	@UseGuards(JwtGuard)
+	@UseGuards(JwtTwoFactorGuard)
 	async turnOnTwoFactorAuthentication(
 		@Req() request: any,
 		@Res() res: any,
 		@Body() { twoFactorAuthenticationCode } : any
 	) {
 		try {
+			const user = await this.userservice.findUsersById(request.user.intra_id);
 			const isCodeValid = this.twoFactorAuthenticationService.isTwoFactorAuthenticationCodeValid(
-			twoFactorAuthenticationCode, request.user
+			twoFactorAuthenticationCode, user
 			);
 			if (!isCodeValid) {
 				throw new Error('Wrong authentication code');
 			}
-			await this.userService.turnOnTwoFactorAuthentication(request.user.intra_id);
-			const accessToken = this.authenticationService.getCookieWithJwtAccessToken(request.user.id, true);
+			await this.userservice.turnOnTwoFactorAuthentication(request.user.intra_id);
+			const accessToken = this.authenticationService.getCookieWithJwtAccessToken(request.user, true);
 			res.status(200).json(accessToken);
 		} catch(err) {
 			res.status(400).json({ message: err.message });
@@ -51,7 +51,7 @@ import JwtTwoFactorGuard from 'src/GuardStrategies/Jwt2F.guard';
 	}
 
 	@Post('generate')
-	@UseGuards(JwtGuard)
+	@UseGuards(JwtTwoFactorGuard)
 	async register(@Res() res: Response, @Req() req: any) {
 		if (!req.user.isTwoFactorAuthenticationEnabled) {
 			const { otpauthUrl } = await this.twoFactorAuthenticationService.generateTwoFactorAuthenticationSecret(req.user);
@@ -62,8 +62,8 @@ import JwtTwoFactorGuard from 'src/GuardStrategies/Jwt2F.guard';
 		}
 	}
 
+
 	@Post('authenticate')
-	@HttpCode(200)
 	@UseGuards(JwtGuard)
 	async authenticate(
 		@Req() request: any,
@@ -76,7 +76,7 @@ import JwtTwoFactorGuard from 'src/GuardStrategies/Jwt2F.guard';
 			throw new UnauthorizedException('Wrong authentication code');
 		}
 	
-		const accessToken = this.authenticationService.getCookieWithJwtAccessToken(request.user.id, true);
+		const accessToken = this.authenticationService.getCookieWithJwtAccessToken(request.user, true);
 	
 		return accessToken;
 	}
@@ -88,7 +88,7 @@ import JwtTwoFactorGuard from 'src/GuardStrategies/Jwt2F.guard';
 		@Res() res: any,
 	) {
 		try {
-			await this.userService.turnOffTwoFactorAuthentication(request.user.intra_id);
+			await this.userservice.turnOffTwoFactorAuthentication(request.user.intra_id);
 			res.status(200).json();
 		} catch (err) {
 			res.status(400).json(err);

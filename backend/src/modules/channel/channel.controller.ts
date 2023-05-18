@@ -17,10 +17,10 @@ export class ChannelController {
 		private readonly userservice: UserService,
 		) {}
 
-	@Get('all')
-	async getUsers() {
-		return ObjectPruningMany(ChannelTransformed, await this.channelservice.getChannels());
-	}
+	// @Get('all')
+	// async getUsers() {
+	// 	return ObjectPruningMany(ChannelTransformed, await this.channelservice.getChannels());
+	// }
 
 	@Get('usersToInvite/:channelId')
 	@UseGuards(JwtTwoFactorGuard)
@@ -33,7 +33,6 @@ export class ChannelController {
 			const inviteUsers = await this.channelservice.usersToInvite(users, req.params.channelId);
 			res.status(200).json(inviteUsers);
 		}catch(err) {
-			console.log('error: ' + err);
 			res.status(400).json({ error: err.message });
 		}
 	}
@@ -49,11 +48,9 @@ export class ChannelController {
 			if (!user) {
 				throw new Error('User doesnt exist');
 			}
-			console.log('user received: ' + user.intra_id)
 			await this.channelservice.inviteUserToChannel(req.params.channelId, user);
 			res.status(200).json();
 		}catch(err) {
-			console.log('error: ' + err);
 			res.status(400).json({ error: err.message });
 		}
 	}
@@ -72,7 +69,6 @@ export class ChannelController {
 			await this.channelservice.changePassword(req.params.channelId, req.body.password);
 			res.status(200).json();
 		}catch(err) {
-			console.log('error: ' + err);
 			res.status(400).json({ error: err.message });
 		}
 	}
@@ -87,7 +83,6 @@ export class ChannelController {
 			const userChannels = await this.channelservice.findChannelUsers(req.params.channel_id);
 			res.status(200).json(ObjectPruningMany(UserTransformed, userChannels));
 		}catch(err) {
-			console.log('error: ' + err);
 			res.status(400).json(err.message);
 		}
 	}
@@ -118,7 +113,6 @@ export class ChannelController {
 			const userChannels = await this.channelservice.findUserChannels(req.params.intra_id);
 			res.status(200).json(ObjectPruningMany(ChannelTransformed, userChannels));
 		}catch(err) {
-			console.log('error: ' + err);
 			res.status(400).json(err.message);
 		}
 	}
@@ -141,7 +135,6 @@ export class ChannelController {
 			await this.channelservice.addAdminToChannel(user, req.body.channelId);
 			res.status(200).json({ message: 'User is now an administrator of the channel' });
 		}catch(err) {
-			console.log('error: ' + err);
 			res.status(400).json({ error: err.message });
 		}
 	}

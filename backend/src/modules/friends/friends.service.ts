@@ -32,7 +32,7 @@ export class FriendsService {
 		let success: boolean = false;
 
 		userWithFriend.friends = userWithFriend.friends.map((friend) => {
-			if (friend.intra_id = friend_id)
+			if (friend.intra_id === friend_id)
 			{
 				success = true;
 				return ;

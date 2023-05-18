@@ -37,6 +37,7 @@ export class FriendsController {
 
 
 	@Post('/:id')
+	@UseGuards(ExistsGuardid)
 	@UseGuards(JwtTwoFactorGuard)
 	async addFriend(@Param('id') id: string, @Req() req: any): Promise<UserTransformed> {
 		let chosenId: number = req.user.intra_id;

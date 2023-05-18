@@ -31,7 +31,6 @@ export class FriendsController {
 		if (id && !isNaN(Number(id))) {
 			chosenId = Number(id);
 		}
-
 		return await this.friendsService.deleteFriend(req.user.intra_id, chosenId);
 	}
 

@@ -15,11 +15,11 @@ export class MessageController {
 		private readonly channelservice: ChannelService) {
 	}
 	
-	@Get('all')
-	@UseGuards(JwtTwoFactorGuard)
-	async getAllMess() {
-		return ObjectPruningMany(MessageTransformed, await this.messageservice.getAll());
-	}
+	// @Get('all')
+	// @UseGuards(JwtTwoFactorGuard)
+	// async getAllMess() {
+	// 	return ObjectPruningMany(MessageTransformed, await this.messageservice.getAll());
+	// }
 
 
 	@Get('channel/:channelId')
@@ -32,10 +32,14 @@ export class MessageController {
 			const channel = await this.channelservice.findChannelById(req.params.channelId);
 			if (!channel)
 				throw new Error('No such channel')
+			const isMember = await this.userservice.isAmember(req.user.intra_id, channel.id);
+			if (!isMember){
+				throw new Error('You are not a member');
+			}
 			const channelMessages = await this.messageservice.findChannelMessages(channel);
-			res.status(200).json(channelMessages);
+			res.status(200).json(ObjectPruningMany( MessageTransformed ,channelMessages));
 		}catch(err) {
-			res.status(500).json(err);
+			res.status(400).json(err);
 		}
 	}
 }

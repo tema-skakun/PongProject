@@ -284,4 +284,17 @@ export class UserService {
 		  });
 	}
 
+	async isAmember(intra_id: number, channelId: number) {
+		const user = await this.userRepository.findOne({
+			where: {
+			  intra_id: intra_id,
+			},
+			relations: ['channels'],
+		  });
+
+		if (!user) {
+			throw new Error('user not existing');
+		}
+		return user.channels.some((channel) => channel.id === channelId);
+	}
 }

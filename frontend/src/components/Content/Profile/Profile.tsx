@@ -13,6 +13,7 @@ import { MatchHistoryEntry } from './MatchItems/MatchItems';
 
 const Profile = (props: any) => {
 	const {intra_id} = useParams();
+
 	const [fetchedUser, setFetchedUser] = useState<Record<string, any>>({});
 	const [matchHistoryList, setMatchHistoryList] = useState<MatchHistoryEntry []>([]);
 	const [picUrl, setPicUrl] = useState<string>('');

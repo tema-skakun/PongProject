@@ -28,4 +28,4 @@ COPY --from=compile /app/package*.json .
 RUN npm i --production
 COPY --from=compile /app/dist/ .
 
-CMD ["node", "src/main.js"]
+CMD ["npx", "pm2-runtime", "src/main.js"]

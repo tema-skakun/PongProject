@@ -116,7 +116,14 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   async handleConnection(socket: Socket): Promise<void> { // Lobby
 
+		if (!socketToCookie(socket))
+		{
+			socket.disconnect();
+			return ;
+		}
+
 		const client: Client = new Client(socket, this.userService, this.matchHistoryService, this.archivmentService);
+
 	try {
 		client._digestCookie(socketToCookie(socket), this.jwtService.decode, this.jwtService);
 	} catch (err) {
@@ -133,23 +140,29 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 		this.join(client, JoinOpts);
 	}
 
-	client.on('invite', (intraId: string, callback: (res: string) => void) => {
+	const inviteCb = (intraId: string, callback: (res: string) => void) => {
+
+		client.addReactivator('invite', inviteCb);
 
 		console.log('server recieved invite');
 		clients.forEach((cl: Client) => {
 			if ((cl.intraId == +intraId) && (client.id !== cl.id))
 			{
 				console.log(`send invite req`);
-				if (cl.status === ClientStatus.INGAME) {
+				if (cl.status === ClientStatus.INGAME || cl.status === ClientStatus.OFFLINE) {
+					client.reactiveListener('invite');
 					callback('Fuck off');
 				}
 				else {
+
 					cl.emit('inviteReq', client.intraId, (resToServer: string) => {
 						if (resToServer === 'I will destory you') // Client accepted the game
 						{
 							client.addReactivator('join', joinCb);
-							client.addReactivator('join', joinCb);
-							this.kickoffGroup(client, cl);
+							if (client.status !== ClientStatus.INGAME && cl.status !== ClientStatus.INGAME)
+								this.kickoffGroup(client, cl);
+						} else {
+							client.reactiveListener('invite');
 						}
 
 						callback(resToServer);
@@ -157,10 +170,9 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 				}
 			}
 		})
+	}
 
-
-
-	})
+	client.on('invite', inviteCb)
 
 	client.on('join', joinCb);
 

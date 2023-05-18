@@ -39,6 +39,10 @@ export default function CreateChannelButton({ closeModal, socket }: {closeModal:
 			alert('Please fill out all fields');
 			return;
 		}
+		if (channelName.length > 10) {
+			alert('Channel name shouldnt be longer then 10 char');
+			return;
+		}
 		const newChannel = {
 			name: channelName,
 			type: channelType,

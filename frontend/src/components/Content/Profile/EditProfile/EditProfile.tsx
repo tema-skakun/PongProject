@@ -70,6 +70,9 @@ const EditProfile = (props: any) => {
             setNewUsername(''); // reset the new username
 			props.setUser({...props.user, username: response.data})
         })
+		.catch(err => {
+			alert('username already taken');
+		})
     }, [newUsername, setNewUsername, setShowUsernameModal, props]);
 
 	const handleTwoFactorAuthClick = useCallback(() => {

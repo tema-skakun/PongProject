@@ -31,7 +31,6 @@ export class FriendsService {
 		const userWithFriend: User = await this.initalUser(userId);
 		let success: boolean = false;
 
-		console.log(JSON.stringify(userWithFriend.friends));
 		userWithFriend.friends = userWithFriend.friends.map((friend) => {
 			if (Number(friend.intra_id) === friend_id)
 			{
@@ -40,7 +39,6 @@ export class FriendsService {
 			}
 			return friend;
 		})
-		console.log(JSON.stringify(userWithFriend.friends));
 		await this.userRepository.save(userWithFriend);
 
 		return success;

@@ -2,7 +2,6 @@ import axios from 'axios';
 import React, { useEffect } from 'react';
 import JSCookies from 'js-cookie';
 import Friends from './Friends';
-import { socket } from '../../../../App';
 import { useParams } from 'react-router-dom';
 
 const BACKEND_PORT: string = ':6969';

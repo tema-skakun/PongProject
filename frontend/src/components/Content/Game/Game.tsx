@@ -121,7 +121,6 @@ function Game({CONFIG, setCONFIG, winningRef, backgroundImg, displayBtn, setDisp
 
 	useSocketEmission(socket);
 	
-	console.log(`Display button: ${displayBtn}`);
 	if (displayBtn) {
 		return (
 			<div className={style.menu}>

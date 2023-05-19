@@ -25,6 +25,7 @@ export const randomVelocity: () => math.Matrix = () => math.matrix([
 ]);
 
 export interface ConfigInter {
+	PING_TRESHOLD: number;
 	POINTS: number;
 	BACKGROUND_COLOR: string;
 	SPAWN_EXCLUSION: number;
@@ -51,6 +52,7 @@ export interface ConfigInter {
 }
 
 export default {
+	PING_TRESHOLD: 200,
 	POINTS: 3,
 	MAX_VEL: WIDTH / (2 + 2/3) / 60,
 	BACKGROUND_COLOR: 'red',

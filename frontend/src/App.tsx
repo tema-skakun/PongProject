@@ -92,24 +92,28 @@ function App(props: any) {
 		)
 	}, [socket]);
 
-	const disconnectStateChange = useCallback(() => {
-		setShowDisconnect(true);
-	}, [setShowDisconnect])
-
 	useEffect(() => {
 		if (!socket)
 		{
 			return ;
 		}
 
-		socket.on('disconnect', disconnectStateChange);
+		socket.on('ping', () => {
+			socket?.emit('pong');
+		})
+
+		socket.on('disconnect', () => {
+			setShowDisconnect(true);
+		});
 
 		return (() => {
 			if (!socket)
 				return;
-			socket.off('disconnect', disconnectStateChange);
+			
+			socket.removeAllListeners('ping');
+			socket.removeAllListeners('disconnect');
 		})
-	}, [socket])
+	}, [socket, setShowDisconnect])
 
     if (isLoading) {
         return <div>Loading...</div>;

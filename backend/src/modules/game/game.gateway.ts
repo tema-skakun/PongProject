@@ -28,6 +28,14 @@ export const clients = new Map<string, Client>();
 type KeyHandler = (...args: any[]) => void;
 type KeyHandlerXClient = (player: Client) => KeyHandler; 
 
+async function ping(client: Client): Promise<void> {
+	return await new Promise((res, rej) => {
+		client.emit('ping');
+		setTimeout(rej, CONFIG.PING_TRESHOLD)
+		client.once('pong', res)}
+		)
+}
+
 @WebSocketGateway({
 	cors: {
 			origin: (origin: string, callback: (err: Error | null, allow?: boolean) => void) => {
@@ -95,6 +103,16 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 	client.coupledHandshake();
 
 	this.matchMakeingQueue.push(client);
+
+	this.matchMakeingQueue = (await Promise.all(this.matchMakeingQueue.map(async player => {
+		try {
+			await ping(player);
+			return player;
+		} catch (err: unknown) {
+			return null;
+		}
+	}))).filter(player => player !== null);
+	
 	if (this.matchMakeingQueue.length === 2)
 	{
 		const player1 = this.matchMakeingQueue.shift();
@@ -164,6 +182,10 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 	}
 
 	client.on('invite', inviteCb)
+
+	client.on('close', () => {
+		client.closingConnnection = true;
+	})
 
 	client.on('join', joinCb);
 

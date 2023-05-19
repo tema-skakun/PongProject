@@ -42,6 +42,8 @@ async function updateMatchHistory(winner: Client, looser: Client, userService: U
 
 export class Client extends Socket {
 
+	public closingConnnection = false;
+
 	private _inGame: boolean = false;
 	get inGame(): boolean { return this._inGame; }
 	set inGame(val: boolean) {

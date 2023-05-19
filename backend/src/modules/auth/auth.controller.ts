@@ -42,9 +42,8 @@ import { ConfigService } from '@nestjs/config';
 	}
 	
 	
-	@HttpCode(200)
-	@UseGuards(JwtTwoFactorGuard)
 	@Get('log-in')
+	@UseGuards(JwtTwoFactorGuard)
 	async logIn(@Req() req: any) {
 		const { user } = req;
 		if (!user) {

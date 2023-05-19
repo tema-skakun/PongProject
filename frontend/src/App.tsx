@@ -118,17 +118,18 @@ function App(props: any) {
     return (
         isLoggedIn ? (
             <div className="App">
-				<InvitePopUp socket={socket}
-							setDisplayBtn={setDisplayBtn} />
+				<InvitePopUp socket={socket} />
 				<RejectionPopup socket={socket} showRejection={showRejection} setShowRejection={setShowRejection}/>
                 <Navbar/>
-				<DisconnectPopup showDisconnect={showDisconnect} setShowDisconnect={setShowDisconnect} />
+				<DisconnectPopup setDisplayBtn={setDisplayBtn} showDisconnect={showDisconnect} setShowDisconnect={setShowDisconnect} />
                 <Content state={props.state} dispatch={props.dispatch} setIsLoggedIn={setIsLoggedIn}
                          userdata={userdata.current}
 						 CONFIG={CONFIG}
 						 setCONFIG={setCONFIG}
 						 winningRef={winningRef}
-						 backgroundImg={backgroundImg}/>
+						 backgroundImg={backgroundImg}
+						 setDisplayBtn={setDisplayBtn}
+						 displayBtn={displayBtn}/>
             </div>
         ) : (
             <div className="App">

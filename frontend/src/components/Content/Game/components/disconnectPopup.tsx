@@ -7,15 +7,17 @@ import { socket } from "../../../../App";
 export type DisconnectPopupArgs = {
 	showDisconnect: boolean;
 	setShowDisconnect: (val: boolean) => any;
+	setDisplayBtn: (val: boolean) => any;
 	// socket: Socket<any, any> | null;
 };
 
 
-export const DisconnectPopup: React.FC<DisconnectPopupArgs> = ({showDisconnect, setShowDisconnect}) => {
+export const DisconnectPopup: React.FC<DisconnectPopupArgs> = ({showDisconnect, setShowDisconnect, setDisplayBtn}) => {
 
 	const deactivatePopup = useCallback(() => {
+		setDisplayBtn(true);
 		setShowDisconnect(false);
-	}, [setShowDisconnect])
+	}, [setShowDisconnect, setDisplayBtn])
 
 	// const retry = useCallback(() => {
 	// 	if (socket) {
@@ -31,7 +33,8 @@ export const DisconnectPopup: React.FC<DisconnectPopupArgs> = ({showDisconnect, 
 	return (<Popup open={showDisconnect} onClose={deactivatePopup} >
 				<p>The connection to server has been lost.</p>
 				<p>All games have been canceled.</p>
-				{/* <button onClick={retry}>try to reconnect</button> */}
+
+				<button onClick={deactivatePopup}>ok</button>
 			</Popup>)
 }
 

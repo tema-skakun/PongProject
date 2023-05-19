@@ -32,7 +32,7 @@ export enum winningStates {
 }
 
 
-function Game({CONFIG, setCONFIG, winningRef, backgroundImg}: {CONFIG: Config, setCONFIG: Function, winningRef: React.MutableRefObject<winningStates>, backgroundImg: React.MutableRefObject<HTMLImageElement>}) {
+function Game({CONFIG, setCONFIG, winningRef, backgroundImg, displayBtn, setDisplayBtn}: {CONFIG: Config, setCONFIG: Function, winningRef: React.MutableRefObject<winningStates>, backgroundImg: React.MutableRefObject<HTMLImageElement>, displayBtn: boolean, setDisplayBtn: (arg: boolean) => any}) {
 	// <Means for displaying>
 	const gameStateRef: React.MutableRefObject<GameState | null> = useRef(null)
 
@@ -41,7 +41,7 @@ function Game({CONFIG, setCONFIG, winningRef, backgroundImg}: {CONFIG: Config, s
 	// </Means for displaying>
 	
 	// <Stateful>
-	const [displayBtn, setDisplayBtn] = useState<boolean>(true);
+	// const [displayBtn, setDisplayBtn] = useState<boolean>(true);
 	const [displayPopUp, setDisplayPopUp] = useState<boolean>(false);
 	// </Stateful>
 
@@ -121,6 +121,7 @@ function Game({CONFIG, setCONFIG, winningRef, backgroundImg}: {CONFIG: Config, s
 
 	useSocketEmission(socket);
 	
+	console.log(`Display button: ${displayBtn}`);
 	if (displayBtn) {
 		return (
 			<div className={style.menu}>

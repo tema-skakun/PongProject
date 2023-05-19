@@ -17,7 +17,7 @@ const Content = (props: any) => {
                         dispatch={ props.dispatch }
 						userdata={ props.userdata }
                     />}/>
-                <Route path='/game' element={<Game backgroundImg={props.backgroundImg} winningRef={props.winningRef} CONFIG={props.CONFIG} setCONFIG={props.setCONFIG}/>}/>
+                <Route path='/game' element={<Game displayBtn={props.displayBtn} setDisplayBtn={props.setDisplayBtn} backgroundImg={props.backgroundImg} winningRef={props.winningRef} CONFIG={props.CONFIG} setCONFIG={props.setCONFIG}/>}/>
 				<Route path='/meme' element={<MemeOverlay memeUrl='/pug-dance.gif' showMeme={true} />}/>
             </Routes>
         </div>

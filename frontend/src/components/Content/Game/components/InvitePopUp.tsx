@@ -6,11 +6,10 @@ import { useNavigate } from "react-router-dom";
 
 type InvitePopUpArgs = {
 	// invitedBy: [string, (res: string) => void];
-	setDisplayBtn: Function;
 	socket: Socket<any, any> | null;
 };
 
-export const InvitePopUp: React.FC<InvitePopUpArgs> = ({socket, setDisplayBtn}) => {
+export const InvitePopUp: React.FC<InvitePopUpArgs> = ({socket}) => {
 	const navigator = useNavigate();
 	
 	const [displayPopUp, setDisplayPopUp] = useState<boolean>(false);

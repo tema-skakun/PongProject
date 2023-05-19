@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect} from "react";
 import style from './MatchItems.module.css'
 import axios, { AxiosResponse } from "axios";
 import JSCookies from 'js-cookie';

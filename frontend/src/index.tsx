@@ -11,14 +11,10 @@ const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement
 );
 root.render(
-    // <React.StrictMode>
         <BrowserRouter>
             <Provider store={store}>{/*put store in context*/}
                 <App/>
             </Provider>
         </BrowserRouter>
-    // </React.StrictMode>
 );
-{/* <React.StrictMode>
-</React.StrictMode> */}
 reportWebVitals();

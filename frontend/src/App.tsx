@@ -2,7 +2,7 @@ import './App.css';
 import Navbar from './components/Navbar/Navbar';
 import Content from './components/Content/Content';
 import JSCookies from 'js-cookie';
-import {createContext, useEffect, useRef, useState} from 'react';
+import {createContext, useCallback, useEffect, useRef, useState} from 'react';
 import {userProps} from './props';
 import {LoginPage} from './components/LoginPage/LoginPage';
 import { Socket } from 'socket.io-client';
@@ -11,6 +11,7 @@ import { InvitePopUp } from './components/Content/Game/components/InvitePopUp';
 import { RejectionPopup } from './components/Content/Game/components/RejectionPopup';
 import { Config } from './interfaces/config';
 import { winningStates } from './components/Content/Game/Game';
+import { DisconnectPopup } from './components/Content/Game/components/disconnectPopup';
 
 export let socket: Socket<any, any> | null = null;
 
@@ -30,6 +31,7 @@ function App(props: any) {
 		img.src = '/default.png';
 		return img;
 	})());
+	const [showDisconnect, setShowDisconnect] = useState<boolean>(false);
 
     useEffect(() => {
 		gSetShowRejection = setShowRejection;
@@ -90,6 +92,25 @@ function App(props: any) {
 		)
 	}, [socket]);
 
+	const disconnectStateChange = useCallback(() => {
+		setShowDisconnect(true);
+	}, [setShowDisconnect])
+
+	useEffect(() => {
+		if (!socket)
+		{
+			return ;
+		}
+
+		socket.on('disconnect', disconnectStateChange);
+
+		return (() => {
+			if (!socket)
+				return;
+			socket.off('disconnect', disconnectStateChange);
+		})
+	}, [socket])
+
     if (isLoading) {
         return <div>Loading...</div>;
     }
@@ -101,6 +122,7 @@ function App(props: any) {
 							setDisplayBtn={setDisplayBtn} />
 				<RejectionPopup socket={socket} showRejection={showRejection} setShowRejection={setShowRejection}/>
                 <Navbar/>
+				<DisconnectPopup showDisconnect={showDisconnect} setShowDisconnect={setShowDisconnect} />
                 <Content state={props.state} dispatch={props.dispatch} setIsLoggedIn={setIsLoggedIn}
                          userdata={userdata.current}
 						 CONFIG={CONFIG}

@@ -1,9 +1,9 @@
 # PongProject (ft_transcendence)
 
 ## Group Project
-  Linus Jahn        - pong game, fullstack, team managent;
-  Boriss Varlamovs  - backend;
-  Artem Skakun      - frontend.
+  - Linus Jahn        - pong game, fullstack, team managent;
+  - Boriss Varlamovs  - backend;
+  - Artem Skakun      - frontend.
 
 Collaborated in the development of a multiplayer online Pong game website (single page application), using React as a frontend library, Nest.js as a backend framework, and PostgreSQL as a relational database.
 Enhanced team cooperation, adaptability, and full-stack development skills through this TypeScript project.
